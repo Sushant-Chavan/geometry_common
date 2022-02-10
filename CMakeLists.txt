@@ -27,3 +27,17 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
     ${YAML_CPP_INCLUDE_DIRS}
 )
+
+# =========
+# LIBRARIES
+# =========
+add_library(geometry_utils
+    SHARED
+        src/utils.cpp
+        # data structures
+        src/point.cpp
+        src/pose_2d.cpp
+        src/line_segment.cpp
+)
+target_link_libraries(geometry_utils
+)
