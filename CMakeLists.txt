@@ -41,3 +41,16 @@ add_library(geometry_utils
 )
 target_link_libraries(geometry_utils
 )
+
+# =====
+# TESTS
+# =====
+if (CATKIN_ENABLE_TESTING)
+    catkin_add_gtest(point_test
+        test/point_test.cpp
+    )
+    target_link_libraries(point_test
+        geometry_utils
+    )
+endif ()
+
