@@ -42,6 +42,14 @@ add_library(geometry_utils
 target_link_libraries(geometry_utils
 )
 
+add_library(pointcloud_projector
+    SHARED
+        src/pointcloud_projector.cpp
+)
+target_link_libraries(pointcloud_projector
+    geometry_utils
+)
+
 # =====
 # TESTS
 # =====
