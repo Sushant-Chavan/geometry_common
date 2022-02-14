@@ -74,5 +74,7 @@ class Point
         friend bool operator == (const Point& p1, const Point& p2);
 };
 
+typedef std::vector<Point> PointCloud;
+
 }; // namespace geometry_common
 #endif // GEOMETRY_COMMON_POINT_H

@@ -2,6 +2,7 @@
 #include <math.h>
 #include <cassert>
 #include <list>
+#include <deque>
 #include <sensor_msgs/point_cloud_conversion.h>
 
 namespace geometry_common
@@ -16,7 +17,7 @@ float Utils::roundFloat(
 }
 
 Point Utils::getMeanPoint(
-        const std::vector<Point>& points,
+        const PointCloud& points,
         unsigned start_index,
         unsigned end_index)
 {
@@ -29,13 +30,14 @@ Point Utils::getMeanPoint(
 }
 
 Point Utils::getMeanPoint(
-        const std::vector<Point>& points)
+        const PointCloud& points)
 {
     return Utils::getMeanPoint(points, 0, points.size()-1);
 }
 
+template <typename T>
 Pose2d Utils::getMeanPose(
-        const std::vector<Pose2d>& poses)
+        const T& poses)
 {
     Pose2d mean_cart_pose;
     if ( poses.size() == 0 )
@@ -57,9 +59,12 @@ Pose2d Utils::getMeanPose(
                                  cos_theta_sum/poses.size());
     return mean_cart_pose;
 }
+template Pose2d Utils::getMeanPose(const std::vector<Pose2d>& poses);
+template Pose2d Utils::getMeanPose(const std::deque<Pose2d>& poses);
+template Pose2d Utils::getMeanPose(const std::list<Pose2d>& poses);
 
 Point Utils::getClosestPoint(
-        const std::vector<Point>& points,
+        const PointCloud& points,
         float x,
         float y,
         float z)
@@ -80,7 +85,7 @@ Point Utils::getClosestPoint(
 }
 
 std::vector<std::vector<Point> > Utils::clusterPoints(
-        const std::vector<Point>& points,
+        const PointCloud& points,
         float cluster_distance_threshold,
         size_t min_cluster_size)
 {
@@ -132,7 +137,7 @@ std::vector<std::vector<Point> > Utils::clusterPoints(
 }
 
 std::vector<std::vector<Point> > Utils::clusterOrderedPoints(
-        const std::vector<Point>& points,
+        const PointCloud& points,
         float cluster_distance_threshold,
         size_t min_cluster_size)
 {
@@ -201,7 +206,7 @@ bool Utils::isPointInPolygon(
 
 bool Utils::isFootprintSafe(
         const std::vector<Point>& footprint,
-        const std::vector<Point>& points)
+        const PointCloud& points)
 {
     for ( const Point& p : points )
     {
@@ -449,7 +454,7 @@ float Utils::distToLineSegmentSquared(
 }
 
 float Utils::fitLineRANSAC(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         unsigned start_index,
         unsigned end_index,
         float& m,
@@ -500,7 +505,7 @@ float Utils::fitLineRANSAC(
 }
 
 float Utils::fitLineRANSAC(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         float &m,
         float &c,
         float delta,
@@ -510,7 +515,7 @@ float Utils::fitLineRANSAC(
 }
 
 float Utils::fitLineSegmentRANSAC(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         unsigned start_index,
         unsigned end_index,
         LineSegment& line_segment,
@@ -557,7 +562,7 @@ float Utils::fitLineSegmentRANSAC(
 }
 
 float Utils::fitLineSegmentRANSAC(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         LineSegment& line_segment,
         float delta,
         size_t itr_limit)
@@ -566,7 +571,7 @@ float Utils::fitLineSegmentRANSAC(
 }
 
 std::vector<LineSegment> Utils::fitLineSegmentsRANSAC(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         float score_threshold,
         float delta,
         size_t itr_limit)
@@ -671,7 +676,7 @@ std::vector<LineSegment> Utils::fitLineSegmentsRANSAC(
 }
 
 float Utils::fitLineRegression(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         unsigned start_index,
         unsigned end_index,
         LineSegment& line_segment)
@@ -735,14 +740,14 @@ float Utils::fitLineRegression(
 }
 
 float Utils::fitLineRegression(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         LineSegment& line_segment)
 {
     return Utils::fitLineRegression(pts, 0, pts.size()-1, line_segment);
 }
 
 std::vector<LineSegment> Utils::piecewiseRegression(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         float error_threshold)
 {
     struct RegressionLineSegment
@@ -828,7 +833,7 @@ std::vector<LineSegment> Utils::piecewiseRegression(
 }
 
 std::vector<LineSegment> Utils::piecewiseRegressionSplit(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         float error_threshold)
 {
     struct RegressionLineSegment
@@ -984,7 +989,7 @@ void Utils::mergeCloseLinesBF(
 }
 
 std::vector<LineSegment> Utils::fitLineSegments(
-        const std::vector<Point>& pts,
+        const PointCloud& pts,
         float regression_error_threshold,
         float distance_threshold,
         float angle_threshold)
@@ -1021,7 +1026,7 @@ float Utils::linearInterpolate(
 }
 
 sensor_msgs::PointCloud Utils::convertToROSPC(
-        const std::vector<Point>& pc,
+        const PointCloud& pc,
         const std::string& frame)
 {
     sensor_msgs::PointCloud cloud;
@@ -1187,7 +1192,7 @@ visualization_msgs::Marker Utils::getGeometricPathAsMarker(
 }
 
 visualization_msgs::Marker Utils::getPointcloudAsMarker(
-        const std::vector<Point>& cloud,
+        const PointCloud& cloud,
         const std::string& frame,
         float diameter,
         float red,

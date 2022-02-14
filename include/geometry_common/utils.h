@@ -25,29 +25,30 @@ class Utils
                 unsigned decimal_places);
 
         static Point getMeanPoint(
-                const std::vector<Point>& points,
+                const PointCloud& points,
                 unsigned start_index,
                 unsigned end_index);
 
         static Point getMeanPoint(
-                const std::vector<Point>& points);
+                const PointCloud& points);
 
+        template <typename T>
         static Pose2d getMeanPose(
-                const std::vector<Pose2d>& poses);
+                const T& poses);
 
         static Point getClosestPoint(
-                const std::vector<Point>& points,
+                const PointCloud& points,
                 float x=0.0f,
                 float y=0.0f,
                 float z=0.0f);
 
         static std::vector<std::vector<Point> > clusterPoints(
-                const std::vector<Point>& points,
+                const PointCloud& points,
                 float cluster_distance_threshold=0.1f,
                 size_t min_cluster_size=3);
 
         static std::vector<std::vector<Point> > clusterOrderedPoints(
-                const std::vector<Point>& points,
+                const PointCloud& points,
                 float cluster_distance_threshold=0.1f,
                 size_t min_cluster_size=3);
 
@@ -55,12 +56,12 @@ class Utils
          * Source: https://stackoverflow.com/a/2922778/10460994
          */
         static bool isPointInPolygon(
-                const std::vector<Point> &polygon,
-                const Point &point);
+                const std::vector<Point>& polygon,
+                const Point& point);
 
         static bool isFootprintSafe(
                 const std::vector<Point>& footprint,
-                const std::vector<Point>& points);
+                const PointCloud& points);
 
         static Point getTransformedPoint(
                 const Pose2d& tf,
@@ -148,7 +149,7 @@ class Utils
                 const Point& p);
 
         static float fitLineRANSAC(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 unsigned start_index,
                 unsigned end_index,
                 float& m,
@@ -157,13 +158,13 @@ class Utils
                 size_t itr_limit = 10);
 
         static float fitLineRANSAC(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 float& m, float& c,
                 float delta = 0.2f,
                 size_t itr_limit = 10);
 
         static float fitLineSegmentRANSAC(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 unsigned start_index,
                 unsigned end_index,
                 LineSegment& line_segment,
@@ -171,33 +172,33 @@ class Utils
                 size_t itr_limit = 10);
 
         static float fitLineSegmentRANSAC(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 LineSegment& line_segment,
                 float delta = 0.2f,
                 size_t itr_limit = 10);
 
         static std::vector<LineSegment> fitLineSegmentsRANSAC(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 float score_threshold = 0.9f,
                 float delta = 0.2f,
                 size_t itr_limit = 10);
 
         static float fitLineRegression(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 unsigned start_index,
                 unsigned end_index,
                 LineSegment& line_segment);
 
         static float fitLineRegression(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 LineSegment& line_segment);
 
         static std::vector<LineSegment> piecewiseRegression(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 float error_threshold = 0.1f);
 
         static std::vector<LineSegment> piecewiseRegressionSplit(
-                const std::vector<Point>& pts,
+                const PointCloud& pts,
                 float error_threshold = 0.1f);
 
         static void mergeCloseLines(
@@ -232,7 +233,7 @@ class Utils
                 float t);
 
         static sensor_msgs::PointCloud convertToROSPC(
-                const std::vector<Point>& pc,
+                const PointCloud& pc,
                 const std::string& frame);
 
         static std::vector<Point> convertFromROSPC(
@@ -296,7 +297,7 @@ class Utils
                 float line_width = 0.05f);
 
         static visualization_msgs::Marker getPointcloudAsMarker(
-                const std::vector<Point>& cloud,
+                const PointCloud& cloud,
                 const std::string& frame,
                 float diameter = 0.05f,
                 float red = 1.0f,
