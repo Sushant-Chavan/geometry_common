@@ -20,6 +20,18 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
+    CATKIN_DEPENDS
+        std_msgs
+        sensor_msgs
+        geometry_msgs
+        tf
+        visualization_msgs
+        tf2_geometry_msgs
+    INCLUDE_DIRS
+        include
+    LIBRARIES
+        geometry_utils
+        pointcloud_projector
 )
 
 include_directories(
@@ -62,3 +74,14 @@ if (CATKIN_ENABLE_TESTING)
     )
 endif ()
 
+# =======
+# INSTALL
+# =======
+install(TARGETS geometry_utils pointcloud_projector
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
