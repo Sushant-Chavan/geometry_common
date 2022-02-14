@@ -49,6 +49,7 @@ add_library(geometry_utils
         # data structures
         src/point.cpp
         src/pose_2d.cpp
+        src/box.cpp
         src/line_segment.cpp
 )
 target_link_libraries(geometry_utils
