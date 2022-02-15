@@ -266,7 +266,7 @@ std::vector<Pose2d> Utils::getTrajectory(
     return traj;
 }
 
-std::vector<float> Utils::mulltiplyMatrixToVector(
+std::vector<float> Utils::multiplyMatrixToVector(
         const std::vector<float>& mat_a,
         const std::vector<float>& vec_b)
 {
@@ -308,7 +308,7 @@ void Utils::transformPoint(
         Point& pt)
 {
     std::vector<float> p_vec{pt.x, pt.y, pt.z, 1.0f};
-    std::vector<float> transformed_p_vec = Utils::mulltiplyMatrixToVector(tf_mat, p_vec);
+    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
     pt.x = transformed_p_vec[0];
     pt.y = transformed_p_vec[1];
     pt.z = transformed_p_vec[2];
@@ -1016,6 +1016,53 @@ float Utils::signedClip(
     return sign * Utils::clip(fabsf(value), max_limit, min_limit);
 }
 
+float Utils::clipAngle(
+        float raw_angle)
+{
+    float angle = raw_angle;
+    if ( angle > M_PI )
+    {
+        angle -= 2*M_PI;
+    }
+    else if ( angle < -M_PI )
+    {
+        angle += 2*M_PI;
+    }
+    return angle;
+}
+
+Pose2d Utils::applyVelLimits(
+        const Pose2d& vel,
+        const Pose2d& max_vel,
+        const Pose2d& min_vel)
+{
+    Pose2d clipped_vel;
+    clipped_vel.x = Utils::clip(vel.x, max_vel.x, min_vel.x);
+    clipped_vel.y = Utils::clip(vel.y, max_vel.y, min_vel.y);
+    clipped_vel.theta = Utils::clip(vel.theta, max_vel.theta, min_vel.theta);
+    return clipped_vel;
+}
+
+Pose2d Utils::applyAccLimits(
+        const Pose2d& cmd_vel,
+        const Pose2d& curr_vel,
+        const Pose2d& max_acc,
+        float loop_rate)
+{
+    Pose2d vel;
+    Pose2d max_acc_per_loop = max_acc * (1.0f/loop_rate);
+    vel.x = Utils::clip(cmd_vel.x,
+                        curr_vel.x + max_acc_per_loop.x,
+                        curr_vel.x - max_acc_per_loop.x);
+    vel.y = Utils::clip(cmd_vel.y,
+                        curr_vel.y + max_acc_per_loop.y,
+                        curr_vel.y - max_acc_per_loop.y);
+    vel.theta = Utils::clip(cmd_vel.theta,
+                            curr_vel.theta + max_acc_per_loop.theta,
+                            curr_vel.theta - max_acc_per_loop.theta);
+    return vel;
+}
+
 float Utils::linearInterpolate(
         float src,
         float target,
@@ -1075,7 +1122,7 @@ std::vector<float> Utils::getInverted2DTransformMat(
     inv_tf.theta *= -1; // reverse angle
     std::vector<float> inv_mat = inv_tf.getMat();
     std::vector<float> p_vec{-tf.x, -tf.y, 0.0f};
-    std::vector<float> transformed_vec = Utils::mulltiplyMatrixToVector(inv_mat, p_vec);
+    std::vector<float> transformed_vec = Utils::multiplyMatrixToVector(inv_mat, p_vec);
     inv_mat[2] = transformed_vec[0];
     inv_mat[5] = transformed_vec[1];
     return inv_mat;

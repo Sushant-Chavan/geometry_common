@@ -76,7 +76,7 @@ class Utils
                 size_t num_of_poses,
                 float future_time);
 
-        static std::vector<float> mulltiplyMatrixToVector(
+        static std::vector<float> multiplyMatrixToVector(
                 const std::vector<float>& mat_a,
                 const std::vector<float>& vec_b);
 
@@ -226,6 +226,20 @@ class Utils
                 float value,
                 float max_limit,
                 float min_limit);
+
+        static float clipAngle(
+                float raw_angle);
+
+        static Pose2d applyVelLimits(
+                const Pose2d& vel,
+                const Pose2d& max_vel,
+                const Pose2d& min_vel);
+
+        static Pose2d applyAccLimits(
+                const Pose2d& cmd_vel,
+                const Pose2d& curr_vel,
+                const Pose2d& max_acc,
+                float loop_rate);
 
         static float linearInterpolate(
                 float src,
