@@ -47,17 +47,25 @@ class PointCloudProjector
         bool configure(
                 const std::string& config_file);
 
-        void transformPointCloud(
-                std::vector<geometry_common::Point>& pc) const;
-
-        void applyFilter(
-                std::vector<geometry_common::Point>& pc) const;
+        geometry_common::PointCloud transformAndFilterPointCloud(
+                const geometry_common::PointCloud& cloud_in) const;
 
         std::vector<float> pointCloudToScan(
-                const std::vector<geometry_common::Point>& pc) const;
+                const geometry_common::PointCloud& cloud_in) const;
 
-        std::vector<geometry_common::Point> pointCloudTo2DPointCloud(
-                const std::vector<geometry_common::Point>& pc) const;
+        std::vector<float> pointCloudToProjectedScan(
+                const geometry_common::PointCloud& cloud_in) const;
+
+        std::vector<float> pointCloudToProjectedScan(
+                const geometry_common::PointCloud& cloud_in,
+                geometry_common::PointCloud& filtered_cloud) const;
+
+        geometry_common::PointCloud pointCloudToProjectedPointCloud(
+                const geometry_common::PointCloud& cloud_in) const;
+
+        geometry_common::PointCloud pointCloudToProjectedPointCloud(
+                const geometry_common::PointCloud& cloud_in,
+                geometry_common::PointCloud& filtered_cloud) const;
 
         float getRadialDistMax() const;
 
@@ -76,6 +84,7 @@ class PointCloudProjector
         std::vector<float> camera_to_target_tf_mat_;
         float passthrough_min_z_, passthrough_max_z_;
         float radial_dist_min_, radial_dist_max_;
+        float radial_dist_min_sq_, radial_dist_max_sq_;
         float angle_min_, angle_max_;
         bool is_angle_flipped_;
         float angle_increment_, angle_increment_inv_;
@@ -84,9 +93,7 @@ class PointCloudProjector
         ValidityFunction external_validity_func_;
 
         bool isPointValid(
-                const geometry_common::Point& pt,
-                float dist,
-                float angle) const;
+                const geometry_common::Point& pt) const;
 
 };
 

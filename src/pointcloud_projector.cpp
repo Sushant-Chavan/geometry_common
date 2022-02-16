@@ -2,13 +2,16 @@
 #include <math.h>
 
 using geometry_common::Point;
+using geometry_common::PointCloud;
 using geometry_common::Utils;
 
 PointCloudProjector::PointCloudProjector():
     passthrough_min_z_(0.0f),
     passthrough_max_z_(2.0f),
     radial_dist_min_(0.1f),
-    radial_dist_max_(1000.0f),
+    radial_dist_max_(1e3f),
+    radial_dist_min_sq_(0.01f),
+    radial_dist_max_sq_(1e6f),
     angle_min_(-3.14f),
     angle_max_(3.14f),
     is_angle_flipped_(false),
@@ -56,7 +59,9 @@ bool PointCloudProjector::configure(
     passthrough_min_z_ = passthrough_min_z;
     passthrough_max_z_ = passthrough_max_z;
     radial_dist_min_ = radial_dist_min;
+    radial_dist_min_sq_ = pow(radial_dist_min_, 2);
     radial_dist_max_ = radial_dist_max;
+    radial_dist_max_sq_ = pow(radial_dist_max_sq_, 2);
     angle_min_ = angle_min;
     angle_max_ = angle_max;
     is_angle_flipped_ = ( angle_min_ > angle_max_ );
@@ -147,52 +152,31 @@ bool PointCloudProjector::configure(
     return configure(config_params_yaml);
 }
 
-void PointCloudProjector::transformPointCloud(
-        std::vector<Point>& pc) const
+PointCloud PointCloudProjector::transformAndFilterPointCloud(
+        const PointCloud& cloud_in) const
 {
-    for ( Point& p : pc )
+    PointCloud cloud_out;
+    cloud_out.reserve(cloud_in.size());
+    for ( Point pt : cloud_in )
     {
-        Utils::transformPoint(camera_to_target_tf_mat_, p);
-    }
-}
-
-void PointCloudProjector::applyFilter(
-        std::vector<Point>& pc) const
-{
-    std::vector<Point> result_pc;
-    result_pc.reserve(pc.size());
-    for ( const Point& pt : pc )
-    {
-        float dist = sqrt(pow(pt.x, 2) + pow(pt.y, 2));
-        float angle = atan2(pt.y, pt.x);
-        if ( isPointValid(pt, dist, angle) )
+        Utils::transformPoint(camera_to_target_tf_mat_, pt);
+        if ( isPointValid(pt) )
         {
-            result_pc.push_back(pt);
+            cloud_out.push_back(pt);
         }
     }
-    pc = result_pc;
-    pc.shrink_to_fit();
+    return cloud_out;
 }
 
 std::vector<float> PointCloudProjector::pointCloudToScan(
-        const std::vector<Point>& pc) const
+        const PointCloud& cloud_in) const
 {
     std::vector<float> scan(num_of_scan_pts_, radial_dist_max_);
 
-    for ( Point pt : pc )
+    for ( const Point& pt : cloud_in )
     {
-        /* tranform point into target frame */
-        Utils::transformPoint(camera_to_target_tf_mat_, pt);
-
-        /* filter point */
-        float dist = pt.magnitude();
+        float dist = sqrt(pow(pt.x, 2) + pow(pt.y, 2));
         float angle = atan2(pt.y, pt.x);
-        if ( !isPointValid(pt, dist, angle) )
-        {
-            continue;
-        }
-
-        /* convert to scan */
         if ( is_angle_flipped_ && angle < angle_max_ && angle > -M_PI )
         {
             angle += 2*M_PI;
@@ -206,31 +190,55 @@ std::vector<float> PointCloudProjector::pointCloudToScan(
     return scan;
 }
 
-std::vector<Point> PointCloudProjector::pointCloudTo2DPointCloud(
-        const std::vector<Point>& pc) const
+std::vector<float> PointCloudProjector::pointCloudToProjectedScan(
+        const PointCloud& cloud_in) const
 {
-    std::vector<float> scan = pointCloudToScan(pc);
+    PointCloud filtered_cloud;
+    return pointCloudToProjectedScan(cloud_in, filtered_cloud);
+}
+
+std::vector<float> PointCloudProjector::pointCloudToProjectedScan(
+        const PointCloud& cloud_in,
+        PointCloud& filtered_cloud) const
+{
+    filtered_cloud = transformAndFilterPointCloud(cloud_in);
+    return pointCloudToScan(filtered_cloud);
+}
+
+PointCloud PointCloudProjector::pointCloudToProjectedPointCloud(
+        const PointCloud& cloud_in) const
+{
+    PointCloud filtered_cloud;
+    return pointCloudToProjectedPointCloud(cloud_in, filtered_cloud);
+}
+
+PointCloud PointCloudProjector::pointCloudToProjectedPointCloud(
+        const PointCloud& cloud_in,
+        PointCloud& filtered_cloud) const
+{
+    filtered_cloud = transformAndFilterPointCloud(cloud_in);
+    std::vector<float> scan = pointCloudToScan(filtered_cloud);
 
     /* convert from scan to flat pointcloud */
-    std::vector<Point> flat_pc;
-    flat_pc.reserve(scan.size());
+    PointCloud flat_cloud;
+    flat_cloud.reserve(scan.size());
     for ( size_t i = 0; i < scan.size(); i++ )
     {
         if ( scan[i] == radial_dist_max_ )
         {
             continue;
         }
-        flat_pc.push_back(Point(scan[i] * cos(angle_min_ + i*angle_increment_),
-                                scan[i] * sin(angle_min_ + i*angle_increment_)));
+        flat_cloud.push_back(Point(scan[i] * cos(angle_min_ + i*angle_increment_),
+                                   scan[i] * sin(angle_min_ + i*angle_increment_)));
     }
-    return flat_pc;
+    return flat_cloud;
 }
 
 bool PointCloudProjector::isPointValid(
-        const Point& pt,
-        float dist,
-        float angle) const
+        const Point& pt) const
 {
+    float angle = atan2(pt.y, pt.x);
+    float dist_sq = pow(pt.x, 2) + pow(pt.y, 2);
     if ( std::isnan(pt.x) || std::isnan(pt.y) || std::isnan(pt.z) )
     {
         return false;
@@ -243,7 +251,7 @@ bool PointCloudProjector::isPointValid(
     }
 
     /* radial dist filter */
-    if ( dist < radial_dist_min_ || dist > radial_dist_max_ )
+    if ( dist_sq < radial_dist_min_sq_ || dist_sq > radial_dist_max_sq_ )
     {
         return false;
     }

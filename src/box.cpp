@@ -32,8 +32,8 @@ bool Box::initialiseBoxFromYAML(const YAML::Node& yaml_box_params, Box& box)
 bool Box::isPointInsideBox(const Point& p) const
 {
     return ( p.x >= min_x && p.x <= max_x &&
-            p.y >= min_y && p.y <= max_y &&
-            p.z >= min_z && p.z <= max_z );
+             p.y >= min_y && p.y <= max_y &&
+             p.z >= min_z && p.z <= max_z );
 }
 
 std::ostream& operator << (std::ostream& out, const Box& box)
