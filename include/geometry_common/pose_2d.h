@@ -33,15 +33,21 @@ class Pose2d
 
         virtual ~Pose2d();
 
-        geometry_msgs::PoseStamped getPoseStamped(std::string frame="map") const;
+        geometry_msgs::PoseStamped getPoseStamped(const std::string& frame="map") const;
 
         geometry_msgs::Pose getPose() const;
 
         std::vector<float> getMat() const;
 
-        visualization_msgs::Marker getMarker(std::string frame = "base_link",
-                float red=1.0f, float green=0.0f, float blue=0.0f,
-                float size_x=0.3, float size_y=0.05, float size_z=0.05) const;
+        visualization_msgs::Marker getMarker(
+                const std::string& frame = "base_link",
+                float red = 1.0f,
+                float green = 0.0f,
+                float blue = 0.0f,
+                float alpha = 1.0f,
+                float size_x = 0.3f,
+                float size_y = 0.05f,
+                float size_z = 0.05f) const;
 
         inline float getCartDist(const Pose2d& p) const
         {

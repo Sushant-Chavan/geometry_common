@@ -40,7 +40,7 @@ Pose2d::~Pose2d()
 {
 }
 
-geometry_msgs::PoseStamped Pose2d::getPoseStamped(std::string frame) const
+geometry_msgs::PoseStamped Pose2d::getPoseStamped(const std::string& frame) const
 {
     geometry_msgs::PoseStamped pose;
     pose.header.frame_id = frame;
@@ -66,8 +66,8 @@ std::vector<float> Pose2d::getMat() const
     return Utils::get2DTransformMat(x, y, theta);
 }
 
-visualization_msgs::Marker Pose2d::getMarker(std::string frame,
-        float red, float green, float blue,
+visualization_msgs::Marker Pose2d::getMarker(const std::string& frame,
+        float red, float green, float blue, float alpha,
         float size_x, float size_y, float size_z) const
 {
     visualization_msgs::Marker marker;
@@ -77,7 +77,7 @@ visualization_msgs::Marker Pose2d::getMarker(std::string frame,
     marker.color.r = red;
     marker.color.g = green;
     marker.color.b = blue;
-    marker.color.a = 1.0;
+    marker.color.a = alpha;
     marker.scale.x = size_x;
     marker.scale.y = size_y;
     marker.scale.z = size_z;
