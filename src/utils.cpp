@@ -1082,11 +1082,7 @@ sensor_msgs::PointCloud Utils::convertToROSPC(
     cloud.points.reserve(pc.size());
     for ( const Point& pt : pc )
     {
-        geometry_msgs::Point32 p;
-        p.x = pt.x;
-        p.y = pt.y;
-        p.z = pt.z;
-        cloud.points.push_back(p);
+        cloud.points.push_back(pt.getPoint32());
     }
     return cloud;
 }
