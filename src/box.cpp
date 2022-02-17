@@ -29,6 +29,26 @@ bool Box::initialiseBoxFromYAML(const YAML::Node& yaml_box_params, Box& box)
     return true;
 }
 
+visualization_msgs::Marker Box::getMarker(const std::string& frame,
+        float red, float green, float blue, float alpha) const
+{
+    visualization_msgs::Marker marker;
+    marker.type = visualization_msgs::Marker::CUBE;
+    marker.header.frame_id = frame;
+    marker.color.r = red;
+    marker.color.g = green;
+    marker.color.b = blue;
+    marker.color.a = alpha;
+    marker.scale.x = max_x-min_x;
+    marker.scale.y = max_y-min_y;
+    marker.scale.z = max_z-min_z;
+    marker.pose.position.x = (max_x+min_x)/2;
+    marker.pose.position.y = (max_y+min_y)/2;
+    marker.pose.position.z = (max_z+min_z)/2;
+    marker.pose.orientation.w = 1.0f;
+    return marker;
+}
+
 bool Box::isPointInsideBox(const Point& p) const
 {
     return ( p.x >= min_x && p.x <= max_x &&

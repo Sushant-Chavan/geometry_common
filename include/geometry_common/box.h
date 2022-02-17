@@ -3,6 +3,7 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <visualization_msgs/Marker.h>
 #include <geometry_common/point.h>
 
 namespace geometry_common
@@ -28,6 +29,13 @@ class Box
         virtual ~Box() {};
 
         static bool initialiseBoxFromYAML(const YAML::Node& yaml_box_params, Box& box);
+
+        visualization_msgs::Marker getMarker(
+                const std::string& frame = "base_link",
+                float red = 1.0f,
+                float green = 0.0f,
+                float blue = 0.0f,
+                float alpha = 1.0f) const;
 
         bool isPointInsideBox(const Point& p) const;
 
