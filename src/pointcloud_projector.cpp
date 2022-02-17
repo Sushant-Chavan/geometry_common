@@ -68,10 +68,10 @@ bool PointCloudProjector::configure(
     angle_increment_ = angle_increment;
     angle_increment_inv_ = 1.0f/angle_increment_;
 
-    num_of_scan_pts_ = 1 + ceil((angle_max_ - angle_min_) * angle_increment_inv_);
+    num_of_scan_pts_ = 1 + round((angle_max_ - angle_min_) * angle_increment_inv_);
     if ( is_angle_flipped_ )
     {
-        num_of_scan_pts_ = ceil(((M_PI - angle_min_) + (angle_max_ + M_PI)) * angle_increment_inv_);
+        num_of_scan_pts_ = round(((M_PI - angle_min_) + (angle_max_ + M_PI)) * angle_increment_inv_);
     }
     return true;
 }
