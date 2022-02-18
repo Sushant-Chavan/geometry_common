@@ -256,6 +256,9 @@ class Utils
         static std::vector<Point> convertFromROSPC(
                 const sensor_msgs::PointCloud2& pc);
 
+        static PointCloud convertFromROSScan(
+                const sensor_msgs::LaserScan& scan);
+
         static std::vector<float> getInverted2DTransformMat(
                 const Pose2d& tf);
 

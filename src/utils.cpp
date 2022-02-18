@@ -1109,6 +1109,26 @@ std::vector<Point> Utils::convertFromROSPC(
     sensor_msgs::PointCloud pointcloud_msg;
     sensor_msgs::convertPointCloud2ToPointCloud(pc, pointcloud_msg);
     return Utils::convertFromROSPC(pointcloud_msg);
+
+PointCloud Utils::convertFromROSScan(
+        const sensor_msgs::LaserScan& scan)
+{
+    PointCloud laser_pts;
+    for ( size_t i = 0; i < scan.ranges.size(); i++ )
+    {
+        if ( std::isnan(scan.ranges[i]) ||
+             std::isinf(scan.ranges[i]) ||
+             scan.ranges[i] >= scan.range_max ||
+             scan.ranges[i] <= scan.range_min )
+        {
+            continue;
+        }
+        float angle = scan.angle_min + (i * scan.angle_increment);
+        laser_pts.push_back(Point(scan.ranges[i] * cos(angle),
+                                  scan.ranges[i] * sin(angle),
+                                  0.0f));
+    }
+    return laser_pts;
 }
 
 std::vector<float> Utils::getInverted2DTransformMat(
