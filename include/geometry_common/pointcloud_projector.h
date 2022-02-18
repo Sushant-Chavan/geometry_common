@@ -51,7 +51,20 @@ class PointCloudProjector
                 const geometry_common::PointCloud& cloud_in) const;
 
         std::vector<float> pointCloudToScan(
-                const geometry_common::PointCloud& cloud_in) const;
+                const geometry_common::PointCloud& cloud_in,
+                float angle_min,
+                float angle_max) const;
+
+        std::vector<float> pointCloudToProjectedScan(
+                const geometry_common::PointCloud& cloud_in,
+                float angle_min,
+                float angle_max) const;
+
+        std::vector<float> pointCloudToProjectedScan(
+                const geometry_common::PointCloud& cloud_in,
+                geometry_common::PointCloud& filtered_cloud,
+                float angle_min,
+                float angle_max) const;
 
         std::vector<float> pointCloudToProjectedScan(
                 const geometry_common::PointCloud& cloud_in) const;
@@ -79,6 +92,11 @@ class PointCloudProjector
 
         void setPassthroughMaxZ(
                 float passthrough_max_z);
+
+        static size_t calculateNumOfScanPts(
+                float angle_min,
+                float angle_max,
+                float angle_increment);
 
     private:
         std::vector<float> camera_to_target_tf_mat_;
