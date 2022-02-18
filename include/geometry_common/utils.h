@@ -8,6 +8,7 @@
 #include <nav_msgs/Path.h>
 #include <sensor_msgs/PointCloud.h>
 #include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/LaserScan.h>
 
 #include <geometry_common/pose_2d.h>
 #include <geometry_common/point.h>
@@ -250,11 +251,20 @@ class Utils
                 const PointCloud& pc,
                 const std::string& frame);
 
-        static std::vector<Point> convertFromROSPC(
+        static PointCloud convertFromROSPC(
                 const sensor_msgs::PointCloud& pc);
 
-        static std::vector<Point> convertFromROSPC(
-                const sensor_msgs::PointCloud2& pc);
+        /*
+         * `row_sub_sample_factor` and `col_sub_sample_factor` parameterise how
+         * many points are skipped.
+         * e.g. if both their values is 1, no points are skipped
+         *      if both their values are 2 and it is an organised cloud, the
+         *      resulting cloud will be 1/4th the input cloud
+         */
+        static PointCloud convertFromROSPC(
+                const sensor_msgs::PointCloud2& cloud_msg,
+                size_t row_sub_sample_factor = 1,
+                size_t col_sub_sample_factor = 1);
 
         static PointCloud convertFromROSScan(
                 const sensor_msgs::LaserScan& scan);

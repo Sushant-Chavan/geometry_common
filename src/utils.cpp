@@ -3,7 +3,7 @@
 #include <cassert>
 #include <list>
 #include <deque>
-#include <sensor_msgs/point_cloud_conversion.h>
+#include <sensor_msgs/point_cloud2_iterator.h>
 
 namespace geometry_common
 {
@@ -1087,7 +1087,7 @@ sensor_msgs::PointCloud Utils::convertToROSPC(
     return cloud;
 }
 
-std::vector<Point> Utils::convertFromROSPC(
+PointCloud Utils::convertFromROSPC(
         const sensor_msgs::PointCloud& pc)
 {
     std::vector<Point> points;
@@ -1099,16 +1099,51 @@ std::vector<Point> Utils::convertFromROSPC(
     return points;
 }
 
-std::vector<Point> Utils::convertFromROSPC(
-        const sensor_msgs::PointCloud2& pc)
+PointCloud Utils::convertFromROSPC(
+        const sensor_msgs::PointCloud2& cloud_msg,
+        size_t row_sub_sample_factor,
+        size_t col_sub_sample_factor)
 {
-    if ( pc.height == 0 || pc.width == 0 )
+    if ( cloud_msg.height == 0 || cloud_msg.width == 0 )
     {
         return std::vector<Point>();
     }
-    sensor_msgs::PointCloud pointcloud_msg;
-    sensor_msgs::convertPointCloud2ToPointCloud(pc, pointcloud_msg);
-    return Utils::convertFromROSPC(pointcloud_msg);
+    PointCloud points;
+    if ( cloud_msg.height == 1 ) // unorganised cloud
+    {
+        row_sub_sample_factor = 1;
+    }
+    points.reserve((cloud_msg.height / row_sub_sample_factor) *
+                   (cloud_msg.width / col_sub_sample_factor));
+    size_t col = 0;
+    size_t col_remainder = cloud_msg.width % col_sub_sample_factor;
+    size_t row_skip_factor = (cloud_msg.width * (row_sub_sample_factor-1)) + col_remainder;
+    sensor_msgs::PointCloud2ConstIterator<float> iter_x(cloud_msg, "x");
+    sensor_msgs::PointCloud2ConstIterator<float> iter_y(cloud_msg, "y");
+    sensor_msgs::PointCloud2ConstIterator<float> iter_z(cloud_msg, "z");
+    while ( iter_x != iter_x.end() )
+    {
+        if ( std::isnan(*iter_x) || std::isnan(*iter_y) || std::isnan(*iter_z) )
+        {
+            continue;
+        }
+        points.push_back(Point(*iter_x, *iter_y, *iter_z));
+
+        col += col_sub_sample_factor;
+        if ( col >= cloud_msg.width )
+        {
+            col = 0;
+            iter_x += row_skip_factor;
+            iter_y += row_skip_factor;
+            iter_z += row_skip_factor;
+            continue;
+        }
+        iter_x += col_sub_sample_factor;
+        iter_y += col_sub_sample_factor;
+        iter_z += col_sub_sample_factor;
+    }
+    return points;
+}
 
 PointCloud Utils::convertFromROSScan(
         const sensor_msgs::LaserScan& scan)
