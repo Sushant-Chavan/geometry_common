@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(geometry_common)
 
-add_compile_options(-std=c++11 -Wall)
+add_compile_options(-std=c++11 -Wall -O3)
 
 if (WIN32)
     find_package(yaml-cpp REQUIRED)
