@@ -1,3 +1,35 @@
 #!/bin/bash
 
-catkin run_tests --this | sed -En '/^-- run_tests.py/,/^-- run_tests.py/p'                    
+# ==============================================================================
+
+# Build all test scripts
+echo "Building test scripts"
+output="`(catkin build --this --catkin-make-args run_tests --)`"
+success=$?
+if [[ $success != 0 ]]; then
+    echo "$output"
+    echo -e "\nBuilding test scripts failed. Output printed above."
+    exit 1
+fi
+echo "Test scripts built without error"
+
+# ==============================================================================
+
+# Find out the package name and executables
+current_dir="`(dirname \"$0\")`"                  # relative
+current_dir="`(cd \"$current_dir\" && pwd)`"  # absolutized and normalized
+catkin_pkd_dir="`( cd \"$current_dir\" && cd .. && pwd )`"
+cmakelists_file_path="$catkin_pkd_dir""/CMakeLists.txt"
+cmakelists_file="`(cat $cmakelists_file_path)`"
+pkg_name="`(echo "$cmakelists_file" | sed -n 's/^project(\(\S*\).*)/\1/p')`"
+executables="`(echo "$cmakelists_file" | sed -n 's/^\s*catkin_add_gtest(\(\S*\)/\1/p')`"
+
+# ==============================================================================
+
+# run all test executables one after another
+for executable_name in $executables; do
+    echo "Executing ""$executable_name"
+    executable="`(catkin_find "$pkg_name" "$executable_name")`"
+    $executable
+    echo ""
+done

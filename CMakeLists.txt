@@ -72,6 +72,16 @@ if (CATKIN_ENABLE_TESTING)
     )
     target_link_libraries(point_test
         geometry_utils
+        ${YAML_CPP_LIBRARIES}
+        ${catkin_LIBRARIES}
+    )
+    catkin_add_gtest(utils_test
+        test/utils_test.cpp
+    )
+    target_link_libraries(utils_test
+        geometry_utils
+        ${YAML_CPP_LIBRARIES}
+        ${catkin_LIBRARIES}
     )
 endif ()
 
