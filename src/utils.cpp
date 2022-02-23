@@ -1452,6 +1452,28 @@ visualization_msgs::Marker Utils::getPolygonAsMarker(
     return marker;
 }
 
+visualization_msgs::Marker Utils::getStringAsMarker(
+        const std::string& string_label,
+        const std::string& frame,
+        float red,
+        float green,
+        float blue,
+        float alpha,
+        float size)
+{
+    visualization_msgs::Marker marker;
+    marker.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
+    marker.header.frame_id = frame;
+    marker.color.r = red;
+    marker.color.g = green;
+    marker.color.b = blue;
+    marker.color.a = alpha;
+    marker.scale.z = size;
+    marker.pose.orientation.w = 1.0f;
+    marker.text = string_label;
+    return marker;
+}
+
 std::string Utils::getMatrixAsString(
         const std::vector<float>& mat,
         size_t N)

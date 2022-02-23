@@ -355,6 +355,15 @@ class Utils
                 float blue = 0.0f,
                 float alpha = 1.0f);
 
+        static visualization_msgs::Marker getStringAsMarker(
+                const std::string& string_label,
+                const std::string& frame,
+                float red = 0.0f,
+                float green = 0.0f,
+                float blue = 0.0f,
+                float alpha = 1.0f,
+                float size = 0.2f);
+
         static std::string getMatrixAsString(
                 const std::vector<float>& mat,
                 size_t N);
