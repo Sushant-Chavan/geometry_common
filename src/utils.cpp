@@ -1300,7 +1300,7 @@ std::vector<Point> Utils::calcConvexHullOfPolygons(
     }
 
     /* find the lowest left most point */
-    T lower_left_pt(pts[0]);
+    Point lower_left_pt(pts[0]);
     for ( size_t i = 0; i < pts.size(); i++ )
     {
         if ( pts[i].y < lower_left_pt.y )
