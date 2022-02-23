@@ -64,9 +64,35 @@ class Utils
                 const std::vector<Point>& footprint,
                 const PointCloud& points);
 
+        /*
+         * 2D transform (returns a 2D point which only has x and y component)
+         */
         static Point getTransformedPoint(
                 const Pose2d& tf,
                 const Point& pt);
+
+        /*
+         * 3D transform (returns a 3D point which has x, y and z component)
+         */
+        static Point getTransformedPoint(
+                const std::vector<float>& tf_mat,
+                const Point& pt);
+
+        static void transformPoint2D(
+                const std::vector<float>& tf_mat,
+                Point& pt);
+
+        static void transformPoint(
+                const std::vector<float>& tf_mat,
+                Point& pt);
+
+        static Pose2d getTransformedPose(
+                const std::vector<float> tf_mat,
+                const Pose2d& pose);
+
+        static Pose2d getTransformedPose(
+                const Pose2d& tf,
+                const Pose2d& pose);
 
         static std::vector<Point> getTransformedFootprint(
                 const Pose2d& tf,
@@ -85,10 +111,6 @@ class Utils
                 const std::vector<float>& mat_a,
                 const std::vector<float>& mat_b,
                 size_t N);
-
-        static void transformPoint(
-                const std::vector<float>& tf_mat,
-                Point& pt);
 
         static std::vector<float> get2DTransformMat(
                 float x,

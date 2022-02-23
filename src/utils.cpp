@@ -225,7 +225,63 @@ Point Utils::getTransformedPoint(
     Point transformed_pt = pt;
     transformed_pt.x = (cos(tf.theta) * pt.x) + (-sin(tf.theta) * pt.y) + tf.x;
     transformed_pt.y = (sin(tf.theta) * pt.x) + (cos(tf.theta) * pt.y) + tf.y;
+    transformed_pt.z = 0.0f;
     return transformed_pt;
+}
+
+Point Utils::getTransformedPoint(
+        const std::vector<float>& tf_mat,
+        const Point& pt)
+{
+    Point transformed_pt(pt);
+    assert(tf_mat.size() == 16 || tf_mat.size() == 9);
+    if ( tf_mat.size() == 16 )
+    {
+        Utils::transformPoint(tf_mat, transformed_pt);
+    }
+    else
+    {
+        Utils::transformPoint2D(tf_mat, transformed_pt);
+    }
+    return transformed_pt;
+}
+
+void Utils::transformPoint2D(
+        const std::vector<float>& tf_mat,
+        Point& pt)
+{
+    assert(tf_mat.size() == 9);
+    std::vector<float> p_vec{pt.x, pt.y, 1.0f};
+    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
+    pt.x = transformed_p_vec[0];
+    pt.y = transformed_p_vec[1];
+}
+
+void Utils::transformPoint(
+        const std::vector<float>& tf_mat,
+        Point& pt)
+{
+    assert(tf_mat.size() == 16);
+    std::vector<float> p_vec{pt.x, pt.y, pt.z, 1.0f};
+    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
+    pt.x = transformed_p_vec[0];
+    pt.y = transformed_p_vec[1];
+    pt.z = transformed_p_vec[2];
+}
+
+Pose2d Utils::getTransformedPose(
+        const std::vector<float> tf_mat,
+        const Pose2d& pose)
+{
+    assert(tf_mat.size() == 9);
+    return Pose2d(Utils::multiplyMatrices(tf_mat, pose.getMat(), 3));
+}
+
+Pose2d Utils::getTransformedPose(
+        const Pose2d& tf,
+        const Pose2d& pose)
+{
+    return Utils::getTransformedPose(tf.getMat(), pose);
 }
 
 std::vector<Point> Utils::getTransformedFootprint(
@@ -301,17 +357,6 @@ std::vector<float> Utils::multiplyMatrices(
         }
     }
     return mat_c;
-}
-
-void Utils::transformPoint(
-        const std::vector<float>& tf_mat,
-        Point& pt)
-{
-    std::vector<float> p_vec{pt.x, pt.y, pt.z, 1.0f};
-    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
-    pt.x = transformed_p_vec[0];
-    pt.y = transformed_p_vec[1];
-    pt.z = transformed_p_vec[2];
 }
 
 std::vector<float> Utils::get2DTransformMat(
@@ -1183,6 +1228,7 @@ std::vector<float> Utils::getInverted2DTransformMat(
 std::vector<float> Utils::getInverted2DTransformMat(
         const std::vector<float>& tf)
 {
+    assert(tf.size() == 9);
     return Utils::getInverted2DTransformMat(Pose2d(tf));
 }
 
