@@ -301,6 +301,11 @@ class Utils
                 float max_perp_dist = 3.0f,
                 float step_size = 0.1f);
 
+        static float getAngleBetweenPoints(
+                const Point& a,
+                const Point& b,
+                const Point& c);
+
         static bool isPolygonConvex(
                 const std::vector<Point>& polygon);
 

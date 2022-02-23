@@ -1245,6 +1245,17 @@ std::vector<Point> Utils::generatePerpendicularPoints(
     return pts;
 }
 
+float Utils::getAngleBetweenPoints(
+        const Point& a,
+        const Point& b,
+        const Point& c)
+{
+    Point vec_b_a = a - b;
+    Point vec_b_c = c - b;
+    return Utils::clipAngle(atan2(vec_b_c.y, vec_b_c.x) -
+                            atan2(vec_b_a.y, vec_b_a.x));
+}
+
 bool Utils::isPolygonConvex(
         const std::vector<Point>& polygon)
 {
@@ -1327,11 +1338,8 @@ std::vector<Point> Utils::calcConvexHullOfPolygons(
     {
         while ( convex_hull.size() > 1 )
         {
-            const Point& a = convex_hull.back();
-            const Point& b = convex_hull[convex_hull.size()-2];
-            float angle = atan2(p.y - a.y, p.x - a.x)
-                        - atan2(a.y - b.y, a.x - b.x);
-            angle = Utils::clipAngle(angle);
+            std::vector<Point>::const_iterator it = convex_hull.end();
+            float angle = Utils::getAngleBetweenPoints(p, *(it-1), *(it-2));
             if ( angle > 0 ) // counter clockwise turn is allowed
             {
                 break;

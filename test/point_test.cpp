@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <geometry_common/point.h>
 
-// Demonstrate some basic assertions.
-TEST(PointTest, constructor) {
+TEST(PointTest, constructor)
+{
     geometry_common::Point p;
     EXPECT_EQ(p.x, 0.0f) << "p.x is not zero";
     EXPECT_EQ(p.y, 0.0f) << "p.x is not zero";
