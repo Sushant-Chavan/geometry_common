@@ -1245,6 +1245,104 @@ std::vector<Point> Utils::generatePerpendicularPoints(
     return pts;
 }
 
+bool Utils::isPolygonConvex(
+        const std::vector<Point>& polygon)
+{
+    if ( polygon.size() <= 2 )
+    {
+        return true;
+    }
+
+    Point m = Utils::getMeanPoint(polygon);
+    if ( !Utils::isPointInPolygon(polygon, m) )
+    {
+        return false;
+    }
+
+    for ( size_t i = 0; i < polygon.size(); i++ )
+    {
+        Point p1(polygon[i]);
+        Point p2(polygon[(i+2)%polygon.size()]);
+        m = (p1 + p2) * 0.5f;
+        if ( !Utils::isPointInPolygon(polygon, m) )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+float Utils::calcPolygonArea(
+        const std::vector<Point>& polygon)
+{
+    float area = 0.0f;
+    size_t i, j;
+    for ( i = 0; i < polygon.size(); i++ )
+    {
+        j = (i+1) % polygon.size();
+        area += (polygon[i].x * polygon[j].y) - (polygon[i].y * polygon[j].x);
+    }
+    return area/2;
+}
+
+std::vector<Point> Utils::calcConvexHullOfPolygons(
+        const std::vector<Point>& polygon_a,
+        const std::vector<Point>& polygon_b)
+{
+    /* aggregate all points */
+    std::vector<Point> pts;
+    pts.reserve(pts.size() + polygon_a.size() + polygon_b.size());
+    pts.insert(pts.end(), polygon_a.begin(), polygon_a.end());
+    pts.insert(pts.end(), polygon_b.begin(), polygon_b.end());
+    if ( pts.size() < 3 )
+    {
+        return pts;
+    }
+
+    /* find the lowest left most point */
+    T lower_left_pt(pts[0]);
+    for ( size_t i = 0; i < pts.size(); i++ )
+    {
+        if ( pts[i].y < lower_left_pt.y )
+        {
+            lower_left_pt = pts[i];
+        }
+        else if ( pts[i].y == lower_left_pt.y && pts[i].x < lower_left_pt.x )
+        {
+            lower_left_pt = pts[i];
+        }
+    }
+
+    /* sort points in increasing order of angle they and lower_left_pt makes with X axis */
+    std::sort(pts.begin(), pts.end(),
+              [&lower_left_pt](const Point& a, const Point& b)
+              {
+                  return atan2(a.y - lower_left_pt.y, a.x - lower_left_pt.x)
+                       < atan2(b.y - lower_left_pt.y, b.x - lower_left_pt.x);
+              });
+
+    /* walk along pts and remove points that form non counter clockwise turn */
+    std::vector<Point> convex_hull;
+    for ( Point& p : pts )
+    {
+        while ( convex_hull.size() > 1 )
+        {
+            const Point& a = convex_hull.back();
+            const Point& b = convex_hull[convex_hull.size()-2];
+            float angle = atan2(p.y - a.y, p.x - a.x)
+                        - atan2(a.y - b.y, a.x - b.x);
+            angle = Utils::clipAngle(angle);
+            if ( angle > 0 ) // counter clockwise turn is allowed
+            {
+                break;
+            }
+            convex_hull.pop_back();
+        }
+        convex_hull.push_back(p);
+    }
+    return convex_hull;
+}
+
 nav_msgs::Path Utils::getPathMsgFromTrajectory(const std::vector<Pose2d>& trajectory,
                                                const std::string& frame)
 {

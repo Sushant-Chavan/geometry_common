@@ -301,6 +301,24 @@ class Utils
                 float max_perp_dist = 3.0f,
                 float step_size = 0.1f);
 
+        static bool isConvexPolygon(
+                const std::vector<Point>& polygon);
+
+        /*
+         * Note: area can be negative (the sign informs if the polygon is
+         * clockwise or not)
+         */
+        static float calcPolygonArea(
+                const std::vector<Point>& polygon);
+
+        /*
+         * Find convex hull from the union of 2 polygons.
+         * source: https://en.wikipedia.org/wiki/Graham_scan#Pseudocode
+         */
+        static std::vector<Point> calcConvexHullOfPolygons(
+                const std::vector<Point>& polygon_a,
+                const std::vector<Point>& polygon_b);
+
         static nav_msgs::Path getPathMsgFromTrajectory(
                 const std::vector<Pose2d>& trajectory,
                 const std::string& frame);
