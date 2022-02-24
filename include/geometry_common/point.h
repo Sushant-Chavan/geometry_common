@@ -1,6 +1,7 @@
 #ifndef GEOMETRY_COMMON_POINT_H
 #define GEOMETRY_COMMON_POINT_H
 
+#include <visualization_msgs/Marker.h>
 #include <geometry_msgs/PointStamped.h>
 #include <geometry_msgs/Point32.h>
 #include <geometry_msgs/Point.h>
@@ -62,6 +63,14 @@ class Point
         };
 
         Point normalise() const;
+
+        visualization_msgs::Marker getMarker(
+                const std::string& frame = "base_link",
+                float red = 1.0f,
+                float green = 0.0f,
+                float blue = 0.0f,
+                float alpha = 1.0f,
+                float diameter = 0.2f) const;
 
         friend Point operator - (const Point& p1, const Point& p2);
 

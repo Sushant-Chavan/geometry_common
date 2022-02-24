@@ -40,6 +40,26 @@ Point Point::normalise() const
     return Point(x/mag, y/mag, z/mag);
 }
 
+visualization_msgs::Marker Point::getMarker(const std::string& frame,
+        float red, float green, float blue, float alpha, float diameter) const
+{
+    visualization_msgs::Marker marker;
+    marker.type = visualization_msgs::Marker::SPHERE;
+    marker.header.frame_id = frame;
+    marker.color.r = red;
+    marker.color.g = green;
+    marker.color.b = blue;
+    marker.color.a = alpha;
+    marker.scale.x = diameter;
+    marker.scale.y = diameter;
+    marker.scale.z = diameter;
+    marker.pose.position.x = x;
+    marker.pose.position.y = y;
+    marker.pose.position.z = z;
+    marker.pose.orientation.w = 1.0f;
+    return marker;
+}
+
 Point operator - (const Point& p1, const Point& p2)
 {
     Point diff;
