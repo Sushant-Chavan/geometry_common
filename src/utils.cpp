@@ -1168,11 +1168,10 @@ PointCloud Utils::convertFromROSPC(
     sensor_msgs::PointCloud2ConstIterator<float> iter_z(cloud_msg, "z");
     while ( iter_x != iter_x.end() && row < cloud_msg.height )
     {
-        if ( std::isnan(*iter_x) || std::isnan(*iter_y) || std::isnan(*iter_z) )
+        if ( !std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z) )
         {
-            continue;
+            points.push_back(Point(*iter_x, *iter_y, *iter_z));
         }
-        points.push_back(Point(*iter_x, *iter_y, *iter_z));
 
         col += col_sub_sample_factor;
         if ( col >= cloud_msg.width )
