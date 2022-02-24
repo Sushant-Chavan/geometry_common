@@ -41,6 +41,17 @@ TEST(UtilsTest, isPolygonConvex)
     });
     EXPECT_EQ(geometry_common::Utils::isPolygonConvex(concave_polygon), false)
         << "Concave polygon is not found to be concave.";
+
+    std::vector<geometry_common::Point> star_polygon(
+    {
+        geometry_common::Point(0.0f, 0.0f),
+        geometry_common::Point(2.0f, 5.0f),
+        geometry_common::Point(4.0f, 0.0f),
+        geometry_common::Point(0.0f, 3.0f),
+        geometry_common::Point(4.0f, 3.0f),
+    });
+    EXPECT_EQ(geometry_common::Utils::isPolygonConvex(star_polygon), false)
+        << "Star polygon is not found to be concave.";
 }
 
 TEST(UtilsTest, calcConvexHullOfPolygons)
