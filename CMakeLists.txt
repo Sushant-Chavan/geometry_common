@@ -10,21 +10,22 @@ else (WIN32)
 endif (WIN32)
 
 find_package(catkin REQUIRED COMPONENTS
-    roscpp
+    tf
     std_msgs
     sensor_msgs
     geometry_msgs
-    tf
+    nav_msgs
     visualization_msgs
     tf2_geometry_msgs
 )
 
 catkin_package(
     CATKIN_DEPENDS
+        tf
         std_msgs
         sensor_msgs
         geometry_msgs
-        tf
+        nav_msgs
         visualization_msgs
         tf2_geometry_msgs
     INCLUDE_DIRS
