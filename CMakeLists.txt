@@ -76,6 +76,14 @@ if (CATKIN_ENABLE_TESTING)
         ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
+    catkin_add_gtest(pose2d_test
+        test/pose2d_test.cpp
+    )
+    target_link_libraries(pose2d_test
+        geometry_utils
+        ${YAML_CPP_LIBRARIES}
+        ${catkin_LIBRARIES}
+    )
     catkin_add_gtest(utils_test
         test/utils_test.cpp
     )
