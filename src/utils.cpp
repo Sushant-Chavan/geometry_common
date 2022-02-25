@@ -524,9 +524,9 @@ float Utils::fitLineRANSAC(
         size_t ind_1 = (rand() % num_of_points) + start_index;
         size_t ind_2 = (rand() % num_of_points) + start_index;
         unsigned score = 0;
-        for (Point p : pts)
+        for ( size_t i = start_index; i <= end_index; i++ )
         {
-            if ( Utils::distToLineSquared(pts[ind_1], pts[ind_2], p) < delta_sq )
+            if ( Utils::distToLineSquared(pts[ind_1], pts[ind_2], pts[i]) < delta_sq )
             {
                 score ++;
             }
