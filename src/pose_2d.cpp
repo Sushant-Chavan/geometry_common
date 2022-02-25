@@ -53,11 +53,13 @@ geometry_msgs::Pose Pose2d::getPose() const
     geometry_msgs::Pose pose;
     pose.position.x = x;
     pose.position.y = y;
-    pose.position.z = 0.0;
-    tf2::Quaternion quat;
-    quat.setRPY(0.0, 0.0, theta);
-    quat.normalize();
-    pose.orientation = tf2::toMsg(quat);
+    pose.position.z = 0.0f;
+    pose.orientation.x = 0.0f;
+    pose.orientation.y = 0.0f;
+    float z, w;
+    Pose2d::getQuaternionFromTheta(theta, z, w);
+    pose.orientation.z = z;
+    pose.orientation.w = w;
     return pose;
 }
 
@@ -85,9 +87,19 @@ visualization_msgs::Marker Pose2d::getMarker(const std::string& frame,
     return marker;
 }
 
-float Pose2d::getThetaFromQuaternion(const geometry_msgs::Quaternion& orientation)
+float Pose2d::getThetaFromQuaternion(const geometry_msgs::Quaternion& q)
 {
-    return tf::getYaw(orientation);
+    /* source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2 */
+    float sinyaw_cospitch = 2 * (q.w * q.z + q.x * q.y);
+    float cosyaw_cospitch = 1 - 2 * (q.y * q.y + q.z * q.z);
+    return atan2(sinyaw_cospitch, cosyaw_cospitch);
+}
+
+void Pose2d::getQuaternionFromTheta(float _theta, float& qz, float& qw)
+{
+    /* source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code */
+    qw = cos(_theta * 0.5f);
+    qz = sin(_theta * 0.5f);
 }
 
 std::string Pose2d::str() const

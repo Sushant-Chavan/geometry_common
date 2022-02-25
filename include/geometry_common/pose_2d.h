@@ -4,7 +4,6 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Pose.h>
 #include <visualization_msgs/Marker.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf/transform_datatypes.h>
 
 #include <geometry_common/point.h>
@@ -17,8 +16,8 @@ class Pose2d
     public:
         float x, y, theta;
 
-        Pose2d(float x = 0.0f, float y = 0.0f, float theta = 0.0f):
-            x(x), y(y), theta(theta) {};
+        Pose2d(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
+            x(_x), y(_y), theta(_theta) {};
 
         Pose2d(const Pose2d &pose):
             x(pose.x), y(pose.y), theta(pose.theta) {};
@@ -65,6 +64,8 @@ class Pose2d
         };
 
         static float getThetaFromQuaternion(const geometry_msgs::Quaternion& orientation);
+
+        static void getQuaternionFromTheta(float _theta, float& qz, float& qw);
 
         std::string str() const;
 
