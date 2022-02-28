@@ -8,6 +8,8 @@
 
 #include <geometry_common/point.h>
 
+#include <cmath>
+
 namespace geometry_common
 {
 
@@ -50,20 +52,22 @@ class Pose2d
 
         inline float getCartDist(const Pose2d& p) const
         {
-            return sqrt(getCartDistSquared(p));
+            return std::sqrt(getCartDistSquared(p));
         };
 
         inline float getCartDistSquared(const Pose2d& p) const
         {
-            return pow(x - p.x, 2) + pow(y - p.y, 2);
+            return std::pow(x - p.x, 2) + std::pow(y - p.y, 2);
         };
 
         inline float getCartDist(const Point& p) const
         {
-            return sqrt(pow(x - p.x, 2) + pow(y - p.y, 2));
+            return std::sqrt(pow(x - p.x, 2) + std::pow(y - p.y, 2));
         };
 
-        static float getThetaFromQuaternion(const geometry_msgs::Quaternion& orientation);
+        static float getThetaFromQuaternion(const geometry_msgs::Quaternion& q);
+
+        static float getThetaFromQuaternion(float qx, float qy, float qz, float qw);
 
         static void getQuaternionFromTheta(float _theta, float& qz, float& qw);
 

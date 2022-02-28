@@ -1,6 +1,6 @@
 #include <geometry_common/pose_2d.h>
 #include <geometry_common/utils.h>
-#include <math.h>
+#include <cmath>
 
 namespace geometry_common
 {
@@ -24,7 +24,7 @@ Pose2d::Pose2d(const std::vector<float>& mat)
     assert(mat.size() == 9);
     x = mat[2];
     y = mat[5];
-    theta = atan2(mat[3], mat[0]);
+    theta = std::atan2(mat[3], mat[0]);
 }
 
 Pose2d::Pose2d(const tf::StampedTransform &stamped_transform)
@@ -89,17 +89,22 @@ visualization_msgs::Marker Pose2d::getMarker(const std::string& frame,
 
 float Pose2d::getThetaFromQuaternion(const geometry_msgs::Quaternion& q)
 {
+    return Pose2d::getThetaFromQuaternion(q.x, q.y, q.z, q.w);
+}
+
+float Pose2d::getThetaFromQuaternion(float qx, float qy, float qz, float qw)
+{
     /* source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2 */
-    float sinyaw_cospitch = 2 * (q.w * q.z + q.x * q.y);
-    float cosyaw_cospitch = 1 - 2 * (q.y * q.y + q.z * q.z);
-    return atan2(sinyaw_cospitch, cosyaw_cospitch);
+    float sinyaw_cospitch = 2 * (qw * qz + qx * qy);
+    float cosyaw_cospitch = 1 - 2 * (qy * qy + qz * qz);
+    return std::atan2(sinyaw_cospitch, cosyaw_cospitch);
 }
 
 void Pose2d::getQuaternionFromTheta(float _theta, float& qz, float& qw)
 {
     /* source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code */
-    qw = cos(_theta * 0.5f);
-    qz = sin(_theta * 0.5f);
+    qw = std::cos(_theta * 0.5f);
+    qz = std::sin(_theta * 0.5f);
 }
 
 std::string Pose2d::str() const
@@ -133,8 +138,8 @@ Pose2d operator * (const Pose2d& pose, float scalar)
 
 bool operator == (const Pose2d& pose_1, const Pose2d& pose_2)
 {
-    return ( pose_1.getCartDist(pose_2) < 0.01f &&
-             Utils::getShortestAngle(pose_1.theta, pose_2.theta) < 0.01f );
+    return ( pose_1.getCartDist(pose_2) < 1e-3f &&
+             Utils::getShortestAngle(pose_1.theta, pose_2.theta) < 1e-2f );
 }
 
 std::ostream& operator << (std::ostream &out, const Pose2d& pose_2d)

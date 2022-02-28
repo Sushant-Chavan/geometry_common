@@ -1,5 +1,6 @@
 #include <geometry_common/utils.h>
-#include <math.h>
+#include <cmath>
+#include <cstdlib>
 #include <cassert>
 #include <list>
 #include <deque>
@@ -12,8 +13,8 @@ float Utils::roundFloat(
         float value,
         unsigned decimal_places)
 {
-    unsigned multiplier = pow(10, decimal_places);
-    return ((float)((int)round(value * multiplier))) / multiplier;
+    unsigned multiplier = std::pow(10, decimal_places);
+    return ((float)((int)std::round(value * multiplier))) / multiplier;
 }
 
 Point Utils::getMeanPoint(
@@ -50,13 +51,13 @@ Pose2d Utils::getMeanPose(
     {
         mean_cart_pose.x += p.x;
         mean_cart_pose.y += p.y;
-        cos_theta_sum += cos(p.theta);
-        sin_theta_sum += sin(p.theta);
+        cos_theta_sum += std::cos(p.theta);
+        sin_theta_sum += std::sin(p.theta);
     }
     mean_cart_pose.x /= poses.size();
     mean_cart_pose.y /= poses.size();
-    mean_cart_pose.theta = atan2(sin_theta_sum/poses.size(),
-                                 cos_theta_sum/poses.size());
+    mean_cart_pose.theta = std::atan2(sin_theta_sum/poses.size(),
+                                      cos_theta_sum/poses.size());
     return mean_cart_pose;
 }
 template Pose2d Utils::getMeanPose(const std::vector<Pose2d>& poses);
@@ -98,7 +99,7 @@ std::vector<std::vector<Point> > Utils::clusterPoints(
         remaining_points.push_back(Point(p));
     }
 
-    float threshold_dist_sq = pow(cluster_distance_threshold, 2);
+    float threshold_dist_sq = std::pow(cluster_distance_threshold, 2);
 
     /* cluster remaining_points iteratively */
     while ( !remaining_points.empty() )
@@ -150,7 +151,7 @@ std::vector<std::vector<Point> > Utils::clusterOrderedPoints(
         remaining_points.push_back(Point(p));
     }
 
-    float threshold_dist_sq = pow(cluster_distance_threshold, 2);
+    float threshold_dist_sq = std::pow(cluster_distance_threshold, 2);
 
     while ( !remaining_points.empty() )
     {
@@ -223,8 +224,8 @@ Point Utils::getTransformedPoint(
         const Point& pt)
 {
     Point transformed_pt = pt;
-    transformed_pt.x = (cos(tf.theta) * pt.x) + (-sin(tf.theta) * pt.y) + tf.x;
-    transformed_pt.y = (sin(tf.theta) * pt.x) + (cos(tf.theta) * pt.y) + tf.y;
+    transformed_pt.x = (std::cos(tf.theta) * pt.x) + (-std::sin(tf.theta) * pt.y) + tf.x;
+    transformed_pt.y = (std::sin(tf.theta) * pt.x) + (std::cos(tf.theta) * pt.y) + tf.y;
     transformed_pt.z = 0.0f;
     return transformed_pt;
 }
@@ -365,9 +366,9 @@ std::vector<float> Utils::get2DTransformMat(
         float theta)
 {
     return std::vector<float>
-           {cos(theta), -sin(theta), x,
-            sin(theta),  cos(theta), y,
-            0.0f,        0.0f,       1.0f};
+           {std::cos(theta), -std::sin(theta), x,
+            std::sin(theta),  std::cos(theta), y,
+            0.0f,             0.0f,            1.0f};
 }
 
 std::vector<float> Utils::getTransformMat(
@@ -380,15 +381,15 @@ std::vector<float> Utils::getTransformMat(
 {
     std::vector<float> tf_mat(16, 0.0f);
     /* rotation */
-    tf_mat[0] = cos(yaw) * cos(pitch);
-    tf_mat[1] = (cos(yaw) * sin(pitch) * sin(roll)) - (sin(yaw) * cos(roll));
-    tf_mat[2] = (cos(yaw) * sin(pitch) * cos(roll)) + (sin(yaw) * sin(roll));
-    tf_mat[4] = sin(yaw)* cos(pitch);
-    tf_mat[5] = (sin(yaw) * sin(pitch) * sin(roll)) + (cos(yaw) * cos(roll));
-    tf_mat[6] = (sin(yaw) * sin(pitch) * cos(roll)) - (cos(yaw) * sin(roll));
-    tf_mat[8] = -sin(pitch);
-    tf_mat[9] = cos(pitch) * sin(roll);
-    tf_mat[10] = cos(pitch) * cos(roll);
+    tf_mat[0] = std::cos(yaw) * std::cos(pitch);
+    tf_mat[1] = (std::cos(yaw) * std::sin(pitch) * std::sin(roll)) - (std::sin(yaw) * std::cos(roll));
+    tf_mat[2] = (std::cos(yaw) * std::sin(pitch) * std::cos(roll)) + (std::sin(yaw) * std::sin(roll));
+    tf_mat[4] = std::sin(yaw)* std::cos(pitch);
+    tf_mat[5] = (std::sin(yaw) * std::sin(pitch) * std::sin(roll)) + (std::cos(yaw) * std::cos(roll));
+    tf_mat[6] = (std::sin(yaw) * std::sin(pitch) * std::cos(roll)) - (std::cos(yaw) * std::sin(roll));
+    tf_mat[8] = -std::sin(pitch);
+    tf_mat[9] = std::cos(pitch) * std::sin(roll);
+    tf_mat[10] = std::cos(pitch) * std::cos(roll);
 
     /* translation */
     tf_mat[3] = x;
@@ -403,7 +404,7 @@ float Utils::getShortestAngle(
         float angle1,
         float angle2)
 {
-    return atan2(sin(angle1 - angle2), cos(angle1 - angle2));
+    return std::atan2(std::sin(angle1 - angle2), std::cos(angle1 - angle2));
 }
 
 void Utils::findPerpendicularLineAt(
@@ -413,7 +414,7 @@ void Utils::findPerpendicularLineAt(
         float& perpendicular_m,
         float& perpendicular_c)
 {
-    perpendicular_m = ( fabs(m) < 1e-8f ) ? 1e8f : -1/m;
+    perpendicular_m = ( std::fabs(m) < 1e-8f ) ? 1e8f : -1/m;
     perpendicular_c = p.y - (perpendicular_m * p.x);
 }
 
@@ -468,7 +469,7 @@ Point Utils::getProjectedPointOnMajorAxis(
         const Point& p)
 {
     Point proj_pt;
-    bool major_axis_x = ( fabs(m) < 1.0f );
+    bool major_axis_x = ( std::fabs(m) < 1.0f );
     if ( major_axis_x )
     {
         proj_pt.x = p.x;
@@ -509,8 +510,8 @@ float Utils::fitLineRANSAC(
 {
     if ( end_index <= start_index )
     {
-        m = 0;
-        c = 0;
+        m = 0.0f;
+        c = 0.0f;
         return 0.0f;
     }
 
@@ -521,8 +522,8 @@ float Utils::fitLineRANSAC(
     float delta_sq = delta * delta;
     for ( size_t itr_num = 0; itr_num < itr_limit; ++itr_num )
     {
-        size_t ind_1 = (rand() % num_of_points) + start_index;
-        size_t ind_2 = (rand() % num_of_points) + start_index;
+        size_t ind_1 = (std::rand() % num_of_points) + start_index;
+        size_t ind_2 = (std::rand() % num_of_points) + start_index;
         unsigned score = 0;
         for ( size_t i = start_index; i <= end_index; i++ )
         {
@@ -540,7 +541,7 @@ float Utils::fitLineRANSAC(
     }
 
     float dx = pts[index_1].x - pts[index_2].x;
-    if ( fabs(dx) < 1e-8 )
+    if ( std::fabs(dx) < 1e-8 )
     {
         dx = 1e-8;
     }
@@ -574,7 +575,7 @@ float Utils::fitLineSegmentRANSAC(
     line_segment.start.y = 1e6f;
     line_segment.end.x = -1e6f;
     line_segment.end.y = -1e6f;
-    bool major_axis_x = ( fabs(m) < 1.0f );
+    bool major_axis_x = ( std::fabs(m) < 1.0f );
     for ( size_t i = start_index; i <= end_index; i++ )
     {
         if ( Utils::distToLineSquared(m, c, pts[i]) < delta_sq )
@@ -737,7 +738,7 @@ float Utils::fitLineRegression(
 
     float dx = pts[end_index].x - pts[start_index].x;
     float dy = pts[end_index].y - pts[start_index].y;
-    bool swap_axis = ( fabs(dx) < fabs(dy) );
+    bool swap_axis = ( std::fabs(dx) < std::fabs(dy) );
     float numerator = 0.0f;
     float denominator = 0.0f;
     for ( size_t i = start_index; i <= end_index; i++ )
@@ -745,11 +746,11 @@ float Utils::fitLineRegression(
         numerator += (pts[i].x - mean_pt.x) * (pts[i].y - mean_pt.y);
         if ( !swap_axis )
         {
-            denominator += pow(pts[i].x - mean_pt.x, 2);
+            denominator += std::pow(pts[i].x - mean_pt.x, 2);
         }
         else
         {
-            denominator += pow(pts[i].y - mean_pt.y, 2);
+            denominator += std::pow(pts[i].y - mean_pt.y, 2);
         }
     }
     if ( denominator < 1e-8 )
@@ -991,7 +992,8 @@ void Utils::mergeCloseLines(
         float linear_dist = line_segments[i].end.getCartDist(line_segments[i+1].start);
         float angular_dist = Utils::getShortestAngle(line_segments[i].getAngle(),
                                                      line_segments[i+1].getAngle());
-        if ( linear_dist < distance_threshold && fabs(angular_dist) < angle_threshold )
+        if ( linear_dist < distance_threshold &&
+             std::fabs(angular_dist) < angle_threshold )
         {
             line_segments[i].end = line_segments[i+1].end;
             line_segments.erase(line_segments.begin() + i + 1);
@@ -1021,7 +1023,8 @@ void Utils::mergeCloseLinesBF(
             float linear_dist = line_segments[i].end.getCartDist(line_segments[i+skip_index].start);
             float angular_dist = Utils::getShortestAngle(line_segments[i].getAngle(),
                                                          line_segments[i+skip_index].getAngle());
-            if ( linear_dist < distance_threshold && fabs(angular_dist) < angle_threshold )
+            if ( linear_dist < distance_threshold &&
+                 std::fabs(angular_dist) < angle_threshold )
             {
                 line_segments[i].end = line_segments[i+skip_index].end;
                 line_segments.erase(line_segments.begin() + i + skip_index);
@@ -1058,7 +1061,7 @@ float Utils::signedClip(
         float min_limit)
 {
     int sign = ( value < 0.0f ) ? -1 : 1;
-    return sign * Utils::clip(fabsf(value), max_limit, min_limit);
+    return sign * Utils::clip(std::fabs(value), max_limit, min_limit);
 }
 
 float Utils::clipAngle(
@@ -1122,7 +1125,7 @@ sensor_msgs::PointCloud Utils::convertToROSPC(
         const std::string& frame)
 {
     sensor_msgs::PointCloud cloud;
-    cloud.header.stamp = ros::Time::now();
+    // cloud.header.stamp = ros::Time::now();
     cloud.header.frame_id = frame;
     cloud.points.reserve(pc.size());
     for ( const Point& pt : pc )
@@ -1204,8 +1207,8 @@ PointCloud Utils::convertFromROSScan(
             continue;
         }
         float angle = scan.angle_min + (i * scan.angle_increment);
-        laser_pts.push_back(Point(scan.ranges[i] * cos(angle),
-                                  scan.ranges[i] * sin(angle),
+        laser_pts.push_back(Point(scan.ranges[i] * std::cos(angle),
+                                  scan.ranges[i] * std::sin(angle),
                                   0.0f));
     }
     return laser_pts;
@@ -1215,7 +1218,7 @@ std::vector<float> Utils::getInverted2DTransformMat(
         const Pose2d& tf)
 {
     Pose2d inv_tf(tf);
-    inv_tf.theta *= -1; // reverse angle
+    inv_tf.theta *= -1.0f; // reverse angle
     std::vector<float> inv_mat = inv_tf.getMat();
     std::vector<float> p_vec{-tf.x, -tf.y, 0.0f};
     std::vector<float> transformed_vec = Utils::multiplyMatrixToVector(inv_mat, p_vec);
@@ -1276,10 +1279,10 @@ std::vector<Point> Utils::generatePerpendicularPoints(
         float max_perp_dist,
         float step_size)
 {
-    float theta = atan2(end.y - start.y, end.x - start.x);
+    float theta = std::atan2(end.y - start.y, end.x - start.x);
     float perpendicular_angle = Utils::getPerpendicularAngle(theta);
 
-    Point unit_vec(cos(perpendicular_angle), sin(perpendicular_angle)); 
+    Point unit_vec(std::cos(perpendicular_angle), std::sin(perpendicular_angle)); 
     std::vector<Point> pts;
     for ( float perp_dist = step_size; perp_dist < max_perp_dist; perp_dist += step_size )
     {
@@ -1297,8 +1300,8 @@ float Utils::getAngleBetweenPoints(
 {
     Point vec_b_a = a - b;
     Point vec_b_c = c - b;
-    return Utils::clipAngle(atan2(vec_b_c.y, vec_b_c.x) -
-                            atan2(vec_b_a.y, vec_b_a.x));
+    return Utils::clipAngle(std::atan2(vec_b_c.y, vec_b_c.x) -
+                            std::atan2(vec_b_a.y, vec_b_a.x));
 }
 
 bool Utils::isPolygonConvex(
@@ -1373,8 +1376,8 @@ std::vector<Point> Utils::calcConvexHullOfPolygons(
     std::sort(pts.begin(), pts.end(),
               [&lower_left_pt](const Point& a, const Point& b)
               {
-                  return atan2(a.y - lower_left_pt.y, a.x - lower_left_pt.x)
-                       < atan2(b.y - lower_left_pt.y, b.x - lower_left_pt.x);
+                  return std::atan2(a.y - lower_left_pt.y, a.x - lower_left_pt.x)
+                       < std::atan2(b.y - lower_left_pt.y, b.x - lower_left_pt.x);
               });
 
     /* walk along pts and remove points that form non counter clockwise turn */

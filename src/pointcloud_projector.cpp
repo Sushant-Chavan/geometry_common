@@ -1,5 +1,5 @@
 #include <geometry_common/pointcloud_projector.h>
-#include <math.h>
+#include <cmath>
 
 using geometry_common::Point;
 using geometry_common::PointCloud;
@@ -59,9 +59,9 @@ bool PointCloudProjector::configure(
     passthrough_min_z_ = passthrough_min_z;
     passthrough_max_z_ = passthrough_max_z;
     radial_dist_min_ = radial_dist_min;
-    radial_dist_min_sq_ = pow(radial_dist_min_, 2);
+    radial_dist_min_sq_ = std::pow(radial_dist_min_, 2);
     radial_dist_max_ = radial_dist_max;
-    radial_dist_max_sq_ = pow(radial_dist_max_sq_, 2);
+    radial_dist_max_sq_ = std::pow(radial_dist_max_sq_, 2);
     angle_min_ = angle_min;
     angle_max_ = angle_max;
     is_angle_flipped_ = ( angle_min_ > angle_max_ );
@@ -178,8 +178,8 @@ std::vector<float> PointCloudProjector::pointCloudToScan(
 
     for ( const Point& pt : cloud_in )
     {
-        float dist = sqrt(pow(pt.x, 2) + pow(pt.y, 2));
-        float angle = atan2(pt.y, pt.x);
+        float dist = std::sqrt(std::pow(pt.x, 2) + std::pow(pt.y, 2));
+        float angle = std::atan2(pt.y, pt.x);
         if ( is_angle_flipped && angle < angle_max && angle > -M_PI )
         {
             angle += 2*M_PI;
@@ -250,8 +250,8 @@ PointCloud PointCloudProjector::pointCloudToProjectedPointCloud(
         {
             continue;
         }
-        flat_cloud.push_back(Point(scan[i] * cos(angle_min_ + i*angle_increment_),
-                                   scan[i] * sin(angle_min_ + i*angle_increment_)));
+        flat_cloud.push_back(Point(scan[i] * std::cos(angle_min_ + i*angle_increment_),
+                                   scan[i] * std::sin(angle_min_ + i*angle_increment_)));
     }
     return flat_cloud;
 }
@@ -259,8 +259,8 @@ PointCloud PointCloudProjector::pointCloudToProjectedPointCloud(
 bool PointCloudProjector::isPointValid(
         const Point& pt) const
 {
-    float angle = atan2(pt.y, pt.x);
-    float dist_sq = pow(pt.x, 2) + pow(pt.y, 2);
+    float angle = std::atan2(pt.y, pt.x);
+    float dist_sq = std::pow(pt.x, 2) + std::pow(pt.y, 2);
     if ( std::isnan(pt.x) || std::isnan(pt.y) || std::isnan(pt.z) )
     {
         return false;
@@ -331,6 +331,6 @@ size_t PointCloudProjector::calculateNumOfScanPts(
         float angle_increment)
 {
     return ( angle_min > angle_max ) // angle is flipped for looking backwards
-           ? 1 + round((angle_max - angle_min + 2*M_PI) / angle_increment)
-           : 1 + round((angle_max - angle_min) / angle_increment);
+           ? 1 + std::round((angle_max - angle_min + 2*M_PI) / angle_increment)
+           : 1 + std::round((angle_max - angle_min) / angle_increment);
 }

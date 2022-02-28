@@ -6,6 +6,8 @@
 #include <geometry_msgs/Point32.h>
 #include <geometry_msgs/Point.h>
 
+#include <cmath>
+
 namespace geometry_common
 {
 
@@ -49,17 +51,17 @@ class Point
 
         inline float getCartDist(const Point& p) const
         {
-            return sqrt(getCartDistSquared(p));
+            return std::sqrt(getCartDistSquared(p));
         };
 
         inline float getCartDistSquared(const Point& p) const
         {
-            return pow(x - p.x, 2) + pow(y - p.y, 2) + pow(z - p.z, 2);
+            return std::pow(x - p.x, 2) + std::pow(y - p.y, 2) + std::pow(z - p.z, 2);
         };
 
         inline float magnitude() const
         {
-            return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+            return std::sqrt(std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2));
         };
 
         Point normalise() const;

@@ -24,7 +24,7 @@ geometry_msgs::Point32 Point::getPoint32() const
 geometry_msgs::PointStamped Point::getPointStamped(const std::string& frame) const
 {
     geometry_msgs::PointStamped point;
-    point.header.stamp = ros::Time::now();
+    // point.header.stamp = ros::Time::now();
     point.header.frame_id = frame;
     point.point = getPoint();
     return point;
@@ -95,7 +95,7 @@ std::ostream& operator << (std::ostream& out, const Point& point)
 
 bool operator == (const Point& p1, const Point& p2)
 {
-    return ( p1.getCartDist(p2) < 0.001f );
+    return ( p1.getCartDist(p2) < 1e-3f );
 }
 
 } // namespace geometry_common
