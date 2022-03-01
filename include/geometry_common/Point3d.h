@@ -17,29 +17,29 @@ class Point3D : public Point2D
 
         Point3D(float x = 0.0, float y = 0.0, float z = 0.0):
             Point2D(x, y),
-            z(z) {};
+            z(z) {}
 
-        Point3D(const Point2D& point):
+        Point3D(const Point2D& point, float z = 0.0):
             Point2D(point.x, point.y),
-            z(0.0) {};
+            z(z) {}
 
         Point3D(const Point3D& point):
             Point2D(point.x, point.y),
-            z(point.z) {};
+            z(point.z) {}
 
         Point3D(const geometry_msgs::PointStamped& point):
             Point2D(point.point.x, point.point.y),
-            z(point.point.z) {};
+            z(point.point.z) {}
 
         Point3D(const geometry_msgs::Point& point):
             Point2D(point.x, point.y),
-            z(point.z) {};
+            z(point.z) {}
 
         Point3D(const geometry_msgs::Point32& point):
             Point2D(point.x, point.y),
-            z(point.z) {};
+            z(point.z) {}
 
-        virtual ~Point3D() {};
+        virtual ~Point3D() {}
 
         geometry_msgs::Point getPoint() const;
 

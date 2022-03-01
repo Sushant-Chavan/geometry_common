@@ -50,6 +50,7 @@ add_library(geometry_utils
         # data structures
         src/Point2d.cpp
         src/Point3d.cpp
+        src/Polygon2d.cpp
         src/Pose2d.cpp
         src/Box.cpp
         src/LineSegment.cpp
