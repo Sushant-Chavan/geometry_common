@@ -10,9 +10,9 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/LaserScan.h>
 
-#include <geometry_common/pose_2d.h>
-#include <geometry_common/point.h>
-#include <geometry_common/line_segment.h>
+#include <geometry_common/Pose2d.h>
+#include <geometry_common/Point.h>
+#include <geometry_common/LineSegment.h>
 
 namespace geometry_common
 {

@@ -46,19 +46,19 @@ include_directories(
 # =========
 add_library(geometry_utils
     SHARED
-        src/utils.cpp
+        src/Utils.cpp
         # data structures
-        src/point.cpp
-        src/pose_2d.cpp
-        src/box.cpp
-        src/line_segment.cpp
+        src/Point.cpp
+        src/Pose2d.cpp
+        src/Box.cpp
+        src/LineSegment.cpp
 )
 target_link_libraries(geometry_utils
 )
 
 add_library(pointcloud_projector
     SHARED
-        src/pointcloud_projector.cpp
+        src/PointCloudProjector.cpp
 )
 target_link_libraries(pointcloud_projector
     geometry_utils

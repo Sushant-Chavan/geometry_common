@@ -1,4 +1,4 @@
-#include <geometry_common/line_segment.h>
+#include <geometry_common/LineSegment.h>
 
 namespace geometry_common
 {

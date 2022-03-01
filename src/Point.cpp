@@ -1,4 +1,4 @@
-#include <geometry_common/point.h>
+#include <geometry_common/Point.h>
 
 namespace geometry_common
 {

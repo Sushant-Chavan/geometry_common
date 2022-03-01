@@ -7,8 +7,8 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <geometry_common/utils.h>
-#include <geometry_common/point.h>
+#include <geometry_common/Utils.h>
+#include <geometry_common/Point.h>
 
 typedef std::function<bool (const geometry_common::Point& )> ValidityFunction;
 

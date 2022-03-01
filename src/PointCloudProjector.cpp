@@ -1,4 +1,4 @@
-#include <geometry_common/pointcloud_projector.h>
+#include <geometry_common/PointCloudProjector.h>
 #include <cmath>
 
 using geometry_common::Point;

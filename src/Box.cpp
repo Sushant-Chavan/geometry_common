@@ -1,4 +1,4 @@
-#include <geometry_common/box.h>
+#include <geometry_common/Box.h>
 
 namespace geometry_common
 {

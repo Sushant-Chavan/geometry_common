@@ -4,7 +4,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include <visualization_msgs/Marker.h>
-#include <geometry_common/point.h>
+#include <geometry_common/Point.h>
 
 namespace geometry_common
 {
