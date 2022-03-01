@@ -1,5 +1,5 @@
-#ifndef POINTCLOUD_PROJECTOR_H
-#define POINTCLOUD_PROJECTOR_H
+#ifndef KELO_POINTCLOUD_PROJECTOR_H
+#define KELO_POINTCLOUD_PROJECTOR_H
 
 #include <iostream>
 #include <string>
@@ -115,4 +115,4 @@ class PointCloudProjector
 
 };
 
-#endif // POINTCLOUD_PROJECTOR_H
+#endif // KELO_POINTCLOUD_PROJECTOR_H

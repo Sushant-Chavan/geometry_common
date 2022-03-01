@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_COMMON_POSE_2D_H
-#define GEOMETRY_COMMON_POSE_2D_H
+#ifndef KELO_GEOMETRY_COMMON_POSE_2D_H
+#define KELO_GEOMETRY_COMMON_POSE_2D_H
 
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Pose.h>
@@ -84,4 +84,4 @@ class Pose2d
 
 } // namespace geometry_common
 
-#endif // GEOMETRY_COMMON_POSE_2D_H
+#endif // KELO_GEOMETRY_COMMON_POSE_2D_H

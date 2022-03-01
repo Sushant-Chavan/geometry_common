@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_COMMON_BOX_H
-#define GEOMETRY_COMMON_BOX_H
+#ifndef KELO_GEOMETRY_COMMON_BOX_H
+#define KELO_GEOMETRY_COMMON_BOX_H
 
 #include <yaml-cpp/yaml.h>
 
@@ -43,5 +43,4 @@ class Box
 };
 
 }; // namespace geometry_common
-#endif // GEOMETRY_COMMON_BOX_H
-
+#endif // KELO_GEOMETRY_COMMON_BOX_H

@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_COMMON_LINE_SEGMENT_H
-#define GEOMETRY_COMMON_LINE_SEGMENT_H
+#ifndef KELO_GEOMETRY_COMMON_LINE_SEGMENT_H
+#define KELO_GEOMETRY_COMMON_LINE_SEGMENT_H
 
 #include <math.h>
 #include <string>
@@ -52,4 +52,4 @@ class LineSegment
 };
 
 } // namespace geometry_common
-#endif // GEOMETRY_COMMON_LINE_SEGMENT_H
+#endif // KELO_GEOMETRY_COMMON_LINE_SEGMENT_H

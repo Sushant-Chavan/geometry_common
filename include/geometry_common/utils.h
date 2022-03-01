@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_COMMON_UTILS_H
-#define GEOMETRY_COMMON_UTILS_H
+#ifndef KELO_GEOMETRY_COMMON_UTILS_H
+#define KELO_GEOMETRY_COMMON_UTILS_H
 
 #include <vector>
 #include <string>
@@ -393,4 +393,4 @@ class Utils
 
 } // namespace geometry_common
 
-#endif // GEOMETRY_COMMON_UTILS_H
+#endif // KELO_GEOMETRY_COMMON_UTILS_H
