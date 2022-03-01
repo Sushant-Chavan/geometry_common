@@ -138,7 +138,7 @@ bool PointCloudProjector::configure(
     {
         config_params_yaml = YAML::LoadFile(config_file);
     }
-    catch(YAML::BadFile)
+    catch(YAML::BadFile&)
     {
         std::cout << std::endl << std::endl;
         std::cerr << "YAML threw BadFile exception. Does the file exist?" << std::endl;
