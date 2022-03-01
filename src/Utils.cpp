@@ -6,7 +6,7 @@
 #include <deque>
 #include <sensor_msgs/point_cloud2_iterator.h>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 float Utils::roundFloat(
@@ -1539,4 +1539,4 @@ std::string Utils::getMatrixAsString(
     return mat_stream.str();
 }
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common

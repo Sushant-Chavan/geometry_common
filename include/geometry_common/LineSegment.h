@@ -8,7 +8,7 @@
 
 #include <geometry_common/Point.h>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 class LineSegment
@@ -51,5 +51,5 @@ class LineSegment
         friend std::ostream& operator << (std::ostream &out, const LineSegment& line_segment);
 };
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common
 #endif // KELO_GEOMETRY_COMMON_LINE_SEGMENT_H

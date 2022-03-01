@@ -1,9 +1,9 @@
 #include <geometry_common/PointCloudProjector.h>
 #include <cmath>
 
-using geometry_common::Point;
-using geometry_common::PointCloud;
-using geometry_common::Utils;
+using kelo::geometry_common::Point;
+using kelo::geometry_common::PointCloud;
+using kelo::geometry_common::Utils;
 
 PointCloudProjector::PointCloudProjector():
     passthrough_min_z_(0.0f),

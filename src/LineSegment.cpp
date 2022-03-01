@@ -1,6 +1,6 @@
 #include <geometry_common/LineSegment.h>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 LineSegment::~LineSegment()
@@ -71,4 +71,4 @@ std::ostream& operator << (std::ostream &out, const LineSegment& line_segment)
     return out;
 }
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common

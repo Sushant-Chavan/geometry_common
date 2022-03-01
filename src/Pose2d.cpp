@@ -2,7 +2,7 @@
 #include <geometry_common/Utils.h>
 #include <cmath>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 Pose2d::Pose2d(const geometry_msgs::PoseStamped &pose)
@@ -151,4 +151,4 @@ std::ostream& operator << (std::ostream &out, const Pose2d& pose_2d)
     return out;
 }
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common

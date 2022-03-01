@@ -14,7 +14,7 @@
 #include <geometry_common/Point.h>
 #include <geometry_common/LineSegment.h>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 class Utils
@@ -391,6 +391,6 @@ class Utils
                 size_t N);
 };
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common
 
 #endif // KELO_GEOMETRY_COMMON_UTILS_H

@@ -10,7 +10,7 @@
 
 #include <cmath>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 class Pose2d
@@ -82,6 +82,6 @@ class Pose2d
         friend std::ostream& operator << (std::ostream &out, const Pose2d& pose_2d);
 };
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common
 
 #endif // KELO_GEOMETRY_COMMON_POSE_2D_H

@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 class Point
@@ -87,5 +87,5 @@ class Point
 
 typedef std::vector<Point> PointCloud;
 
-}; // namespace geometry_common
+}; // namespace kelo::geometry_common
 #endif // KELO_GEOMETRY_COMMON_POINT_H
