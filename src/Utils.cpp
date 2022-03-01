@@ -17,12 +17,12 @@ float Utils::roundFloat(
     return ((float)((int)std::round(value * multiplier))) / multiplier;
 }
 
-Point Utils::getMeanPoint(
+Point3D Utils::getMeanPoint(
         const PointCloud& points,
         unsigned start_index,
         unsigned end_index)
 {
-    Point sum_pt(0.0f, 0.0f, 0.0f);
+    Point3D sum_pt(0.0f, 0.0f, 0.0f);
     for ( size_t i = start_index; i <= end_index; i++ )
     {
         sum_pt = sum_pt + points[i];
@@ -30,7 +30,7 @@ Point Utils::getMeanPoint(
     return sum_pt * (1.0f/(end_index-start_index+1));
 }
 
-Point Utils::getMeanPoint(
+Point3D Utils::getMeanPoint(
         const PointCloud& points)
 {
     return Utils::getMeanPoint(points, 0, points.size()-1);
@@ -64,16 +64,16 @@ template Pose2d Utils::getMeanPose(const std::vector<Pose2d>& poses);
 template Pose2d Utils::getMeanPose(const std::deque<Pose2d>& poses);
 template Pose2d Utils::getMeanPose(const std::list<Pose2d>& poses);
 
-Point Utils::getClosestPoint(
+Point3D Utils::getClosestPoint(
         const PointCloud& points,
         float x,
         float y,
         float z)
 {
-    Point min_pt(1e6f, 1e6f, 1e6f);
+    Point3D min_pt(1e6f, 1e6f, 1e6f);
     float min_dist_sq = 1e8f;
-    Point center(x, y, z);
-    for ( const Point& p : points )
+    Point3D center(x, y, z);
+    for ( const Point3D& p : points )
     {
         float dist_sq = p.getCartDistSquared(center);
         if ( dist_sq < min_dist_sq )
@@ -85,18 +85,18 @@ Point Utils::getClosestPoint(
     return min_pt;
 }
 
-std::vector<std::vector<Point> > Utils::clusterPoints(
+std::vector<std::vector<Point3D> > Utils::clusterPoints(
         const PointCloud& points,
         float cluster_distance_threshold,
         size_t min_cluster_size)
 {
-    std::vector<std::vector<Point> > clusters;
+    std::vector<std::vector<Point3D> > clusters;
 
     /* populate remaining_points */
-    std::list<Point> remaining_points;
-    for ( const Point& p : points )
+    std::list<Point3D> remaining_points;
+    for ( const Point3D& p : points )
     {
-        remaining_points.push_back(Point(p));
+        remaining_points.push_back(Point3D(p));
     }
 
     float threshold_dist_sq = std::pow(cluster_distance_threshold, 2);
@@ -104,15 +104,15 @@ std::vector<std::vector<Point> > Utils::clusterPoints(
     /* cluster remaining_points iteratively */
     while ( !remaining_points.empty() )
     {
-        std::vector<Point> cluster;
-        std::list<Point> fringe;
+        std::vector<Point3D> cluster;
+        std::list<Point3D> fringe;
         fringe.push_back(remaining_points.front());
         remaining_points.pop_front();
 
         while ( !fringe.empty() )
         {
             // get first point from fringe
-            Point point = fringe.front();
+            Point3D point = fringe.front();
             fringe.pop_front();
             cluster.push_back(point);
 
@@ -137,25 +137,25 @@ std::vector<std::vector<Point> > Utils::clusterPoints(
     return clusters;
 }
 
-std::vector<std::vector<Point> > Utils::clusterOrderedPoints(
+std::vector<std::vector<Point3D> > Utils::clusterOrderedPoints(
         const PointCloud& points,
         float cluster_distance_threshold,
         size_t min_cluster_size)
 {
-    std::vector<std::vector<Point> > clusters;
+    std::vector<std::vector<Point3D> > clusters;
 
     /* populate remaining_points */
-    std::list<Point> remaining_points;
-    for ( Point p : points )
+    std::list<Point3D> remaining_points;
+    for ( Point3D p : points )
     {
-        remaining_points.push_back(Point(p));
+        remaining_points.push_back(Point3D(p));
     }
 
     float threshold_dist_sq = std::pow(cluster_distance_threshold, 2);
 
     while ( !remaining_points.empty() )
     {
-        std::vector<Point> cluster;
+        std::vector<Point3D> cluster;
         cluster.push_back(remaining_points.front());
         remaining_points.pop_front();
 
@@ -190,8 +190,8 @@ std::vector<std::vector<Point> > Utils::clusterOrderedPoints(
 }
 
 bool Utils::isPointInPolygon(
-        const std::vector<Point>& polygon,
-        const Point& point)
+        const std::vector<Point3D>& polygon,
+        const Point3D& point)
 {
     size_t i, j, counter = 0;
     for (i = 0, j = polygon.size()-1; i < polygon.size(); j = i++)
@@ -206,10 +206,10 @@ bool Utils::isPointInPolygon(
 }
 
 bool Utils::isFootprintSafe(
-        const std::vector<Point>& footprint,
+        const std::vector<Point3D>& footprint,
         const PointCloud& points)
 {
-    for ( const Point& p : points )
+    for ( const Point3D& p : points )
     {
         if ( Utils::isPointInPolygon(footprint, p) )
         {
@@ -219,22 +219,22 @@ bool Utils::isFootprintSafe(
     return true;
 }
 
-Point Utils::getTransformedPoint(
+Point3D Utils::getTransformedPoint(
         const Pose2d& tf,
-        const Point& pt)
+        const Point3D& pt)
 {
-    Point transformed_pt = pt;
+    Point3D transformed_pt = pt;
     transformed_pt.x = (std::cos(tf.theta) * pt.x) + (-std::sin(tf.theta) * pt.y) + tf.x;
     transformed_pt.y = (std::sin(tf.theta) * pt.x) + (std::cos(tf.theta) * pt.y) + tf.y;
     transformed_pt.z = 0.0f;
     return transformed_pt;
 }
 
-Point Utils::getTransformedPoint(
+Point3D Utils::getTransformedPoint(
         const std::vector<float>& tf_mat,
-        const Point& pt)
+        const Point3D& pt)
 {
-    Point transformed_pt(pt);
+    Point3D transformed_pt(pt);
     assert(tf_mat.size() == 16 || tf_mat.size() == 9);
     if ( tf_mat.size() == 16 )
     {
@@ -249,7 +249,7 @@ Point Utils::getTransformedPoint(
 
 void Utils::transformPoint2D(
         const std::vector<float>& tf_mat,
-        Point& pt)
+        Point3D& pt)
 {
     assert(tf_mat.size() == 9);
     std::vector<float> p_vec{pt.x, pt.y, 1.0f};
@@ -260,7 +260,7 @@ void Utils::transformPoint2D(
 
 void Utils::transformPoint(
         const std::vector<float>& tf_mat,
-        Point& pt)
+        Point3D& pt)
 {
     assert(tf_mat.size() == 16);
     std::vector<float> p_vec{pt.x, pt.y, pt.z, 1.0f};
@@ -285,13 +285,13 @@ Pose2d Utils::getTransformedPose(
     return Utils::getTransformedPose(tf.getMat(), pose);
 }
 
-std::vector<Point> Utils::getTransformedFootprint(
+std::vector<Point3D> Utils::getTransformedFootprint(
         const Pose2d& tf,
-        const std::vector<Point>& footprint)
+        const std::vector<Point3D>& footprint)
 { 
-    std::vector<Point> fp;
+    std::vector<Point3D> fp;
     fp.reserve(footprint.size());
-    for ( const Point& pt : footprint )
+    for ( const Point3D& pt : footprint )
     {
         fp.push_back(Utils::getTransformedPoint(tf, pt));
     }
@@ -410,7 +410,7 @@ float Utils::getShortestAngle(
 void Utils::findPerpendicularLineAt(
         float m,
         float c,
-        const Point& p,
+        const Point3D& p,
         float& perpendicular_m,
         float& perpendicular_c)
 {
@@ -421,36 +421,36 @@ void Utils::findPerpendicularLineAt(
 float Utils::distToLineSquared(
         float m,
         float c,
-        const Point& p)
+        const Point3D& p)
 {
-    Point proj_pt = Utils::getProjectedPointOnLine(m, c, p);
+    Point3D proj_pt = Utils::getProjectedPointOnLine(m, c, p);
     return p.getCartDistSquared(proj_pt);
 }
 
-Point Utils::getProjectedPointOnLine(
+Point3D Utils::getProjectedPointOnLine(
         float m,
         float c,
-        const Point& p)
+        const Point3D& p)
 {
     float perpendicular_m, perpendicular_c;
     Utils::findPerpendicularLineAt(m, c, p, perpendicular_m, perpendicular_c);
-    Point proj_pt;
+    Point3D proj_pt;
     proj_pt.x = (perpendicular_c - c) / (m - perpendicular_m);
     proj_pt.y = (m * proj_pt.x) + c;
     return proj_pt;
 }
 
-Point Utils::getProjectedPointOnSegment(
-        const Point& a,
-        const Point& b,
-        const Point& p,
+Point3D Utils::getProjectedPointOnSegment(
+        const Point3D& a,
+        const Point3D& b,
+        const Point3D& p,
         bool is_segment)
 {
-    Point proj_pt;
+    Point3D proj_pt;
     float length_sq = a.getCartDistSquared(b);
     if ( length_sq == 0.0f )
     {
-        proj_pt = Point(a);
+        proj_pt = Point3D(a);
         return proj_pt;
     }
     float t = ((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / length_sq;
@@ -463,12 +463,12 @@ Point Utils::getProjectedPointOnSegment(
     return proj_pt;
 }
 
-Point Utils::getProjectedPointOnMajorAxis(
+Point3D Utils::getProjectedPointOnMajorAxis(
         float m,
         float c,
-        const Point& p)
+        const Point3D& p)
 {
-    Point proj_pt;
+    Point3D proj_pt;
     bool major_axis_x = ( std::fabs(m) < 1.0f );
     if ( major_axis_x )
     {
@@ -484,9 +484,9 @@ Point Utils::getProjectedPointOnMajorAxis(
 }
 
 float Utils::distToLineSquared(
-        const Point& a,
-        const Point& b,
-        const Point& p,
+        const Point3D& a,
+        const Point3D& b,
+        const Point3D& p,
         bool is_segment)
 {
     return p.getCartDistSquared(Utils::getProjectedPointOnSegment(a, b, p, is_segment));
@@ -494,7 +494,7 @@ float Utils::distToLineSquared(
 
 float Utils::distToLineSegmentSquared(
         const LineSegment& line_segment,
-        const Point& p)
+        const Point3D& p)
 {
     return Utils::distToLineSquared(line_segment.start, line_segment.end, p, true);
 }
@@ -734,7 +734,7 @@ float Utils::fitLineRegression(
         line_segment = LineSegment();
         return 0.0f;
     }
-    Point mean_pt = Utils::getMeanPoint(pts, start_index, end_index);
+    Point3D mean_pt = Utils::getMeanPoint(pts, start_index, end_index);
 
     float dx = pts[end_index].x - pts[start_index].x;
     float dy = pts[end_index].y - pts[start_index].y;
@@ -1128,7 +1128,7 @@ sensor_msgs::PointCloud Utils::convertToROSPC(
     // cloud.header.stamp = ros::Time::now();
     cloud.header.frame_id = frame;
     cloud.points.reserve(pc.size());
-    for ( const Point& pt : pc )
+    for ( const Point3D& pt : pc )
     {
         cloud.points.push_back(pt.getPoint32());
     }
@@ -1138,11 +1138,11 @@ sensor_msgs::PointCloud Utils::convertToROSPC(
 PointCloud Utils::convertFromROSPC(
         const sensor_msgs::PointCloud& pc)
 {
-    std::vector<Point> points;
+    std::vector<Point3D> points;
     points.reserve(pc.points.size());
     for ( const geometry_msgs::Point32& p : pc.points )
     {
-        points.push_back(Point(p));
+        points.push_back(Point3D(p));
     }
     return points;
 }
@@ -1154,7 +1154,7 @@ PointCloud Utils::convertFromROSPC(
 {
     if ( cloud_msg.height == 0 || cloud_msg.width == 0 )
     {
-        return std::vector<Point>();
+        return std::vector<Point3D>();
     }
     PointCloud points;
     if ( cloud_msg.height == 1 ) // unorganised cloud
@@ -1173,7 +1173,7 @@ PointCloud Utils::convertFromROSPC(
     {
         if ( !std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z) )
         {
-            points.push_back(Point(*iter_x, *iter_y, *iter_z));
+            points.push_back(Point3D(*iter_x, *iter_y, *iter_z));
         }
 
         col += col_sub_sample_factor;
@@ -1207,7 +1207,7 @@ PointCloud Utils::convertFromROSScan(
             continue;
         }
         float angle = scan.angle_min + (i * scan.angle_increment);
-        laser_pts.push_back(Point(scan.ranges[i] * std::cos(angle),
+        laser_pts.push_back(Point3D(scan.ranges[i] * std::cos(angle),
                                   scan.ranges[i] * std::sin(angle),
                                   0.0f));
     }
@@ -1272,21 +1272,21 @@ bool Utils::isAngleWithinBounds(
            : ( angle <= min_angle && angle >= max_angle );
 }
 
-std::vector<Point> Utils::generatePerpendicularPoints(
+std::vector<Point3D> Utils::generatePerpendicularPoints(
         const Pose2d& start,
         const Pose2d& end,
-        const Point& pt,
+        const Point3D& pt,
         float max_perp_dist,
         float step_size)
 {
     float theta = std::atan2(end.y - start.y, end.x - start.x);
     float perpendicular_angle = Utils::getPerpendicularAngle(theta);
 
-    Point unit_vec(std::cos(perpendicular_angle), std::sin(perpendicular_angle)); 
-    std::vector<Point> pts;
+    Point3D unit_vec(std::cos(perpendicular_angle), std::sin(perpendicular_angle)); 
+    std::vector<Point3D> pts;
     for ( float perp_dist = step_size; perp_dist < max_perp_dist; perp_dist += step_size )
     {
-        Point offset = unit_vec * perp_dist;
+        Point3D offset = unit_vec * perp_dist;
         pts.push_back(pt + offset);
         pts.push_back(pt - offset);
     }
@@ -1294,25 +1294,25 @@ std::vector<Point> Utils::generatePerpendicularPoints(
 }
 
 float Utils::getAngleBetweenPoints(
-        const Point& a,
-        const Point& b,
-        const Point& c)
+        const Point3D& a,
+        const Point3D& b,
+        const Point3D& c)
 {
-    Point vec_b_a = a - b;
-    Point vec_b_c = c - b;
+    Point3D vec_b_a = a - b;
+    Point3D vec_b_c = c - b;
     return Utils::clipAngle(std::atan2(vec_b_c.y, vec_b_c.x) -
                             std::atan2(vec_b_a.y, vec_b_a.x));
 }
 
 bool Utils::isPolygonConvex(
-        const std::vector<Point>& polygon)
+        const std::vector<Point3D>& polygon)
 {
     if ( polygon.size() <= 2 )
     {
         return true;
     }
 
-    Point m = Utils::getMeanPoint(polygon);
+    Point3D m = Utils::getMeanPoint(polygon);
     if ( !Utils::isPointInPolygon(polygon, m) )
     {
         return false;
@@ -1320,8 +1320,8 @@ bool Utils::isPolygonConvex(
 
     for ( size_t i = 0; i < polygon.size(); i++ )
     {
-        Point p1(polygon[i]);
-        Point p2(polygon[(i+2)%polygon.size()]);
+        Point3D p1(polygon[i]);
+        Point3D p2(polygon[(i+2)%polygon.size()]);
         m = (p1 + p2) * 0.5f;
         if ( !Utils::isPointInPolygon(polygon, m) )
         {
@@ -1332,7 +1332,7 @@ bool Utils::isPolygonConvex(
 }
 
 float Utils::calcPolygonArea(
-        const std::vector<Point>& polygon)
+        const std::vector<Point3D>& polygon)
 {
     float area = 0.0f;
     size_t i, j;
@@ -1344,12 +1344,12 @@ float Utils::calcPolygonArea(
     return area/2;
 }
 
-std::vector<Point> Utils::calcConvexHullOfPolygons(
-        const std::vector<Point>& polygon_a,
-        const std::vector<Point>& polygon_b)
+std::vector<Point3D> Utils::calcConvexHullOfPolygons(
+        const std::vector<Point3D>& polygon_a,
+        const std::vector<Point3D>& polygon_b)
 {
     /* aggregate all points */
-    std::vector<Point> pts;
+    std::vector<Point3D> pts;
     pts.reserve(pts.size() + polygon_a.size() + polygon_b.size());
     pts.insert(pts.end(), polygon_a.begin(), polygon_a.end());
     pts.insert(pts.end(), polygon_b.begin(), polygon_b.end());
@@ -1359,7 +1359,7 @@ std::vector<Point> Utils::calcConvexHullOfPolygons(
     }
 
     /* find the lowest left most point */
-    Point lower_left_pt(pts[0]);
+    Point3D lower_left_pt(pts[0]);
     for ( size_t i = 0; i < pts.size(); i++ )
     {
         if ( pts[i].y < lower_left_pt.y )
@@ -1374,19 +1374,19 @@ std::vector<Point> Utils::calcConvexHullOfPolygons(
 
     /* sort points in increasing order of angle they and lower_left_pt makes with X axis */
     std::sort(pts.begin(), pts.end(),
-              [&lower_left_pt](const Point& a, const Point& b)
+              [&lower_left_pt](const Point3D& a, const Point3D& b)
               {
                   return std::atan2(a.y - lower_left_pt.y, a.x - lower_left_pt.x)
                        < std::atan2(b.y - lower_left_pt.y, b.x - lower_left_pt.x);
               });
 
     /* walk along pts and remove points that form non counter clockwise turn */
-    std::vector<Point> convex_hull;
-    for ( Point& p : pts )
+    std::vector<Point3D> convex_hull;
+    for ( Point3D& p : pts )
     {
         while ( convex_hull.size() > 1 )
         {
-            std::vector<Point>::const_iterator it = convex_hull.end();
+            std::vector<Point3D>::const_iterator it = convex_hull.end();
             float angle = Utils::getAngleBetweenPoints(p, *(it-1), *(it-2));
             if ( angle > 0 ) // counter clockwise turn is allowed
             {
@@ -1473,7 +1473,7 @@ visualization_msgs::Marker Utils::getPointcloudAsMarker(
 }
 
 visualization_msgs::Marker Utils::getPolygonAsMarker(
-        const std::vector<Point>& polygon,
+        const std::vector<Point3D>& polygon,
         const std::string& frame,
         float red,
         float green,

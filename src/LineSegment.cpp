@@ -36,12 +36,12 @@ float LineSegment::getConstant() const
     return start.y - (m * start.x);
 }
 
-Point LineSegment::getCenter() const
+Point3D LineSegment::getCenter() const
 {
     return (start + end) * 0.5f;
 }
 
-Point LineSegment::getUnitVector() const
+Point3D LineSegment::getUnitVector() const
 {
     return (end - start) * (1.0f/getLength());
 }

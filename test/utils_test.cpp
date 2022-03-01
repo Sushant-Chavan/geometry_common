@@ -2,16 +2,16 @@
 
 #include <vector>
 
-#include <geometry_common/Point.h>
+#include <geometry_common/Point3d.h>
 #include <geometry_common/Utils.h>
 
 TEST(UtilsTest, getAngleBetweenPoints)
 {
-    kelo::geometry_common::Point a(0.0f, 0.0f);
-    kelo::geometry_common::Point b(1.0f, 0.0f);
-    kelo::geometry_common::Point c(2.0f, 1.0f);
-    kelo::geometry_common::Point d(0.0f, 1.0f);
-    kelo::geometry_common::Point e(2.0f, -1.0f);
+    kelo::geometry_common::Point3D a(0.0f, 0.0f);
+    kelo::geometry_common::Point3D b(1.0f, 0.0f);
+    kelo::geometry_common::Point3D c(2.0f, 1.0f);
+    kelo::geometry_common::Point3D d(0.0f, 1.0f);
+    kelo::geometry_common::Point3D e(2.0f, -1.0f);
     EXPECT_FLOAT_EQ(kelo::geometry_common::Utils::getAngleBetweenPoints(a, b, c), -3*M_PI/4)
         << "Angle should be -3pi/4.";
     EXPECT_FLOAT_EQ(kelo::geometry_common::Utils::getAngleBetweenPoints(d, b, a), M_PI/4)
@@ -22,33 +22,33 @@ TEST(UtilsTest, getAngleBetweenPoints)
 
 TEST(UtilsTest, isPolygonConvex)
 {
-    std::vector<kelo::geometry_common::Point> convex_polygon(
+    std::vector<kelo::geometry_common::Point3D> convex_polygon(
     {
-        kelo::geometry_common::Point(0.0f, 0.0f),
-        kelo::geometry_common::Point(5.0f, 0.0f),
-        kelo::geometry_common::Point(4.0f, 4.0f),
-        kelo::geometry_common::Point(0.0f, 3.0f)
+        kelo::geometry_common::Point3D(0.0f, 0.0f),
+        kelo::geometry_common::Point3D(5.0f, 0.0f),
+        kelo::geometry_common::Point3D(4.0f, 4.0f),
+        kelo::geometry_common::Point3D(0.0f, 3.0f)
     });
     EXPECT_EQ(kelo::geometry_common::Utils::isPolygonConvex(convex_polygon), true)
         << "Convex polygon is not found to be convex.";
 
-    std::vector<kelo::geometry_common::Point> concave_polygon(
+    std::vector<kelo::geometry_common::Point3D> concave_polygon(
     {
-        kelo::geometry_common::Point(0.0f, 0.0f),
-        kelo::geometry_common::Point(5.0f, 0.0f),
-        kelo::geometry_common::Point(1.0f, 1.0f),
-        kelo::geometry_common::Point(0.0f, 5.0f)
+        kelo::geometry_common::Point3D(0.0f, 0.0f),
+        kelo::geometry_common::Point3D(5.0f, 0.0f),
+        kelo::geometry_common::Point3D(1.0f, 1.0f),
+        kelo::geometry_common::Point3D(0.0f, 5.0f)
     });
     EXPECT_EQ(kelo::geometry_common::Utils::isPolygonConvex(concave_polygon), false)
         << "Concave polygon is not found to be concave.";
 
-    std::vector<kelo::geometry_common::Point> star_polygon(
+    std::vector<kelo::geometry_common::Point3D> star_polygon(
     {
-        kelo::geometry_common::Point(0.0f, 0.0f),
-        kelo::geometry_common::Point(2.0f, 5.0f),
-        kelo::geometry_common::Point(4.0f, 0.0f),
-        kelo::geometry_common::Point(0.0f, 3.0f),
-        kelo::geometry_common::Point(4.0f, 3.0f),
+        kelo::geometry_common::Point3D(0.0f, 0.0f),
+        kelo::geometry_common::Point3D(2.0f, 5.0f),
+        kelo::geometry_common::Point3D(4.0f, 0.0f),
+        kelo::geometry_common::Point3D(0.0f, 3.0f),
+        kelo::geometry_common::Point3D(4.0f, 3.0f),
     });
     EXPECT_EQ(kelo::geometry_common::Utils::isPolygonConvex(star_polygon), false)
         << "Star polygon is not found to be concave.";
@@ -56,20 +56,20 @@ TEST(UtilsTest, isPolygonConvex)
 
 TEST(UtilsTest, calcConvexHullOfPolygons)
 {
-    std::vector<kelo::geometry_common::Point> polygon_a(
+    std::vector<kelo::geometry_common::Point3D> polygon_a(
     {
-        kelo::geometry_common::Point(0.0f, 0.0f),
-        kelo::geometry_common::Point(5.0f, 0.0f),
-        kelo::geometry_common::Point(5.0f, 4.0f),
-        kelo::geometry_common::Point(0.0f, 4.0f)
+        kelo::geometry_common::Point3D(0.0f, 0.0f),
+        kelo::geometry_common::Point3D(5.0f, 0.0f),
+        kelo::geometry_common::Point3D(5.0f, 4.0f),
+        kelo::geometry_common::Point3D(0.0f, 4.0f)
     });
-    std::vector<kelo::geometry_common::Point> polygon_b(
+    std::vector<kelo::geometry_common::Point3D> polygon_b(
     {
-        kelo::geometry_common::Point(3.0f, 2.0f),
-        kelo::geometry_common::Point(9.0f, 1.0f),
-        kelo::geometry_common::Point(9.0f, 3.0f)
+        kelo::geometry_common::Point3D(3.0f, 2.0f),
+        kelo::geometry_common::Point3D(9.0f, 1.0f),
+        kelo::geometry_common::Point3D(9.0f, 3.0f)
     });
-    std::vector<kelo::geometry_common::Point> convex_hull = kelo::geometry_common::Utils::calcConvexHullOfPolygons(
+    std::vector<kelo::geometry_common::Point3D> convex_hull = kelo::geometry_common::Utils::calcConvexHullOfPolygons(
             polygon_a, polygon_b);
 
     EXPECT_EQ(convex_hull.size(), 6u);

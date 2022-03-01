@@ -49,7 +49,7 @@ visualization_msgs::Marker Box::getMarker(const std::string& frame,
     return marker;
 }
 
-bool Box::isPointInsideBox(const Point& p) const
+bool Box::isPointInsideBox(const Point3D& p) const
 {
     return ( p.x >= min_x && p.x <= max_x &&
              p.y >= min_y && p.y <= max_y &&

@@ -11,7 +11,7 @@
 #include <sensor_msgs/LaserScan.h>
 
 #include <geometry_common/Pose2d.h>
-#include <geometry_common/Point.h>
+#include <geometry_common/Point3d.h>
 #include <geometry_common/LineSegment.h>
 
 namespace kelo::geometry_common
@@ -25,30 +25,30 @@ class Utils
                 float value,
                 unsigned decimal_places);
 
-        static Point getMeanPoint(
+        static Point3D getMeanPoint(
                 const PointCloud& points,
                 unsigned start_index,
                 unsigned end_index);
 
-        static Point getMeanPoint(
+        static Point3D getMeanPoint(
                 const PointCloud& points);
 
         template <typename T>
         static Pose2d getMeanPose(
                 const T& poses);
 
-        static Point getClosestPoint(
+        static Point3D getClosestPoint(
                 const PointCloud& points,
                 float x=0.0f,
                 float y=0.0f,
                 float z=0.0f);
 
-        static std::vector<std::vector<Point> > clusterPoints(
+        static std::vector<std::vector<Point3D> > clusterPoints(
                 const PointCloud& points,
                 float cluster_distance_threshold=0.1f,
                 size_t min_cluster_size=3);
 
-        static std::vector<std::vector<Point> > clusterOrderedPoints(
+        static std::vector<std::vector<Point3D> > clusterOrderedPoints(
                 const PointCloud& points,
                 float cluster_distance_threshold=0.1f,
                 size_t min_cluster_size=3);
@@ -57,34 +57,34 @@ class Utils
          * Source: https://stackoverflow.com/a/2922778/10460994
          */
         static bool isPointInPolygon(
-                const std::vector<Point>& polygon,
-                const Point& point);
+                const std::vector<Point3D>& polygon,
+                const Point3D& point);
 
         static bool isFootprintSafe(
-                const std::vector<Point>& footprint,
+                const std::vector<Point3D>& footprint,
                 const PointCloud& points);
 
         /*
          * 2D transform (returns a 2D point which only has x and y component)
          */
-        static Point getTransformedPoint(
+        static Point3D getTransformedPoint(
                 const Pose2d& tf,
-                const Point& pt);
+                const Point3D& pt);
 
         /*
          * 3D transform (returns a 3D point which has x, y and z component)
          */
-        static Point getTransformedPoint(
+        static Point3D getTransformedPoint(
                 const std::vector<float>& tf_mat,
-                const Point& pt);
+                const Point3D& pt);
 
         static void transformPoint2D(
                 const std::vector<float>& tf_mat,
-                Point& pt);
+                Point3D& pt);
 
         static void transformPoint(
                 const std::vector<float>& tf_mat,
-                Point& pt);
+                Point3D& pt);
 
         static Pose2d getTransformedPose(
                 const std::vector<float> tf_mat,
@@ -94,9 +94,9 @@ class Utils
                 const Pose2d& tf,
                 const Pose2d& pose);
 
-        static std::vector<Point> getTransformedFootprint(
+        static std::vector<Point3D> getTransformedFootprint(
                 const Pose2d& tf,
-                const std::vector<Point>& footprint);
+                const std::vector<Point3D>& footprint);
 
         static std::vector<Pose2d> getTrajectory(
                 const Pose2d& vel,
@@ -132,44 +132,44 @@ class Utils
         static void findPerpendicularLineAt(
                 float m,
                 float c,
-                const Point& p,
+                const Point3D& p,
                 float& perpendicular_m,
                 float& perpendicular_c);
 
         static float distToLineSquared(
                 float m,
                 float c,
-                const Point& p);
+                const Point3D& p);
 
-        static Point getProjectedPointOnLine(
+        static Point3D getProjectedPointOnLine(
                 float m,
                 float c,
-                const Point& p);
+                const Point3D& p);
 
-        static Point getProjectedPointOnSegment(
-                const Point& a,
-                const Point& b,
-                const Point& p,
+        static Point3D getProjectedPointOnSegment(
+                const Point3D& a,
+                const Point3D& b,
+                const Point3D& p,
                 bool is_segment);
 
-        static Point getProjectedPointOnMajorAxis(
+        static Point3D getProjectedPointOnMajorAxis(
                 float m,
                 float c,
-                const Point& p);
+                const Point3D& p);
 
         /*
          * find the distance of point p from a line formed by points a and b
          * source: https://stackoverflow.com/a/1501725/10460994
          */
         static float distToLineSquared(
-                const Point& a,
-                const Point& b,
-                const Point& p,
+                const Point3D& a,
+                const Point3D& b,
+                const Point3D& p,
                 bool is_segment = false);
 
         static float distToLineSegmentSquared(
                 const LineSegment& line_segment,
-                const Point& p);
+                const Point3D& p);
 
         static float fitLineRANSAC(
                 const PointCloud& pts,
@@ -235,7 +235,7 @@ class Utils
                 float angle_threshold = 0.2);
 
         static std::vector<LineSegment> fitLineSegments(
-                const std::vector<Point> &pts,
+                const std::vector<Point3D> &pts,
                 float regression_error_threshold = 0.1f,
                 float distance_threshold = 0.2,
                 float angle_threshold = 0.2);
@@ -316,42 +316,42 @@ class Utils
                 float max_angle,
                 float min_angle);
 
-        static std::vector<Point> generatePerpendicularPoints(
+        static std::vector<Point3D> generatePerpendicularPoints(
                 const Pose2d& start,
                 const Pose2d& end,
-                const Point& pt,
+                const Point3D& pt,
                 float max_perp_dist = 3.0f,
                 float step_size = 0.1f);
 
         static float getAngleBetweenPoints(
-                const Point& a,
-                const Point& b,
-                const Point& c);
+                const Point3D& a,
+                const Point3D& b,
+                const Point3D& c);
 
         static bool isPolygonConvex(
-                const std::vector<Point>& polygon);
+                const std::vector<Point3D>& polygon);
 
         /*
          * Note: area can be negative (the sign informs if the polygon is
          * clockwise or not)
          */
         static float calcPolygonArea(
-                const std::vector<Point>& polygon);
+                const std::vector<Point3D>& polygon);
 
         /*
          * Find convex hull from the union of 2 polygons.
          * source: https://en.wikipedia.org/wiki/Graham_scan#Pseudocode
          */
-        static std::vector<Point> calcConvexHullOfPolygons(
-                const std::vector<Point>& polygon_a,
-                const std::vector<Point>& polygon_b);
+        static std::vector<Point3D> calcConvexHullOfPolygons(
+                const std::vector<Point3D>& polygon_a,
+                const std::vector<Point3D>& polygon_b);
 
         static nav_msgs::Path getPathMsgFromTrajectory(
                 const std::vector<Pose2d>& trajectory,
                 const std::string& frame);
 
         static visualization_msgs::Marker getPolygonAsMarker(
-                const std::vector<Point>& polygon,
+                const std::vector<Point3D>& polygon,
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,

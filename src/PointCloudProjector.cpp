@@ -1,7 +1,7 @@
 #include <geometry_common/PointCloudProjector.h>
 #include <cmath>
 
-using kelo::geometry_common::Point;
+using kelo::geometry_common::Point3D;
 using kelo::geometry_common::PointCloud;
 using kelo::geometry_common::Utils;
 
@@ -154,7 +154,7 @@ PointCloud PointCloudProjector::transformAndFilterPointCloud(
 {
     PointCloud cloud_out;
     cloud_out.reserve(cloud_in.size());
-    for ( Point pt : cloud_in )
+    for ( Point3D pt : cloud_in )
     {
         Utils::transformPoint(camera_to_target_tf_mat_, pt);
         if ( isPointValid(pt) )
@@ -176,7 +176,7 @@ std::vector<float> PointCloudProjector::pointCloudToScan(
 
     std::vector<float> scan(num_of_scan_pts, radial_dist_max_);
 
-    for ( const Point& pt : cloud_in )
+    for ( const Point3D& pt : cloud_in )
     {
         float dist = std::sqrt(std::pow(pt.x, 2) + std::pow(pt.y, 2));
         float angle = std::atan2(pt.y, pt.x);
@@ -250,14 +250,14 @@ PointCloud PointCloudProjector::pointCloudToProjectedPointCloud(
         {
             continue;
         }
-        flat_cloud.push_back(Point(scan[i] * std::cos(angle_min_ + i*angle_increment_),
+        flat_cloud.push_back(Point3D(scan[i] * std::cos(angle_min_ + i*angle_increment_),
                                    scan[i] * std::sin(angle_min_ + i*angle_increment_)));
     }
     return flat_cloud;
 }
 
 bool PointCloudProjector::isPointValid(
-        const Point& pt) const
+        const Point3D& pt) const
 {
     float angle = std::atan2(pt.y, pt.x);
     float dist_sq = std::pow(pt.x, 2) + std::pow(pt.y, 2);

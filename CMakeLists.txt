@@ -48,7 +48,8 @@ add_library(geometry_utils
     SHARED
         src/Utils.cpp
         # data structures
-        src/Point.cpp
+        src/Point2d.cpp
+        src/Point3d.cpp
         src/Pose2d.cpp
         src/Box.cpp
         src/LineSegment.cpp
@@ -69,7 +70,7 @@ target_link_libraries(pointcloud_projector
 # =====
 if (CATKIN_ENABLE_TESTING)
     catkin_add_gtest(point_test
-        test/point_test.cpp
+        test/point3d_test.cpp
     )
     target_link_libraries(point_test
         geometry_utils

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <visualization_msgs/Marker.h>
 
-#include <geometry_common/Point.h>
+#include <geometry_common/Point3d.h>
 
 namespace kelo::geometry_common
 {
@@ -14,13 +14,13 @@ namespace kelo::geometry_common
 class LineSegment
 {
     public:
-        Point start, end;
+        Point3D start, end;
 
         LineSegment(float start_x = 0.0, float start_y = 0.0,
                     float end_x = 0.0, float end_y = 0.0):
             start(start_x, start_y, 0.0f), end(end_x, end_y, 0.0f) {};
 
-        LineSegment(const Point &start, const Point &end):
+        LineSegment(const Point3D &start, const Point3D &end):
             start(start), end(end) {};
 
         LineSegment(const LineSegment &line_segment):
@@ -36,9 +36,9 @@ class LineSegment
 
         float getConstant() const;
 
-        Point getCenter() const;
+        Point3D getCenter() const;
 
-        Point getUnitVector() const;
+        Point3D getUnitVector() const;
 
         visualization_msgs::Marker getMarker(
                 const std::string& frame = "base_link",

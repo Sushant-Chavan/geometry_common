@@ -8,9 +8,9 @@
 #include <yaml-cpp/yaml.h>
 
 #include <geometry_common/Utils.h>
-#include <geometry_common/Point.h>
+#include <geometry_common/Point3d.h>
 
-typedef std::function<bool (const kelo::geometry_common::Point& )>
+typedef std::function<bool (const kelo::geometry_common::Point3D& )>
     ValidityFunction;
 
 class PointCloudProjector
@@ -112,7 +112,7 @@ class PointCloudProjector
         ValidityFunction external_validity_func_;
 
         bool isPointValid(
-                const kelo::geometry_common::Point& pt) const;
+                const kelo::geometry_common::Point3D& pt) const;
 
 };
 
