@@ -10,7 +10,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/LaserScan.h>
 
-#include <geometry_common/Pose2d.h>
+#include <geometry_common/Pose2D.h>
 #include <geometry_common/Point.h>
 #include <geometry_common/LineSegment.h>
 
@@ -34,7 +34,7 @@ class Utils
                 const PointCloud& points);
 
         template <typename T>
-        static Pose2d getMeanPose(
+        static Pose2D getMeanPose(
                 const T& poses);
 
         static Point getClosestPoint(
@@ -68,7 +68,7 @@ class Utils
          * 2D transform (returns a 2D point which only has x and y component)
          */
         static Point getTransformedPoint(
-                const Pose2d& tf,
+                const Pose2D& tf,
                 const Point& pt);
 
         /*
@@ -86,20 +86,20 @@ class Utils
                 const std::vector<float>& tf_mat,
                 Point& pt);
 
-        static Pose2d getTransformedPose(
+        static Pose2D getTransformedPose(
                 const std::vector<float> tf_mat,
-                const Pose2d& pose);
+                const Pose2D& pose);
 
-        static Pose2d getTransformedPose(
-                const Pose2d& tf,
-                const Pose2d& pose);
+        static Pose2D getTransformedPose(
+                const Pose2D& tf,
+                const Pose2D& pose);
 
         static std::vector<Point> getTransformedFootprint(
-                const Pose2d& tf,
+                const Pose2D& tf,
                 const std::vector<Point>& footprint);
 
-        static std::vector<Pose2d> getTrajectory(
-                const Pose2d& vel,
+        static std::vector<Pose2D> getTrajectory(
+                const Pose2D& vel,
                 size_t num_of_poses,
                 float future_time);
 
@@ -253,15 +253,15 @@ class Utils
         static float clipAngle(
                 float raw_angle);
 
-        static Pose2d applyVelLimits(
-                const Pose2d& vel,
-                const Pose2d& max_vel,
-                const Pose2d& min_vel);
+        static Pose2D applyVelLimits(
+                const Pose2D& vel,
+                const Pose2D& max_vel,
+                const Pose2D& min_vel);
 
-        static Pose2d applyAccLimits(
-                const Pose2d& cmd_vel,
-                const Pose2d& curr_vel,
-                const Pose2d& max_acc,
+        static Pose2D applyAccLimits(
+                const Pose2D& cmd_vel,
+                const Pose2D& curr_vel,
+                const Pose2D& max_acc,
                 float loop_rate);
 
         static float linearInterpolate(
@@ -292,13 +292,13 @@ class Utils
                 const sensor_msgs::LaserScan& scan);
 
         static std::vector<float> getInverted2DTransformMat(
-                const Pose2d& tf);
+                const Pose2D& tf);
 
         static std::vector<float> getInverted2DTransformMat(
                 const std::vector<float>& tf);
 
-        static Pose2d getInverted2DTransformPose(
-                const Pose2d& tf);
+        static Pose2D getInverted2DTransformPose(
+                const Pose2D& tf);
 
         static float getPerpendicularAngle(
                 float angle);
@@ -317,8 +317,8 @@ class Utils
                 float min_angle);
 
         static std::vector<Point> generatePerpendicularPoints(
-                const Pose2d& start,
-                const Pose2d& end,
+                const Pose2D& start,
+                const Pose2D& end,
                 const Point& pt,
                 float max_perp_dist = 3.0f,
                 float step_size = 0.1f);
@@ -347,7 +347,7 @@ class Utils
                 const std::vector<Point>& polygon_b);
 
         static nav_msgs::Path getPathMsgFromTrajectory(
-                const std::vector<Pose2d>& trajectory,
+                const std::vector<Pose2D>& trajectory,
                 const std::string& frame);
 
         static visualization_msgs::Marker getPolygonAsMarker(
@@ -360,7 +360,7 @@ class Utils
                 float line_width = 0.05f);
 
         static visualization_msgs::Marker getGeometricPathAsMarker(
-                const std::vector<Pose2d>& geometric_path,
+                const std::vector<Pose2D>& geometric_path,
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,

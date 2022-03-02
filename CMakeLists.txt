@@ -49,7 +49,7 @@ add_library(geometry_utils
         src/Utils.cpp
         # data structures
         src/Point.cpp
-        src/Pose2d.cpp
+        src/Pose2D.cpp
         src/Box.cpp
         src/LineSegment.cpp
 )
@@ -76,10 +76,10 @@ if (CATKIN_ENABLE_TESTING)
         ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
-    catkin_add_gtest(pose2d_test
-        test/pose2d_test.cpp
+    catkin_add_gtest(pose_2d_test
+        test/pose_2d_test.cpp
     )
-    target_link_libraries(pose2d_test
+    target_link_libraries(pose_2d_test
         geometry_utils
         ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
