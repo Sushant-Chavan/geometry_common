@@ -7,10 +7,10 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <geometry_common/Utils.h>
-#include <geometry_common/Point.h>
+#include <geometry_common/Point2D.h>
+#include <geometry_common/Point3D.h>
 
-typedef std::function<bool (const kelo::geometry_common::Point& )>
+typedef std::function<bool (const kelo::geometry_common::Point3D& )>
     ValidityFunction;
 
 class PointCloudProjector
@@ -48,38 +48,38 @@ class PointCloudProjector
         bool configure(
                 const std::string& config_file);
 
-        kelo::geometry_common::PointCloud transformAndFilterPointCloud(
-                const kelo::geometry_common::PointCloud& cloud_in) const;
+        kelo::geometry_common::PointCloud3D transformAndFilterPointCloud(
+                const kelo::geometry_common::PointCloud3D& cloud_in) const;
 
         std::vector<float> pointCloudToScan(
-                const kelo::geometry_common::PointCloud& cloud_in,
+                const kelo::geometry_common::PointCloud3D& cloud_in,
                 float angle_min,
                 float angle_max) const;
 
         std::vector<float> pointCloudToProjectedScan(
-                const kelo::geometry_common::PointCloud& cloud_in,
+                const kelo::geometry_common::PointCloud3D& cloud_in,
                 float angle_min,
                 float angle_max) const;
 
         std::vector<float> pointCloudToProjectedScan(
-                const kelo::geometry_common::PointCloud& cloud_in,
-                kelo::geometry_common::PointCloud& filtered_cloud,
+                const kelo::geometry_common::PointCloud3D& cloud_in,
+                kelo::geometry_common::PointCloud3D& filtered_cloud,
                 float angle_min,
                 float angle_max) const;
 
         std::vector<float> pointCloudToProjectedScan(
-                const kelo::geometry_common::PointCloud& cloud_in) const;
+                const kelo::geometry_common::PointCloud3D& cloud_in) const;
 
         std::vector<float> pointCloudToProjectedScan(
-                const kelo::geometry_common::PointCloud& cloud_in,
-                kelo::geometry_common::PointCloud& filtered_cloud) const;
+                const kelo::geometry_common::PointCloud3D& cloud_in,
+                kelo::geometry_common::PointCloud3D& filtered_cloud) const;
 
-        kelo::geometry_common::PointCloud pointCloudToProjectedPointCloud(
-                const kelo::geometry_common::PointCloud& cloud_in) const;
+        kelo::geometry_common::PointCloud2D pointCloudToProjectedPointCloud(
+                const kelo::geometry_common::PointCloud3D& cloud_in) const;
 
-        kelo::geometry_common::PointCloud pointCloudToProjectedPointCloud(
-                const kelo::geometry_common::PointCloud& cloud_in,
-                kelo::geometry_common::PointCloud& filtered_cloud) const;
+        kelo::geometry_common::PointCloud2D pointCloudToProjectedPointCloud(
+                const kelo::geometry_common::PointCloud3D& cloud_in,
+                kelo::geometry_common::PointCloud3D& filtered_cloud) const;
 
         float getRadialDistMax() const;
 
@@ -112,7 +112,7 @@ class PointCloudProjector
         ValidityFunction external_validity_func_;
 
         bool isPointValid(
-                const kelo::geometry_common::Point& pt) const;
+                const kelo::geometry_common::Point3D& pt) const;
 
 };
 

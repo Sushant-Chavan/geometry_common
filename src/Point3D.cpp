@@ -1,9 +1,10 @@
-#include <geometry_common/Point.h>
+#include <geometry_common/Utils.h>
+#include <geometry_common/Point3D.h>
 
 namespace kelo::geometry_common
 {
 
-geometry_msgs::Point Point::getPoint() const
+geometry_msgs::Point Point3D::getPoint() const
 {
     geometry_msgs::Point point;
     point.x = x;
@@ -12,7 +13,7 @@ geometry_msgs::Point Point::getPoint() const
     return point;
 }
 
-geometry_msgs::Point32 Point::getPoint32() const
+geometry_msgs::Point32 Point3D::getPoint32() const
 {
     geometry_msgs::Point32 point;
     point.x = x;
@@ -21,7 +22,7 @@ geometry_msgs::Point32 Point::getPoint32() const
     return point;
 }
 
-geometry_msgs::PointStamped Point::getPointStamped(const std::string& frame) const
+geometry_msgs::PointStamped Point3D::getPointStamped(const std::string& frame) const
 {
     geometry_msgs::PointStamped point;
     // point.header.stamp = ros::Time::now();
@@ -30,17 +31,34 @@ geometry_msgs::PointStamped Point::getPointStamped(const std::string& frame) con
     return point;
 }
 
-Point Point::normalise() const
+Point3D Point3D::normalise() const
 {
     float mag = magnitude();
     if ( mag == 0 )
     {
-        return Point();
+        return Point3D();
     }
-    return Point(x/mag, y/mag, z/mag);
+    return Point3D(x/mag, y/mag, z/mag);
 }
 
-visualization_msgs::Marker Point::getMarker(const std::string& frame,
+void Point3D::transform(const std::vector<float>& tf_mat)
+{
+    assert(tf_mat.size() == 16);
+    std::vector<float> p_vec{x, y, z, 1.0f};
+    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
+    x = transformed_p_vec[0];
+    y = transformed_p_vec[1];
+    z = transformed_p_vec[2];
+}
+
+Point3D Point3D::getTransformedPoint(const std::vector<float>& tf_mat) const
+{
+    Point3D transformed_pt(*this);
+    transformed_pt.transform(tf_mat);
+    return transformed_pt;
+}
+
+visualization_msgs::Marker Point3D::getMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float diameter) const
 {
     visualization_msgs::Marker marker;
@@ -60,40 +78,40 @@ visualization_msgs::Marker Point::getMarker(const std::string& frame,
     return marker;
 }
 
-Point operator - (const Point& p1, const Point& p2)
+Point3D operator - (const Point3D& p1, const Point3D& p2)
 {
-    Point diff;
+    Point3D diff;
     diff.x = p1.x - p2.x;
     diff.y = p1.y - p2.y;
     diff.z = p1.z - p2.z;
     return diff;
 }
 
-Point operator + (const Point& p1, const Point& p2)
+Point3D operator + (const Point3D& p1, const Point3D& p2)
 {
-    Point sum;
+    Point3D sum;
     sum.x = p1.x + p2.x;
     sum.y = p1.y + p2.y;
     sum.z = p1.z + p2.z;
     return sum;
 }
 
-Point operator * (const Point& p1, float scalar)
+Point3D operator * (const Point3D& p1, float scalar)
 {
-    Point scaled;
+    Point3D scaled;
     scaled.x = p1.x * scalar;
     scaled.y = p1.y * scalar;
     scaled.z = p1.z * scalar;
     return scaled;
 }
 
-std::ostream& operator << (std::ostream& out, const Point& point)
+std::ostream& operator << (std::ostream& out, const Point3D& point)
 {
     out << "<x: " << point.x << ", y: " << point.y << ", z: " << point.z << ">";
     return out;
 }
 
-bool operator == (const Point& p1, const Point& p2)
+bool operator == (const Point3D& p1, const Point3D& p2)
 {
     return ( p1.getCartDist(p2) < 1e-3f );
 }
