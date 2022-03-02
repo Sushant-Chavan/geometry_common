@@ -8,6 +8,9 @@
 namespace kelo::geometry_common
 {
 
+// Forward declaration 
+class Pose2D;
+
 class Point2D
 {
     public:
@@ -38,6 +41,18 @@ class Point2D
         };
 
         Point2D normalise() const;
+
+        void transform(const std::vector<float>& tf_mat);
+
+        void transform(const Pose2D& tf);
+
+        Point2D getTransformedPoint(const std::vector<float>& tf_mat) const;
+
+        Point2D getTransformedPoint(const Pose2D& tf) const;
+
+        Point2D getTransformedPoint(
+                const std::vector<float>& tf_mat,
+                const Point2D& pt) const;
 
         visualization_msgs::Marker getMarker(
                 const std::string& frame = "base_link",

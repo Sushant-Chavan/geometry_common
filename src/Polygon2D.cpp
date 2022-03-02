@@ -1,4 +1,4 @@
-#include <geometry_common/Point3D.h>
+#include <geometry_common/Utils.h>
 #include <geometry_common/Polygon2D.h>
 
 namespace kelo::geometry_common
@@ -87,6 +87,95 @@ bool Polygon2D::isConvex() const
         }
     }
     return true;
+}
+
+Polygon2D Polygon2D::calcConvexHullOfPolygons(
+        const Polygon2D& polygon_a,
+        const Polygon2D& polygon_b)
+{
+    /**
+     * source: https://en.wikipedia.org/wiki/Graham_scan#Pseudocode
+     */
+
+    /* aggregate all points */
+    PointVec2D pts;
+    pts.reserve(pts.size() + polygon_a.vertices.size() + polygon_b.vertices.size());
+    pts.insert(pts.end(), polygon_a.vertices.begin(), polygon_a.vertices.end());
+    pts.insert(pts.end(), polygon_b.vertices.begin(), polygon_b.vertices.end());
+    if ( pts.size() < 3 )
+    {
+        return pts;
+    }
+
+    /* find the lowest left most point */
+    Point2D lower_left_pt(pts[0]);
+    for ( size_t i = 0; i < pts.size(); i++ )
+    {
+        if ( pts[i].y < lower_left_pt.y )
+        {
+            lower_left_pt = pts[i];
+        }
+        else if ( pts[i].y == lower_left_pt.y && pts[i].x < lower_left_pt.x )
+        {
+            lower_left_pt = pts[i];
+        }
+    }
+
+    /* sort points in increasing order of angle they and lower_left_pt makes with X axis */
+    std::sort(pts.begin(), pts.end(),
+              [&lower_left_pt](const Point2D& a, const Point2D& b)
+              {
+                  return std::atan2(a.y - lower_left_pt.y, a.x - lower_left_pt.x)
+                       < std::atan2(b.y - lower_left_pt.y, b.x - lower_left_pt.x);
+              });
+
+    /* walk along pts and remove points that form non counter clockwise turn */
+    PointVec2D convex_hull;
+    for ( Point2D& p : pts )
+    {
+        while ( convex_hull.size() > 1 )
+        {
+            PointVec2D::const_iterator it = convex_hull.end();
+            float angle = Utils::getAngleBetweenPoints(p, *(it-1), *(it-2));
+            if ( angle > 0 ) // counter clockwise turn is allowed
+            {
+                break;
+            }
+            convex_hull.pop_back();
+        }
+        convex_hull.push_back(p);
+    }
+    return Polygon2D(convex_hull);
+}
+
+void Polygon2D::transform(const std::vector<float>& tf_mat)
+{
+    for ( Point2D& vert : vertices )
+    {
+        vert.transform(tf_mat);
+    }
+}
+
+void Polygon2D::transform(const Pose2D& tf)
+{
+    for ( Point2D& vert : vertices )
+    {
+        vert.transform(tf);
+    }
+}
+
+Polygon2D Polygon2D::getTransformedPolygon(const std::vector<float>& tf_mat) const
+{
+    Polygon2D transformed_poly(*this);
+    transformed_poly.transform(tf_mat);
+    return transformed_poly;
+}
+
+Polygon2D Polygon2D::getTransformedPolygon(const Pose2D& tf) const
+{
+    Polygon2D transformed_poly(*this);
+    transformed_poly.transform(tf);
+    return transformed_poly;
 }
 
 visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,

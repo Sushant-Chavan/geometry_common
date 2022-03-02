@@ -1,3 +1,4 @@
+#include <geometry_common/Utils.h>
 #include <geometry_common/Point2D.h>
 
 namespace kelo::geometry_common
@@ -11,6 +12,35 @@ Point2D Point2D::normalise() const
         return Point2D();
     }
     return Point2D(x/mag, y/mag);
+}
+
+void Point2D::transform(const std::vector<float>& tf_mat)
+{
+    assert(tf_mat.size() == 9);
+    std::vector<float> p_vec{x, y, 1.0f};
+    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
+    x = transformed_p_vec[0];
+    y = transformed_p_vec[1];
+}
+
+void Point2D::transform(const Pose2D& tf)
+{
+    transform(tf.getMat());
+}
+
+Point2D Point2D::getTransformedPoint(const Pose2D& tf) const
+{
+    Point2D transformed_pt(*this);
+    transformed_pt.x = (std::cos(tf.theta) * x) + (-std::sin(tf.theta) * y) + tf.x;
+    transformed_pt.y = (std::sin(tf.theta) * x) + ( std::cos(tf.theta) * y) + tf.y;
+    return transformed_pt;
+}
+
+Point2D Point2D::getTransformedPoint(const std::vector<float>& tf_mat) const
+{
+    Point2D transformed_pt(*this);
+    transformed_pt.transform(tf_mat);
+    return transformed_pt;
 }
 
 visualization_msgs::Marker Point2D::getMarker(const std::string& frame,

@@ -159,7 +159,7 @@ PointCloud3D PointCloudProjector::transformAndFilterPointCloud(
     cloud_out.reserve(cloud_in.size());
     for ( Point3D pt : cloud_in )
     {
-        Utils::transformPoint(camera_to_target_tf_mat_, pt);
+        pt.transform(camera_to_target_tf_mat_);
         if ( isPointValid(pt) )
         {
             cloud_out.push_back(pt);

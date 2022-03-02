@@ -3,11 +3,13 @@
 #include <vector>
 
 #include <geometry_common/Point3D.h>
+#include <geometry_common/Polygon2D.h>
 #include <geometry_common/Utils.h>
 
 
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Polygon2D;
+using kelo::geometry_common::Utils;
 
 TEST(UtilsTest, getAngleBetweenPoints)
 {
@@ -16,11 +18,11 @@ TEST(UtilsTest, getAngleBetweenPoints)
     Point2D c(2.0f, 1.0f);
     Point2D d(0.0f, 1.0f);
     Point2D e(2.0f, -1.0f);
-    EXPECT_FLOAT_EQ(kelo::geometry_common::Utils::getAngleBetweenPoints(a, b, c), -3*M_PI/4)
+    EXPECT_FLOAT_EQ(Utils::getAngleBetweenPoints(a, b, c), -3*M_PI/4)
         << "Angle should be -3pi/4.";
-    EXPECT_FLOAT_EQ(kelo::geometry_common::Utils::getAngleBetweenPoints(d, b, a), M_PI/4)
+    EXPECT_FLOAT_EQ(Utils::getAngleBetweenPoints(d, b, a), M_PI/4)
         << "Angle should be pi/4.";
-    EXPECT_FLOAT_EQ(kelo::geometry_common::Utils::getAngleBetweenPoints(e, b, a), -3*M_PI/4)
+    EXPECT_FLOAT_EQ(Utils::getAngleBetweenPoints(e, b, a), -3*M_PI/4)
         << "Angle should be -3pi/4.";
 }
 
@@ -73,8 +75,7 @@ TEST(UtilsTest, calcConvexHullOfPolygons)
         Point2D(9.0f, 1.0f),
         Point2D(9.0f, 3.0f)
     });
-    Polygon2D convex_hull = kelo::geometry_common::Utils::calcConvexHullOfPolygons(
-            polygon_a, polygon_b);
+    Polygon2D convex_hull = Polygon2D::calcConvexHullOfPolygons(polygon_a, polygon_b);
 
     EXPECT_EQ(convex_hull.vertices.size(), 6u);
     EXPECT_EQ(convex_hull.vertices[0], polygon_a.vertices[0]);

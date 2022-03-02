@@ -202,87 +202,6 @@ std::vector<PointCloud2D> Utils::clusterOrderedPoints(
     return clusters;
 }
 
-Point2D Utils::getTransformedPoint(
-        const Pose2D& tf,
-        const Point2D& pt)
-{
-    Point2D transformed_pt = pt;
-    transformed_pt.x = (std::cos(tf.theta) * pt.x) + (-std::sin(tf.theta) * pt.y) + tf.x;
-    transformed_pt.y = (std::sin(tf.theta) * pt.x) + (std::cos(tf.theta) * pt.y) + tf.y;
-    return transformed_pt;
-}
-
-Point2D Utils::getTransformedPoint(
-        const std::vector<float>& tf_mat,
-        const Point2D& pt)
-{
-    assert(tf_mat.size() == 9);
-    Point2D transformed_pt(pt);
-    Utils::transformPoint(tf_mat, transformed_pt);
-    return transformed_pt;
-}
-
-Point3D Utils::getTransformedPoint(
-        const std::vector<float>& tf_mat,
-        const Point3D& pt)
-{
-    assert(tf_mat.size() == 16);
-    Point3D transformed_pt(pt);
-    Utils::transformPoint(tf_mat, transformed_pt);
-    return transformed_pt;
-}
-
-void Utils::transformPoint(
-        const std::vector<float>& tf_mat,
-        Point2D& pt)
-{
-    assert(tf_mat.size() == 9);
-    std::vector<float> p_vec{pt.x, pt.y, 1.0f};
-    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
-    pt.x = transformed_p_vec[0];
-    pt.y = transformed_p_vec[1];
-}
-
-void Utils::transformPoint(
-        const std::vector<float>& tf_mat,
-        Point3D& pt)
-{
-    assert(tf_mat.size() == 16);
-    std::vector<float> p_vec{pt.x, pt.y, pt.z, 1.0f};
-    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
-    pt.x = transformed_p_vec[0];
-    pt.y = transformed_p_vec[1];
-    pt.z = transformed_p_vec[2];
-}
-
-Pose2D Utils::getTransformedPose(
-        const std::vector<float> tf_mat,
-        const Pose2D& pose)
-{
-    assert(tf_mat.size() == 9);
-    return Pose2D(Utils::multiplyMatrices(tf_mat, pose.getMat(), 3));
-}
-
-Pose2D Utils::getTransformedPose(
-        const Pose2D& tf,
-        const Pose2D& pose)
-{
-    return Utils::getTransformedPose(tf.getMat(), pose);
-}
-
-Polygon2D Utils::getTransformedPolygon(
-        const Pose2D& tf,
-        const Polygon2D& polygon)
-{ 
-    Polygon2D fp;
-    fp.vertices.reserve(polygon.vertices.size());
-    for ( const Point2D& pt : polygon.vertices )
-    {
-        fp.vertices.push_back(Utils::getTransformedPoint(tf, pt));
-    }
-    return fp;
-}
-
 std::vector<Pose2D> Utils::getTrajectory(
         const Pose2D& vel,
         size_t num_of_poses,
@@ -1215,29 +1134,10 @@ PointCloud3D Utils::convertFromROSScan(
 }
 
 std::vector<float> Utils::getInverted2DTransformMat(
-        const Pose2D& tf)
-{
-    Pose2D inv_tf(tf);
-    inv_tf.theta *= -1.0f; // reverse angle
-    std::vector<float> inv_mat = inv_tf.getMat();
-    std::vector<float> p_vec{-tf.x, -tf.y, 0.0f};
-    std::vector<float> transformed_vec = Utils::multiplyMatrixToVector(inv_mat, p_vec);
-    inv_mat[2] = transformed_vec[0];
-    inv_mat[5] = transformed_vec[1];
-    return inv_mat;
-}
-
-std::vector<float> Utils::getInverted2DTransformMat(
         const std::vector<float>& tf)
 {
     assert(tf.size() == 9);
-    return Utils::getInverted2DTransformMat(Pose2D(tf));
-}
-
-Pose2D Utils::getInverted2DTransformPose(
-        const Pose2D& tf)
-{
-    return Pose2D(Utils::getInverted2DTransformMat(tf));
+    return Pose2D(tf).getInverseTransformMat();
 }
 
 float Utils::getPerpendicularAngle(
@@ -1304,63 +1204,9 @@ float Utils::getAngleBetweenPoints(
                             std::atan2(vec_b_a.y, vec_b_a.x));
 }
 
-Polygon2D Utils::calcConvexHullOfPolygons(
-        const Polygon2D& polygon_a,
-        const Polygon2D& polygon_b)
-{
-    /* aggregate all points */
-    PointVec2D pts;
-    pts.reserve(pts.size() + polygon_a.vertices.size() + polygon_b.vertices.size());
-    pts.insert(pts.end(), polygon_a.vertices.begin(), polygon_a.vertices.end());
-    pts.insert(pts.end(), polygon_b.vertices.begin(), polygon_b.vertices.end());
-    if ( pts.size() < 3 )
-    {
-        return pts;
-    }
-
-    /* find the lowest left most point */
-    Point2D lower_left_pt(pts[0]);
-    for ( size_t i = 0; i < pts.size(); i++ )
-    {
-        if ( pts[i].y < lower_left_pt.y )
-        {
-            lower_left_pt = pts[i];
-        }
-        else if ( pts[i].y == lower_left_pt.y && pts[i].x < lower_left_pt.x )
-        {
-            lower_left_pt = pts[i];
-        }
-    }
-
-    /* sort points in increasing order of angle they and lower_left_pt makes with X axis */
-    std::sort(pts.begin(), pts.end(),
-              [&lower_left_pt](const Point2D& a, const Point2D& b)
-              {
-                  return std::atan2(a.y - lower_left_pt.y, a.x - lower_left_pt.x)
-                       < std::atan2(b.y - lower_left_pt.y, b.x - lower_left_pt.x);
-              });
-
-    /* walk along pts and remove points that form non counter clockwise turn */
-    PointVec2D convex_hull;
-    for ( Point2D& p : pts )
-    {
-        while ( convex_hull.size() > 1 )
-        {
-            PointVec2D::const_iterator it = convex_hull.end();
-            float angle = Utils::getAngleBetweenPoints(p, *(it-1), *(it-2));
-            if ( angle > 0 ) // counter clockwise turn is allowed
-            {
-                break;
-            }
-            convex_hull.pop_back();
-        }
-        convex_hull.push_back(p);
-    }
-    return Polygon2D(convex_hull);
-}
-
-nav_msgs::Path Utils::getPathMsgFromTrajectory(const std::vector<Pose2D>& trajectory,
-                                               const std::string& frame)
+nav_msgs::Path Utils::getPathMsgFromTrajectory(
+        const std::vector<Pose2D>& trajectory,
+        const std::string& frame)
 {
     nav_msgs::Path path_msg;
     // path_msg.header.stamp = ros::Time::now();

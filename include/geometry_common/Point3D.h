@@ -60,6 +60,10 @@ class Point3D
 
         Point3D normalise() const;
 
+        void transform(const std::vector<float>& tf_mat);
+
+        Point3D getTransformedPoint(const std::vector<float>& tf_mat) const;
+
         visualization_msgs::Marker getMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,

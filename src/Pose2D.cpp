@@ -107,6 +107,51 @@ void Pose2D::getQuaternionFromTheta(float _theta, float& qz, float& qw)
     qz = std::sin(_theta * 0.5f);
 }
 
+void Pose2D::transform(const std::vector<float>& tf_mat)
+{
+    assert(tf_mat.size() == 9);
+    std::vector<float> mat = Utils::multiplyMatrices(tf_mat, getMat(), 3);
+    x = mat[2];
+    y = mat[5];
+    theta = std::atan2(mat[3], mat[0]);
+}
+
+void Pose2D::transform(const Pose2D& tf)
+{
+    transform(tf.getMat());
+}
+
+Pose2D Pose2D::getTransformedPose(const std::vector<float> tf_mat) const
+{
+    Pose2D transformed_pose(*this);
+    transformed_pose.transform(tf_mat);
+    return transformed_pose;
+}
+
+Pose2D Pose2D::getTransformedPose(const Pose2D& tf) const
+{
+    Pose2D transformed_pose(*this);
+    transformed_pose.transform(tf);
+    return transformed_pose;
+}
+
+std::vector<float> Pose2D::getInverseTransformMat() const
+{
+    Pose2D inv_tf(*this);
+    inv_tf.theta *= -1.0f; // reverse angle
+    std::vector<float> inv_mat = inv_tf.getMat();
+    std::vector<float> p_vec{-x, -y, 0.0f};
+    std::vector<float> transformed_vec = Utils::multiplyMatrixToVector(inv_mat, p_vec);
+    inv_mat[2] = transformed_vec[0];
+    inv_mat[5] = transformed_vec[1];
+    return inv_mat;
+}
+
+Pose2D Pose2D::getInverseTransform() const
+{
+    return Pose2D(getInverseTransform());
+}
+
 std::string Pose2D::str() const
 {
     std::stringstream ss;

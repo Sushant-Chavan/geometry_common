@@ -37,6 +37,25 @@ class Polygon2D
 
         bool isConvex() const;
 
+        /**
+         * @brief Find convex hull from the union of 2 polygons.
+         * 
+         * @param polygon_a 
+         * @param polygon_b 
+         * @return Polygon2D 
+         */
+        static Polygon2D calcConvexHullOfPolygons(
+                const Polygon2D& polygon_a,
+                const Polygon2D& polygon_b);
+
+        void transform(const std::vector<float>& tf_mat);
+
+        void transform(const Pose2D& tf);
+
+        Polygon2D getTransformedPolygon(const std::vector<float>& tf_mat) const;
+
+        Polygon2D getTransformedPolygon(const Pose2D& tf) const;
+
         visualization_msgs::Marker getMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,

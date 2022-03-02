@@ -71,6 +71,18 @@ class Pose2D
 
         static void getQuaternionFromTheta(float _theta, float& qz, float& qw);
 
+        void transform(const std::vector<float>& tf_mat);
+
+        void transform(const Pose2D& tf);
+
+        Pose2D getTransformedPose(const std::vector<float> tf_mat) const;
+
+        Pose2D getTransformedPose(const Pose2D& tf) const;
+
+        std::vector<float> getInverseTransformMat() const;
+
+        Pose2D getInverseTransform() const;
+
         std::string str() const;
 
         friend Pose2D operator - (const Pose2D& p1, const Pose2D& p2);

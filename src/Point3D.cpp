@@ -1,3 +1,4 @@
+#include <geometry_common/Utils.h>
 #include <geometry_common/Point3D.h>
 
 namespace kelo::geometry_common
@@ -38,6 +39,23 @@ Point3D Point3D::normalise() const
         return Point3D();
     }
     return Point3D(x/mag, y/mag, z/mag);
+}
+
+void Point3D::transform(const std::vector<float>& tf_mat)
+{
+    assert(tf_mat.size() == 16);
+    std::vector<float> p_vec{x, y, z, 1.0f};
+    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
+    x = transformed_p_vec[0];
+    y = transformed_p_vec[1];
+    z = transformed_p_vec[2];
+}
+
+Point3D Point3D::getTransformedPoint(const std::vector<float>& tf_mat) const
+{
+    Point3D transformed_pt(*this);
+    transformed_pt.transform(tf_mat);
+    return transformed_pt;
 }
 
 visualization_msgs::Marker Point3D::getMarker(const std::string& frame,
