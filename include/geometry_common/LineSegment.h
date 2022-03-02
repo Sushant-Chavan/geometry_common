@@ -1,14 +1,14 @@
-#ifndef GEOMETRY_COMMON_LINE_SEGMENT_H
-#define GEOMETRY_COMMON_LINE_SEGMENT_H
+#ifndef KELO_GEOMETRY_COMMON_LINE_SEGMENT_H
+#define KELO_GEOMETRY_COMMON_LINE_SEGMENT_H
 
 #include <math.h>
 #include <string>
 #include <iostream>
 #include <visualization_msgs/Marker.h>
 
-#include <geometry_common/point.h>
+#include <geometry_common/Point.h>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 class LineSegment
@@ -51,5 +51,5 @@ class LineSegment
         friend std::ostream& operator << (std::ostream &out, const LineSegment& line_segment);
 };
 
-} // namespace geometry_common
-#endif // GEOMETRY_COMMON_LINE_SEGMENT_H
+} // namespace kelo::geometry_common
+#endif // KELO_GEOMETRY_COMMON_LINE_SEGMENT_H

@@ -46,19 +46,19 @@ include_directories(
 # =========
 add_library(geometry_utils
     SHARED
-        src/utils.cpp
+        src/Utils.cpp
         # data structures
-        src/point.cpp
-        src/pose_2d.cpp
-        src/box.cpp
-        src/line_segment.cpp
+        src/Point.cpp
+        src/Pose2D.cpp
+        src/Box.cpp
+        src/LineSegment.cpp
 )
 target_link_libraries(geometry_utils
 )
 
 add_library(pointcloud_projector
     SHARED
-        src/pointcloud_projector.cpp
+        src/PointCloudProjector.cpp
 )
 target_link_libraries(pointcloud_projector
     geometry_utils
@@ -76,10 +76,10 @@ if (CATKIN_ENABLE_TESTING)
         ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
-    catkin_add_gtest(pose2d_test
-        test/pose2d_test.cpp
+    catkin_add_gtest(pose_2d_test
+        test/pose_2d_test.cpp
     )
-    target_link_libraries(pose2d_test
+    target_link_libraries(pose_2d_test
         geometry_utils
         ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}

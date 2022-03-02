@@ -1,25 +1,25 @@
-#include <geometry_common/pose_2d.h>
-#include <geometry_common/utils.h>
+#include <geometry_common/Pose2D.h>
+#include <geometry_common/Utils.h>
 #include <cmath>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
-Pose2d::Pose2d(const geometry_msgs::PoseStamped &pose)
+Pose2D::Pose2D(const geometry_msgs::PoseStamped &pose)
 {
     x = pose.pose.position.x;
     y = pose.pose.position.y;
-    theta = Pose2d::getThetaFromQuaternion(pose.pose.orientation);
+    theta = Pose2D::getThetaFromQuaternion(pose.pose.orientation);
 }
 
-Pose2d::Pose2d(const geometry_msgs::Pose &pose)
+Pose2D::Pose2D(const geometry_msgs::Pose &pose)
 {
     x = pose.position.x;
     y = pose.position.y;
-    theta = Pose2d::getThetaFromQuaternion(pose.orientation);
+    theta = Pose2D::getThetaFromQuaternion(pose.orientation);
 }
 
-Pose2d::Pose2d(const std::vector<float>& mat)
+Pose2D::Pose2D(const std::vector<float>& mat)
 {
     assert(mat.size() == 9);
     x = mat[2];
@@ -27,7 +27,7 @@ Pose2d::Pose2d(const std::vector<float>& mat)
     theta = std::atan2(mat[3], mat[0]);
 }
 
-Pose2d::Pose2d(const tf::StampedTransform &stamped_transform)
+Pose2D::Pose2D(const tf::StampedTransform &stamped_transform)
 {
     x = stamped_transform.getOrigin().x();
     y = stamped_transform.getOrigin().y();
@@ -36,11 +36,11 @@ Pose2d::Pose2d(const tf::StampedTransform &stamped_transform)
     theta = tf::getYaw(quat);
 }
 
-Pose2d::~Pose2d()
+Pose2D::~Pose2D()
 {
 }
 
-geometry_msgs::PoseStamped Pose2d::getPoseStamped(const std::string& frame) const
+geometry_msgs::PoseStamped Pose2D::getPoseStamped(const std::string& frame) const
 {
     geometry_msgs::PoseStamped pose;
     pose.header.frame_id = frame;
@@ -48,7 +48,7 @@ geometry_msgs::PoseStamped Pose2d::getPoseStamped(const std::string& frame) cons
     return pose;
 }
 
-geometry_msgs::Pose Pose2d::getPose() const
+geometry_msgs::Pose Pose2D::getPose() const
 {
     geometry_msgs::Pose pose;
     pose.position.x = x;
@@ -57,18 +57,18 @@ geometry_msgs::Pose Pose2d::getPose() const
     pose.orientation.x = 0.0f;
     pose.orientation.y = 0.0f;
     float z, w;
-    Pose2d::getQuaternionFromTheta(theta, z, w);
+    Pose2D::getQuaternionFromTheta(theta, z, w);
     pose.orientation.z = z;
     pose.orientation.w = w;
     return pose;
 }
 
-std::vector<float> Pose2d::getMat() const
+std::vector<float> Pose2D::getMat() const
 {
     return Utils::get2DTransformMat(x, y, theta);
 }
 
-visualization_msgs::Marker Pose2d::getMarker(const std::string& frame,
+visualization_msgs::Marker Pose2D::getMarker(const std::string& frame,
         float red, float green, float blue, float alpha,
         float size_x, float size_y, float size_z) const
 {
@@ -87,12 +87,12 @@ visualization_msgs::Marker Pose2d::getMarker(const std::string& frame,
     return marker;
 }
 
-float Pose2d::getThetaFromQuaternion(const geometry_msgs::Quaternion& q)
+float Pose2D::getThetaFromQuaternion(const geometry_msgs::Quaternion& q)
 {
-    return Pose2d::getThetaFromQuaternion(q.x, q.y, q.z, q.w);
+    return Pose2D::getThetaFromQuaternion(q.x, q.y, q.z, q.w);
 }
 
-float Pose2d::getThetaFromQuaternion(float qx, float qy, float qz, float qw)
+float Pose2D::getThetaFromQuaternion(float qx, float qy, float qz, float qw)
 {
     /* source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2 */
     float sinyaw_cospitch = 2 * (qw * qz + qx * qy);
@@ -100,14 +100,14 @@ float Pose2d::getThetaFromQuaternion(float qx, float qy, float qz, float qw)
     return std::atan2(sinyaw_cospitch, cosyaw_cospitch);
 }
 
-void Pose2d::getQuaternionFromTheta(float _theta, float& qz, float& qw)
+void Pose2D::getQuaternionFromTheta(float _theta, float& qz, float& qw)
 {
     /* source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code */
     qw = std::cos(_theta * 0.5f);
     qz = std::sin(_theta * 0.5f);
 }
 
-std::string Pose2d::str() const
+std::string Pose2D::str() const
 {
     std::stringstream ss;
     ss << std::fixed << std::setprecision(3);
@@ -118,31 +118,31 @@ std::string Pose2d::str() const
     return ss.str();
 }
 
-Pose2d operator - (const Pose2d& pose_1, const Pose2d& pose_2)
+Pose2D operator - (const Pose2D& pose_1, const Pose2D& pose_2)
 {
-    Pose2d diff;
+    Pose2D diff;
     diff.x = pose_1.x - pose_2.x;
     diff.y = pose_1.y - pose_2.y;
     diff.theta = Utils::getShortestAngle(pose_1.theta, pose_2.theta);
     return diff;
 }
 
-Pose2d operator * (const Pose2d& pose, float scalar)
+Pose2D operator * (const Pose2D& pose, float scalar)
 {
-    Pose2d scaled;
+    Pose2D scaled;
     scaled.x = pose.x * scalar;
     scaled.y = pose.y * scalar;
     scaled.theta = pose.theta * scalar;
     return scaled;
 }
 
-bool operator == (const Pose2d& pose_1, const Pose2d& pose_2)
+bool operator == (const Pose2D& pose_1, const Pose2D& pose_2)
 {
     return ( pose_1.getCartDist(pose_2) < 1e-3f &&
              Utils::getShortestAngle(pose_1.theta, pose_2.theta) < 1e-2f );
 }
 
-std::ostream& operator << (std::ostream &out, const Pose2d& pose_2d)
+std::ostream& operator << (std::ostream &out, const Pose2D& pose_2d)
 {
     out << "<x: " << pose_2d.x
         << ", y: " << pose_2d.y
@@ -151,4 +151,4 @@ std::ostream& operator << (std::ostream &out, const Pose2d& pose_2d)
     return out;
 }
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common

@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_COMMON_POINT_H
-#define GEOMETRY_COMMON_POINT_H
+#ifndef KELO_GEOMETRY_COMMON_POINT_H
+#define KELO_GEOMETRY_COMMON_POINT_H
 
 #include <visualization_msgs/Marker.h>
 #include <geometry_msgs/PointStamped.h>
@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 class Point
@@ -87,5 +87,5 @@ class Point
 
 typedef std::vector<Point> PointCloud;
 
-}; // namespace geometry_common
-#endif // GEOMETRY_COMMON_POINT_H
+}; // namespace kelo::geometry_common
+#endif // KELO_GEOMETRY_COMMON_POINT_H

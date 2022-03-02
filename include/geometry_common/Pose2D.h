@@ -1,38 +1,38 @@
-#ifndef GEOMETRY_COMMON_POSE_2D_H
-#define GEOMETRY_COMMON_POSE_2D_H
+#ifndef KELO_GEOMETRY_COMMON_POSE_2D_H
+#define KELO_GEOMETRY_COMMON_POSE_2D_H
 
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Pose.h>
 #include <visualization_msgs/Marker.h>
 #include <tf/transform_datatypes.h>
 
-#include <geometry_common/point.h>
+#include <geometry_common/Point.h>
 
 #include <cmath>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
-class Pose2d
+class Pose2D
 {
     public:
         float x, y, theta;
 
-        Pose2d(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
+        Pose2D(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
             x(_x), y(_y), theta(_theta) {};
 
-        Pose2d(const Pose2d &pose):
+        Pose2D(const Pose2D &pose):
             x(pose.x), y(pose.y), theta(pose.theta) {};
 
-        Pose2d(const geometry_msgs::PoseStamped &pose);
+        Pose2D(const geometry_msgs::PoseStamped &pose);
 
-        Pose2d(const geometry_msgs::Pose &pose);
+        Pose2D(const geometry_msgs::Pose &pose);
 
-        Pose2d(const std::vector<float>& mat);
+        Pose2D(const std::vector<float>& mat);
 
-        Pose2d(const tf::StampedTransform &stamped_transform);
+        Pose2D(const tf::StampedTransform &stamped_transform);
 
-        virtual ~Pose2d();
+        virtual ~Pose2D();
 
         geometry_msgs::PoseStamped getPoseStamped(const std::string& frame="map") const;
 
@@ -50,12 +50,12 @@ class Pose2d
                 float size_y = 0.05f,
                 float size_z = 0.05f) const;
 
-        inline float getCartDist(const Pose2d& p) const
+        inline float getCartDist(const Pose2D& p) const
         {
             return std::sqrt(getCartDistSquared(p));
         };
 
-        inline float getCartDistSquared(const Pose2d& p) const
+        inline float getCartDistSquared(const Pose2D& p) const
         {
             return std::pow(x - p.x, 2) + std::pow(y - p.y, 2);
         };
@@ -73,15 +73,15 @@ class Pose2d
 
         std::string str() const;
 
-        friend Pose2d operator - (const Pose2d& p1, const Pose2d& p2);
+        friend Pose2D operator - (const Pose2D& p1, const Pose2D& p2);
 
-        friend Pose2d operator * (const Pose2d& pose, float scalar);
+        friend Pose2D operator * (const Pose2D& pose, float scalar);
 
-        friend bool operator == (const Pose2d& p1, const Pose2d& p2);
+        friend bool operator == (const Pose2D& p1, const Pose2D& p2);
 
-        friend std::ostream& operator << (std::ostream &out, const Pose2d& pose_2d);
+        friend std::ostream& operator << (std::ostream &out, const Pose2D& pose_2d);
 };
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common
 
-#endif // GEOMETRY_COMMON_POSE_2D_H
+#endif // KELO_GEOMETRY_COMMON_POSE_2D_H

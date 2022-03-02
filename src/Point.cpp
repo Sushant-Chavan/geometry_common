@@ -1,6 +1,6 @@
-#include <geometry_common/point.h>
+#include <geometry_common/Point.h>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 geometry_msgs::Point Point::getPoint() const
@@ -98,4 +98,4 @@ bool operator == (const Point& p1, const Point& p2)
     return ( p1.getCartDist(p2) < 1e-3f );
 }
 
-} // namespace geometry_common
+} // namespace kelo::geometry_common

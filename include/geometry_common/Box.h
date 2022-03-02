@@ -1,12 +1,12 @@
-#ifndef GEOMETRY_COMMON_BOX_H
-#define GEOMETRY_COMMON_BOX_H
+#ifndef KELO_GEOMETRY_COMMON_BOX_H
+#define KELO_GEOMETRY_COMMON_BOX_H
 
 #include <yaml-cpp/yaml.h>
 
 #include <visualization_msgs/Marker.h>
-#include <geometry_common/point.h>
+#include <geometry_common/Point.h>
 
-namespace geometry_common
+namespace kelo::geometry_common
 {
 
 class Box
@@ -42,6 +42,5 @@ class Box
         friend std::ostream& operator << (std::ostream& out, const Box& box);
 };
 
-}; // namespace geometry_common
-#endif // GEOMETRY_COMMON_BOX_H
-
+}; // namespace kelo::geometry_common
+#endif // KELO_GEOMETRY_COMMON_BOX_H

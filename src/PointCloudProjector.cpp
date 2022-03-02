@@ -1,9 +1,9 @@
-#include <geometry_common/pointcloud_projector.h>
+#include <geometry_common/PointCloudProjector.h>
 #include <cmath>
 
-using geometry_common::Point;
-using geometry_common::PointCloud;
-using geometry_common::Utils;
+using kelo::geometry_common::Point;
+using kelo::geometry_common::PointCloud;
+using kelo::geometry_common::Utils;
 
 PointCloudProjector::PointCloudProjector():
     passthrough_min_z_(0.0f),
@@ -138,7 +138,7 @@ bool PointCloudProjector::configure(
     {
         config_params_yaml = YAML::LoadFile(config_file);
     }
-    catch(YAML::BadFile)
+    catch(YAML::BadFile&)
     {
         std::cout << std::endl << std::endl;
         std::cerr << "YAML threw BadFile exception. Does the file exist?" << std::endl;
