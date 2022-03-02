@@ -66,8 +66,8 @@ bool Polygon2D::isConvex() const
 
     for ( size_t i = 0; i < vertices.size(); i++ )
     {
-        Point3D p1(vertices[i]);
-        Point3D p2(vertices[(i+2)%vertices.size()]);
+        Point2D p1(vertices[i]);
+        Point2D p2(vertices[(i+2)%vertices.size()]);
         meanPt = (p1 + p2) * 0.5f;
         if ( !containsPoint(meanPt) )
         {
@@ -78,10 +78,8 @@ bool Polygon2D::isConvex() const
 }
 
 visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
-                                                float red, float green,
-                                                float blue, float alpha,
-                                                float line_width,
-                                                double z) const
+        float red, float green, float blue, float alpha, float line_width,
+        float z) const
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::LINE_STRIP;

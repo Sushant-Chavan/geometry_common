@@ -10,34 +10,30 @@
 namespace kelo::geometry_common
 {
 
-class Point3D : public Point2D
+class Point3D
 {
     public:
-        float z{0.0};
+        float x{0.0f}, y{0.0f}, z{0.0f};
 
-        Point3D(float x = 0.0, float y = 0.0, float z = 0.0):
-            Point2D(x, y),
-            z(z) {}
+        Point3D(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f):
+            x(_x),
+            y(_y),
+            z(_z) {}
 
-        Point3D(const Point2D& point, float z = 0.0):
-            Point2D(point.x, point.y),
-            z(z) {}
+        Point3D(const Point2D& point, float _z = 0.0f):
+            Point3D(point.x, point.y, _z) {}
 
         Point3D(const Point3D& point):
-            Point2D(point.x, point.y),
-            z(point.z) {}
+            Point3D(point.x, point.y, point.z) {}
 
         Point3D(const geometry_msgs::PointStamped& point):
-            Point2D(point.point.x, point.point.y),
-            z(point.point.z) {}
+            Point3D(point.point) {}
 
         Point3D(const geometry_msgs::Point& point):
-            Point2D(point.x, point.y),
-            z(point.z) {}
+            Point3D(point.x, point.y, point.z) {}
 
         Point3D(const geometry_msgs::Point32& point):
-            Point2D(point.x, point.y),
-            z(point.z) {}
+            Point3D(point.x, point.y, point.z) {}
 
         virtual ~Point3D() {}
 
@@ -45,7 +41,7 @@ class Point3D : public Point2D
 
         geometry_msgs::Point32 getPoint32() const;
 
-        geometry_msgs::PointStamped getPointStamped(const std::string& frame="map") const;
+        geometry_msgs::PointStamped getPointStamped(const std::string& frame = "map") const;
 
         inline float getCartDist(const Point3D& p) const
         {
@@ -57,7 +53,7 @@ class Point3D : public Point2D
             return std::pow(x - p.x, 2) + std::pow(y - p.y, 2) + std::pow(z - p.z, 2);
         };
 
-        inline float magnitude() const override
+        inline float magnitude() const
         {
             return std::sqrt(std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2));
         };

@@ -14,7 +14,8 @@ Point2D Point2D::normalise() const
 }
 
 visualization_msgs::Marker Point2D::getMarker(const std::string& frame,
-        float red, float green, float blue, float alpha, float diameter, double z) const
+        float red, float green, float blue, float alpha, float diameter, 
+        float z) const
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::SPHERE;

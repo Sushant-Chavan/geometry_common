@@ -11,15 +11,14 @@ namespace kelo::geometry_common
 class Point2D
 {
     public:
-        float x{0.0}, y{0.0};
+        float x{0.0f}, y{0.0f};
 
-        Point2D(float x = 0.0, float y = 0.0):
-            x(x),
-            y(y) {}
+        Point2D(float _x = 0.0f, float _y = 0.0f):
+            x(_x),
+            y(_y) {}
 
         Point2D(const Point2D& point):
-            x(point.x),
-            y(point.y) {}
+            Point2D(point.x, point.y) {}
 
         virtual ~Point2D() {}
 
@@ -33,7 +32,7 @@ class Point2D
             return std::pow(x - p.x, 2) + std::pow(y - p.y, 2);
         };
 
-        virtual inline float magnitude() const
+        inline float magnitude() const
         {
             return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
         };
@@ -47,7 +46,7 @@ class Point2D
                 float blue = 0.0f,
                 float alpha = 1.0f,
                 float diameter = 0.2f,
-                double z = 0.0) const;
+                float z = 0.0f) const;
 
         friend Point2D operator - (const Point2D& p1, const Point2D& p2);
 

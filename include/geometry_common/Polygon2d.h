@@ -42,7 +42,7 @@ class Polygon2D
                 float blue = 0.0f,
                 float alpha = 1.0f,
                 float line_width = 0.1f,
-                double z = 0.0) const;
+                float z = 0.0f) const;
 
         friend std::ostream& operator << (std::ostream &out, const Polygon2D& line_segment);
 };
