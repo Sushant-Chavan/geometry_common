@@ -25,6 +25,8 @@ class Polygon2D
 
         bool containsPoint(const Point2D& point) const;
 
+        bool containsAnyPoint(const PointVec2D& points) const;
+
         Point2D getMeanPoint() const;
 
         /*

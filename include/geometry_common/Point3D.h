@@ -80,7 +80,7 @@ class Point3D
 };
 
 using PointVec3D = std::vector<Point3D>;
-using PointCloud = std::vector<Point3D>;
+using PointCloud3D = std::vector<Point3D>;
 
 }; // namespace kelo::geometry_common
 #endif // KELO_GEOMETRY_COMMON_POINT_3D_H

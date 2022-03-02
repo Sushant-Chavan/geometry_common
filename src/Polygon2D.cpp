@@ -12,7 +12,7 @@ bool Polygon2D::containsPoint(const Point2D& point) const
      * Source: https://stackoverflow.com/a/2922778/10460994
      */
     size_t i, j, counter = 0;
-    for (i = 0, j = vertices.size()-1; i < vertices.size(); j = i++)
+    for ( i = 0, j = vertices.size() - 1; i < vertices.size(); j = i++ )
     {
         const Point2D& currVert = vertices[i];
         const Point2D& prevVert = vertices[j];
@@ -22,7 +22,19 @@ bool Polygon2D::containsPoint(const Point2D& point) const
             counter++;
         }
     }
-    return (counter % 2 == 1);
+    return ( counter % 2 == 1 );
+}
+
+bool Polygon2D::containsAnyPoint(const PointVec2D& points) const
+{
+    for ( const Point2D& pt: points )
+    {
+        if ( containsPoint(pt) )
+        {
+            return true;
+        }
+    }
+    return false; 
 }
 
 Point2D Polygon2D::getMeanPoint() const
@@ -93,7 +105,7 @@ visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
     marker.pose.orientation.w = 1.0f;
     if (!vertices.empty())
     {
-        for (const auto& corner : vertices)
+        for ( const Point2D& corner : vertices )
         {
             marker.points.push_back(Point3D(corner, z).getPoint());
         }

@@ -12,7 +12,8 @@
 
 #include <geometry_common/Pose2D.h>
 #include <geometry_common/Point3D.h>
-#include <geometry_common/LineSegment.h>
+#include <geometry_common/Polygon2D.h>
+#include <geometry_common/LineSegment2D.h>
 
 namespace kelo::geometry_common
 {
@@ -25,62 +26,53 @@ class Utils
                 float value,
                 unsigned decimal_places);
 
-        static Point3D getMeanPoint(
-                const PointCloud& points,
+        template <typename T>
+        static T getMeanPoint(
+                const std::vector<T>& points,
                 unsigned start_index,
                 unsigned end_index);
 
-        static Point3D getMeanPoint(
-                const PointCloud& points);
+        template <typename T>
+        static T getMeanPoint(
+                const std::vector<T>& points);
 
         template <typename T>
         static Pose2D getMeanPose(
                 const T& poses);
 
-        static Point3D getClosestPoint(
-                const PointCloud& points,
-                float x=0.0f,
-                float y=0.0f,
-                float z=0.0f);
+        template <typename T>
+        static T getClosestPoint(
+                const std::vector<T>& points,
+                const T& pt = T());
 
-        static std::vector<std::vector<Point3D> > clusterPoints(
-                const PointCloud& points,
-                float cluster_distance_threshold=0.1f,
-                size_t min_cluster_size=3);
+        static std::vector<PointCloud2D> clusterPoints(
+                const PointCloud2D& points,
+                float cluster_distance_threshold = 0.1f,
+                size_t min_cluster_size = 3);
 
-        static std::vector<std::vector<Point3D> > clusterOrderedPoints(
-                const PointCloud& points,
-                float cluster_distance_threshold=0.1f,
-                size_t min_cluster_size=3);
-
-        /* 
-         * Source: https://stackoverflow.com/a/2922778/10460994
-         */
-        static bool isPointInPolygon(
-                const std::vector<Point3D>& polygon,
-                const Point3D& point);
-
-        static bool isFootprintSafe(
-                const std::vector<Point3D>& footprint,
-                const PointCloud& points);
+        static std::vector<PointCloud2D> clusterOrderedPoints(
+                const PointCloud2D& points,
+                float cluster_distance_threshold = 0.1f,
+                size_t min_cluster_size = 3);
 
         /*
          * 2D transform (returns a 2D point which only has x and y component)
          */
-        static Point3D getTransformedPoint(
+        static Point2D getTransformedPoint(
                 const Pose2D& tf,
-                const Point3D& pt);
+                const Point2D& pt);
 
-        /*
-         * 3D transform (returns a 3D point which has x, y and z component)
-         */
+        static Point2D getTransformedPoint(
+                const std::vector<float>& tf_mat,
+                const Point2D& pt);
+
         static Point3D getTransformedPoint(
                 const std::vector<float>& tf_mat,
                 const Point3D& pt);
 
-        static void transformPoint2D(
+        static void transformPoint(
                 const std::vector<float>& tf_mat,
-                Point3D& pt);
+                Point2D& pt);
 
         static void transformPoint(
                 const std::vector<float>& tf_mat,
@@ -94,9 +86,9 @@ class Utils
                 const Pose2D& tf,
                 const Pose2D& pose);
 
-        static std::vector<Point3D> getTransformedFootprint(
+        static Polygon2D getTransformedPolygon(
                 const Pose2D& tf,
-                const std::vector<Point3D>& footprint);
+                const Polygon2D& polygon);
 
         static std::vector<Pose2D> getTrajectory(
                 const Pose2D& vel,
@@ -132,47 +124,47 @@ class Utils
         static void findPerpendicularLineAt(
                 float m,
                 float c,
-                const Point3D& p,
+                const Point2D& p,
                 float& perpendicular_m,
                 float& perpendicular_c);
 
         static float distToLineSquared(
                 float m,
                 float c,
-                const Point3D& p);
+                const Point2D& p);
 
-        static Point3D getProjectedPointOnLine(
+        static Point2D getProjectedPointOnLine(
                 float m,
                 float c,
-                const Point3D& p);
+                const Point2D& p);
 
-        static Point3D getProjectedPointOnSegment(
-                const Point3D& a,
-                const Point3D& b,
-                const Point3D& p,
+        static Point2D getProjectedPointOnSegment(
+                const Point2D& a,
+                const Point2D& b,
+                const Point2D& p,
                 bool is_segment);
 
-        static Point3D getProjectedPointOnMajorAxis(
+        static Point2D getProjectedPointOnMajorAxis(
                 float m,
                 float c,
-                const Point3D& p);
+                const Point2D& p);
 
         /*
          * find the distance of point p from a line formed by points a and b
          * source: https://stackoverflow.com/a/1501725/10460994
          */
         static float distToLineSquared(
-                const Point3D& a,
-                const Point3D& b,
-                const Point3D& p,
+                const Point2D& a,
+                const Point2D& b,
+                const Point2D& p,
                 bool is_segment = false);
 
         static float distToLineSegmentSquared(
-                const LineSegment& line_segment,
-                const Point3D& p);
+                const LineSegment2D& line_segment,
+                const Point2D& p);
 
         static float fitLineRANSAC(
-                const PointCloud& pts,
+                const PointCloud2D& pts,
                 unsigned start_index,
                 unsigned end_index,
                 float& m,
@@ -181,61 +173,61 @@ class Utils
                 size_t itr_limit = 10);
 
         static float fitLineRANSAC(
-                const PointCloud& pts,
+                const PointCloud2D& pts,
                 float& m, float& c,
                 float delta = 0.2f,
                 size_t itr_limit = 10);
 
         static float fitLineSegmentRANSAC(
-                const PointCloud& pts,
+                const PointCloud2D& pts,
                 unsigned start_index,
                 unsigned end_index,
-                LineSegment& line_segment,
+                LineSegment2D& line_segment,
                 float delta = 0.2f,
                 size_t itr_limit = 10);
 
         static float fitLineSegmentRANSAC(
-                const PointCloud& pts,
-                LineSegment& line_segment,
+                const PointCloud2D& pts,
+                LineSegment2D& line_segment,
                 float delta = 0.2f,
                 size_t itr_limit = 10);
 
-        static std::vector<LineSegment> fitLineSegmentsRANSAC(
-                const PointCloud& pts,
+        static std::vector<LineSegment2D> fitLineSegmentsRANSAC(
+                const PointCloud2D& pts,
                 float score_threshold = 0.9f,
                 float delta = 0.2f,
                 size_t itr_limit = 10);
 
         static float fitLineRegression(
-                const PointCloud& pts,
+                const PointCloud2D& pts,
                 unsigned start_index,
                 unsigned end_index,
-                LineSegment& line_segment);
+                LineSegment2D& line_segment);
 
         static float fitLineRegression(
-                const PointCloud& pts,
-                LineSegment& line_segment);
+                const PointCloud2D& pts,
+                LineSegment2D& line_segment);
 
-        static std::vector<LineSegment> piecewiseRegression(
-                const PointCloud& pts,
+        static std::vector<LineSegment2D> piecewiseRegression(
+                const PointCloud2D& pts,
                 float error_threshold = 0.1f);
 
-        static std::vector<LineSegment> piecewiseRegressionSplit(
-                const PointCloud& pts,
+        static std::vector<LineSegment2D> piecewiseRegressionSplit(
+                const PointCloud2D& pts,
                 float error_threshold = 0.1f);
 
         static void mergeCloseLines(
-                std::vector<LineSegment>& line_segments,
+                std::vector<LineSegment2D>& line_segments,
                 float distance_threshold = 0.2,
                 float angle_threshold = 0.2);
 
         static void mergeCloseLinesBF(
-                std::vector<LineSegment>& line_segments,
+                std::vector<LineSegment2D>& line_segments,
                 float distance_threshold = 0.2,
                 float angle_threshold = 0.2);
 
-        static std::vector<LineSegment> fitLineSegments(
-                const std::vector<Point3D> &pts,
+        static std::vector<LineSegment2D> fitLineSegments(
+                const std::vector<Point2D> &pts,
                 float regression_error_threshold = 0.1f,
                 float distance_threshold = 0.2,
                 float angle_threshold = 0.2);
@@ -270,10 +262,14 @@ class Utils
                 float t);
 
         static sensor_msgs::PointCloud convertToROSPC(
-                const PointCloud& pc,
+                const PointCloud3D& pc,
                 const std::string& frame);
 
-        static PointCloud convertFromROSPC(
+        static sensor_msgs::PointCloud convertToROSPC(
+                const PointCloud2D& pc,
+                const std::string& frame);
+
+        static PointCloud3D convertFromROSPC(
                 const sensor_msgs::PointCloud& pc);
 
         /*
@@ -283,12 +279,12 @@ class Utils
          *      if both their values are 2 and it is an organised cloud, the
          *      resulting cloud will be 1/4th the input cloud
          */
-        static PointCloud convertFromROSPC(
+        static PointCloud3D convertFromROSPC(
                 const sensor_msgs::PointCloud2& cloud_msg,
                 size_t row_sub_sample_factor = 1,
                 size_t col_sub_sample_factor = 1);
 
-        static PointCloud convertFromROSScan(
+        static PointCloud3D convertFromROSScan(
                 const sensor_msgs::LaserScan& scan);
 
         static std::vector<float> getInverted2DTransformMat(
@@ -316,48 +312,29 @@ class Utils
                 float max_angle,
                 float min_angle);
 
-        static std::vector<Point3D> generatePerpendicularPoints(
+        static std::vector<Point2D> generatePerpendicularPoints(
                 const Pose2D& start,
                 const Pose2D& end,
-                const Point3D& pt,
+                const Point2D& pt,
                 float max_perp_dist = 3.0f,
                 float step_size = 0.1f);
 
         static float getAngleBetweenPoints(
-                const Point3D& a,
-                const Point3D& b,
-                const Point3D& c);
-
-        static bool isPolygonConvex(
-                const std::vector<Point3D>& polygon);
-
-        /*
-         * Note: area can be negative (the sign informs if the polygon is
-         * clockwise or not)
-         */
-        static float calcPolygonArea(
-                const std::vector<Point3D>& polygon);
+                const Point2D& a,
+                const Point2D& b,
+                const Point2D& c);
 
         /*
          * Find convex hull from the union of 2 polygons.
          * source: https://en.wikipedia.org/wiki/Graham_scan#Pseudocode
          */
-        static std::vector<Point3D> calcConvexHullOfPolygons(
-                const std::vector<Point3D>& polygon_a,
-                const std::vector<Point3D>& polygon_b);
+        static Polygon2D calcConvexHullOfPolygons(
+                const Polygon2D& polygon_a,
+                const Polygon2D& polygon_b);
 
         static nav_msgs::Path getPathMsgFromTrajectory(
                 const std::vector<Pose2D>& trajectory,
                 const std::string& frame);
-
-        static visualization_msgs::Marker getPolygonAsMarker(
-                const std::vector<Point3D>& polygon,
-                const std::string& frame = "base_link",
-                float red = 1.0f,
-                float green = 0.0f,
-                float blue = 0.0f,
-                float alpha = 1.0f,
-                float line_width = 0.05f);
 
         static visualization_msgs::Marker getGeometricPathAsMarker(
                 const std::vector<Pose2D>& geometric_path,
@@ -369,7 +346,16 @@ class Utils
                 float line_width = 0.05f);
 
         static visualization_msgs::Marker getPointcloudAsMarker(
-                const PointCloud& cloud,
+                const PointCloud2D& cloud,
+                const std::string& frame,
+                float diameter = 0.05f,
+                float red = 1.0f,
+                float green = 0.0f,
+                float blue = 0.0f,
+                float alpha = 1.0f);
+
+        static visualization_msgs::Marker getPointcloudAsMarker(
+                const PointCloud3D& cloud,
                 const std::string& frame,
                 float diameter = 0.05f,
                 float red = 1.0f,

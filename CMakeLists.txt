@@ -53,7 +53,7 @@ add_library(geometry_utils
         src/Polygon2D.cpp
         src/Pose2D.cpp
         src/Box.cpp
-        src/LineSegment.cpp
+        src/LineSegment2D.cpp
 )
 target_link_libraries(geometry_utils
 )

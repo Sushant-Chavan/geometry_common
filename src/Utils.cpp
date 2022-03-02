@@ -17,24 +17,36 @@ float Utils::roundFloat(
     return ((float)((int)std::round(value * multiplier))) / multiplier;
 }
 
-Point3D Utils::getMeanPoint(
-        const PointCloud& points,
+template <typename T>
+T Utils::getMeanPoint(
+        const std::vector<T>& points,
         unsigned start_index,
         unsigned end_index)
 {
-    Point3D sum_pt(0.0f, 0.0f, 0.0f);
+    T sum_pt;
     for ( size_t i = start_index; i <= end_index; i++ )
     {
         sum_pt = sum_pt + points[i];
     }
     return sum_pt * (1.0f/(end_index-start_index+1));
 }
+template Point2D Utils::getMeanPoint(
+        const std::vector<Point2D>& points,
+        unsigned start_index,
+        unsigned end_index);
+template Point3D Utils::getMeanPoint(
+        const std::vector<Point3D>& points,
+        unsigned start_index,
+        unsigned end_index);
 
-Point3D Utils::getMeanPoint(
-        const PointCloud& points)
+template <typename T>
+T Utils::getMeanPoint(
+        const std::vector<T>& points)
 {
     return Utils::getMeanPoint(points, 0, points.size()-1);
 }
+template Point2D Utils::getMeanPoint(const std::vector<Point2D>& points);
+template Point3D Utils::getMeanPoint(const std::vector<Point3D>& points);
 
 template <typename T>
 Pose2D Utils::getMeanPose(
@@ -64,39 +76,40 @@ template Pose2D Utils::getMeanPose(const std::vector<Pose2D>& poses);
 template Pose2D Utils::getMeanPose(const std::deque<Pose2D>& poses);
 template Pose2D Utils::getMeanPose(const std::list<Pose2D>& poses);
 
-Point3D Utils::getClosestPoint(
-        const PointCloud& points,
-        float x,
-        float y,
-        float z)
+template <typename T>
+T Utils::getClosestPoint(
+        const std::vector<T>& points,
+        const T& pt)
 {
-    Point3D min_pt(1e6f, 1e6f, 1e6f);
-    float min_dist_sq = 1e8f;
-    Point3D center(x, y, z);
-    for ( const Point3D& p : points )
+    size_t min_pt_index = 0;
+    float min_dist_sq = std::numeric_limits<float>::max();
+    for ( size_t i = 0; i < points.size(); i++ )
     {
-        float dist_sq = p.getCartDistSquared(center);
+        float dist_sq = points[i].getCartDistSquared(pt);
         if ( dist_sq < min_dist_sq )
         {
-            min_pt = p;
+            min_pt_index = i;
             min_dist_sq = dist_sq;
         }
     }
-    return min_pt;
+    return points[min_pt_index];
 }
+template Point2D Utils::getClosestPoint(const std::vector<Point2D>& points, const Point2D& pt);
+template Point3D Utils::getClosestPoint(const std::vector<Point3D>& points, const Point3D& pt);
 
-std::vector<std::vector<Point3D> > Utils::clusterPoints(
-        const PointCloud& points,
+
+std::vector<PointCloud2D> Utils::clusterPoints(
+        const PointCloud2D& points,
         float cluster_distance_threshold,
         size_t min_cluster_size)
 {
-    std::vector<std::vector<Point3D> > clusters;
+    std::vector<PointCloud2D> clusters;
 
     /* populate remaining_points */
-    std::list<Point3D> remaining_points;
-    for ( const Point3D& p : points )
+    std::list<Point2D> remaining_points;
+    for ( const Point2D& p : points )
     {
-        remaining_points.push_back(Point3D(p));
+        remaining_points.push_back(Point2D(p));
     }
 
     float threshold_dist_sq = std::pow(cluster_distance_threshold, 2);
@@ -104,15 +117,15 @@ std::vector<std::vector<Point3D> > Utils::clusterPoints(
     /* cluster remaining_points iteratively */
     while ( !remaining_points.empty() )
     {
-        std::vector<Point3D> cluster;
-        std::list<Point3D> fringe;
+        std::vector<Point2D> cluster;
+        std::list<Point2D> fringe;
         fringe.push_back(remaining_points.front());
         remaining_points.pop_front();
 
         while ( !fringe.empty() )
         {
             // get first point from fringe
-            Point3D point = fringe.front();
+            Point2D point = fringe.front();
             fringe.pop_front();
             cluster.push_back(point);
 
@@ -137,25 +150,25 @@ std::vector<std::vector<Point3D> > Utils::clusterPoints(
     return clusters;
 }
 
-std::vector<std::vector<Point3D> > Utils::clusterOrderedPoints(
-        const PointCloud& points,
+std::vector<PointCloud2D> Utils::clusterOrderedPoints(
+        const PointCloud2D& points,
         float cluster_distance_threshold,
         size_t min_cluster_size)
 {
-    std::vector<std::vector<Point3D> > clusters;
+    std::vector<PointCloud2D> clusters;
 
     /* populate remaining_points */
-    std::list<Point3D> remaining_points;
-    for ( Point3D p : points )
+    std::list<Point2D> remaining_points;
+    for ( Point2D p : points )
     {
-        remaining_points.push_back(Point3D(p));
+        remaining_points.push_back(Point2D(p));
     }
 
     float threshold_dist_sq = std::pow(cluster_distance_threshold, 2);
 
     while ( !remaining_points.empty() )
     {
-        std::vector<Point3D> cluster;
+        std::vector<Point2D> cluster;
         cluster.push_back(remaining_points.front());
         remaining_points.pop_front();
 
@@ -189,44 +202,23 @@ std::vector<std::vector<Point3D> > Utils::clusterOrderedPoints(
     return clusters;
 }
 
-bool Utils::isPointInPolygon(
-        const std::vector<Point3D>& polygon,
-        const Point3D& point)
-{
-    size_t i, j, counter = 0;
-    for (i = 0, j = polygon.size()-1; i < polygon.size(); j = i++)
-    {
-        if ( ((polygon[i].y > point.y) != (polygon[j].y > point.y)) &&
-             (point.x < (polygon[j].x - polygon[i].x) * (point.y - polygon[i].y) / (polygon[j].y - polygon[i].y) + polygon[i].x) )
-        {
-            counter++;
-        }
-    }
-    return (counter % 2 == 1);
-}
-
-bool Utils::isFootprintSafe(
-        const std::vector<Point3D>& footprint,
-        const PointCloud& points)
-{
-    for ( const Point3D& p : points )
-    {
-        if ( Utils::isPointInPolygon(footprint, p) )
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-Point3D Utils::getTransformedPoint(
+Point2D Utils::getTransformedPoint(
         const Pose2D& tf,
-        const Point3D& pt)
+        const Point2D& pt)
 {
-    Point3D transformed_pt = pt;
+    Point2D transformed_pt = pt;
     transformed_pt.x = (std::cos(tf.theta) * pt.x) + (-std::sin(tf.theta) * pt.y) + tf.x;
     transformed_pt.y = (std::sin(tf.theta) * pt.x) + (std::cos(tf.theta) * pt.y) + tf.y;
-    transformed_pt.z = 0.0f;
+    return transformed_pt;
+}
+
+Point2D Utils::getTransformedPoint(
+        const std::vector<float>& tf_mat,
+        const Point2D& pt)
+{
+    assert(tf_mat.size() == 9);
+    Point2D transformed_pt(pt);
+    Utils::transformPoint(tf_mat, transformed_pt);
     return transformed_pt;
 }
 
@@ -234,22 +226,15 @@ Point3D Utils::getTransformedPoint(
         const std::vector<float>& tf_mat,
         const Point3D& pt)
 {
+    assert(tf_mat.size() == 16);
     Point3D transformed_pt(pt);
-    assert(tf_mat.size() == 16 || tf_mat.size() == 9);
-    if ( tf_mat.size() == 16 )
-    {
-        Utils::transformPoint(tf_mat, transformed_pt);
-    }
-    else
-    {
-        Utils::transformPoint2D(tf_mat, transformed_pt);
-    }
+    Utils::transformPoint(tf_mat, transformed_pt);
     return transformed_pt;
 }
 
-void Utils::transformPoint2D(
+void Utils::transformPoint(
         const std::vector<float>& tf_mat,
-        Point3D& pt)
+        Point2D& pt)
 {
     assert(tf_mat.size() == 9);
     std::vector<float> p_vec{pt.x, pt.y, 1.0f};
@@ -285,17 +270,17 @@ Pose2D Utils::getTransformedPose(
     return Utils::getTransformedPose(tf.getMat(), pose);
 }
 
-std::vector<Point3D> Utils::getTransformedFootprint(
+Polygon2D Utils::getTransformedPolygon(
         const Pose2D& tf,
-        const std::vector<Point3D>& footprint)
+        const Polygon2D& polygon)
 { 
-    std::vector<Point3D> fp;
-    fp.reserve(footprint.size());
-    for ( const Point3D& pt : footprint )
+    Polygon2D fp;
+    fp.vertices.reserve(polygon.vertices.size());
+    for ( const Point2D& pt : polygon.vertices )
     {
-        fp.push_back(Utils::getTransformedPoint(tf, pt));
+        fp.vertices.push_back(Utils::getTransformedPoint(tf, pt));
     }
-    return footprint;
+    return fp;
 }
 
 std::vector<Pose2D> Utils::getTrajectory(
@@ -410,7 +395,7 @@ float Utils::getShortestAngle(
 void Utils::findPerpendicularLineAt(
         float m,
         float c,
-        const Point3D& p,
+        const Point2D& p,
         float& perpendicular_m,
         float& perpendicular_c)
 {
@@ -421,36 +406,36 @@ void Utils::findPerpendicularLineAt(
 float Utils::distToLineSquared(
         float m,
         float c,
-        const Point3D& p)
+        const Point2D& p)
 {
-    Point3D proj_pt = Utils::getProjectedPointOnLine(m, c, p);
+    Point2D proj_pt = Utils::getProjectedPointOnLine(m, c, p);
     return p.getCartDistSquared(proj_pt);
 }
 
-Point3D Utils::getProjectedPointOnLine(
+Point2D Utils::getProjectedPointOnLine(
         float m,
         float c,
-        const Point3D& p)
+        const Point2D& p)
 {
     float perpendicular_m, perpendicular_c;
     Utils::findPerpendicularLineAt(m, c, p, perpendicular_m, perpendicular_c);
-    Point3D proj_pt;
+    Point2D proj_pt;
     proj_pt.x = (perpendicular_c - c) / (m - perpendicular_m);
     proj_pt.y = (m * proj_pt.x) + c;
     return proj_pt;
 }
 
-Point3D Utils::getProjectedPointOnSegment(
-        const Point3D& a,
-        const Point3D& b,
-        const Point3D& p,
+Point2D Utils::getProjectedPointOnSegment(
+        const Point2D& a,
+        const Point2D& b,
+        const Point2D& p,
         bool is_segment)
 {
-    Point3D proj_pt;
+    Point2D proj_pt;
     float length_sq = a.getCartDistSquared(b);
     if ( length_sq == 0.0f )
     {
-        proj_pt = Point3D(a);
+        proj_pt = Point2D(a);
         return proj_pt;
     }
     float t = ((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / length_sq;
@@ -463,12 +448,12 @@ Point3D Utils::getProjectedPointOnSegment(
     return proj_pt;
 }
 
-Point3D Utils::getProjectedPointOnMajorAxis(
+Point2D Utils::getProjectedPointOnMajorAxis(
         float m,
         float c,
-        const Point3D& p)
+        const Point2D& p)
 {
-    Point3D proj_pt;
+    Point2D proj_pt;
     bool major_axis_x = ( std::fabs(m) < 1.0f );
     if ( major_axis_x )
     {
@@ -484,23 +469,23 @@ Point3D Utils::getProjectedPointOnMajorAxis(
 }
 
 float Utils::distToLineSquared(
-        const Point3D& a,
-        const Point3D& b,
-        const Point3D& p,
+        const Point2D& a,
+        const Point2D& b,
+        const Point2D& p,
         bool is_segment)
 {
     return p.getCartDistSquared(Utils::getProjectedPointOnSegment(a, b, p, is_segment));
 }
 
 float Utils::distToLineSegmentSquared(
-        const LineSegment& line_segment,
-        const Point3D& p)
+        const LineSegment2D& line_segment,
+        const Point2D& p)
 {
     return Utils::distToLineSquared(line_segment.start, line_segment.end, p, true);
 }
 
 float Utils::fitLineRANSAC(
-        const PointCloud& pts,
+        const PointCloud2D& pts,
         unsigned start_index,
         unsigned end_index,
         float& m,
@@ -551,7 +536,7 @@ float Utils::fitLineRANSAC(
 }
 
 float Utils::fitLineRANSAC(
-        const PointCloud& pts,
+        const PointCloud2D& pts,
         float &m,
         float &c,
         float delta,
@@ -561,10 +546,10 @@ float Utils::fitLineRANSAC(
 }
 
 float Utils::fitLineSegmentRANSAC(
-        const PointCloud& pts,
+        const PointCloud2D& pts,
         unsigned start_index,
         unsigned end_index,
-        LineSegment& line_segment,
+        LineSegment2D& line_segment,
         float delta,
         size_t itr_limit)
 {
@@ -608,16 +593,16 @@ float Utils::fitLineSegmentRANSAC(
 }
 
 float Utils::fitLineSegmentRANSAC(
-        const PointCloud& pts,
-        LineSegment& line_segment,
+        const PointCloud2D& pts,
+        LineSegment2D& line_segment,
         float delta,
         size_t itr_limit)
 {
     return Utils::fitLineSegmentRANSAC(pts, 0, pts.size()-1, line_segment, delta, itr_limit);
 }
 
-std::vector<LineSegment> Utils::fitLineSegmentsRANSAC(
-        const PointCloud& pts,
+std::vector<LineSegment2D> Utils::fitLineSegmentsRANSAC(
+        const PointCloud2D& pts,
         float score_threshold,
         float delta,
         size_t itr_limit)
@@ -625,10 +610,10 @@ std::vector<LineSegment> Utils::fitLineSegmentsRANSAC(
     struct RegressionLineSegment
     {
         unsigned start_index, end_index;
-        LineSegment line_segment;
+        LineSegment2D line_segment;
     };
 
-    std::vector<LineSegment> line_segments;
+    std::vector<LineSegment2D> line_segments;
     if (pts.size() < 2)
     {
         return line_segments;
@@ -722,19 +707,19 @@ std::vector<LineSegment> Utils::fitLineSegmentsRANSAC(
 }
 
 float Utils::fitLineRegression(
-        const PointCloud& pts,
+        const PointCloud2D& pts,
         unsigned start_index,
         unsigned end_index,
-        LineSegment& line_segment)
+        LineSegment2D& line_segment)
 {
     if ( pts.size() < 2 ||
          start_index >= pts.size() || end_index >= pts.size() ||
          end_index <= start_index || end_index - start_index < 2 )
     {
-        line_segment = LineSegment();
+        line_segment = LineSegment2D();
         return 0.0f;
     }
-    Point3D mean_pt = Utils::getMeanPoint(pts, start_index, end_index);
+    Point2D mean_pt = Utils::getMeanPoint(pts, start_index, end_index);
 
     float dx = pts[end_index].x - pts[start_index].x;
     float dy = pts[end_index].y - pts[start_index].y;
@@ -786,14 +771,14 @@ float Utils::fitLineRegression(
 }
 
 float Utils::fitLineRegression(
-        const PointCloud& pts,
-        LineSegment& line_segment)
+        const PointCloud2D& pts,
+        LineSegment2D& line_segment)
 {
     return Utils::fitLineRegression(pts, 0, pts.size()-1, line_segment);
 }
 
-std::vector<LineSegment> Utils::piecewiseRegression(
-        const PointCloud& pts,
+std::vector<LineSegment2D> Utils::piecewiseRegression(
+        const PointCloud2D& pts,
         float error_threshold)
 {
     struct RegressionLineSegment
@@ -801,7 +786,7 @@ std::vector<LineSegment> Utils::piecewiseRegression(
         unsigned start_index, end_index;
     };
 
-    std::vector<LineSegment> line_segments;
+    std::vector<LineSegment2D> line_segments;
     if (pts.size() < 2)
     {
         return line_segments;
@@ -822,7 +807,7 @@ std::vector<LineSegment> Utils::piecewiseRegression(
 
     /* errors when 2 consecutive segments are merged */
     std::vector<float> errors(segments.size()-1);
-    LineSegment line_segment; // not used;
+    LineSegment2D line_segment; // not used;
     for ( size_t i = 0; i < errors.size(); i++ )
     {
         errors[i] = Utils::fitLineRegression(pts, segments[i].start_index,
@@ -854,7 +839,7 @@ std::vector<LineSegment> Utils::piecewiseRegression(
         segments[i].end_index = segments[i+1].end_index;
         segments.erase(segments.begin() + i + 1);
 
-        LineSegment line_segment; // not used
+        LineSegment2D line_segment; // not used
         if (i > 0)
         {
             errors[i-1] = Utils::fitLineRegression(pts, segments[i-1].start_index,
@@ -871,24 +856,24 @@ std::vector<LineSegment> Utils::piecewiseRegression(
     /* create line_segments from regression line segments */
     for ( RegressionLineSegment rls : segments )
     {
-        LineSegment l;
+        LineSegment2D l;
         Utils::fitLineRegression(pts, rls.start_index, rls.end_index, l);
         line_segments.push_back(l);
     }
     return line_segments;
 }
 
-std::vector<LineSegment> Utils::piecewiseRegressionSplit(
-        const PointCloud& pts,
+std::vector<LineSegment2D> Utils::piecewiseRegressionSplit(
+        const PointCloud2D& pts,
         float error_threshold)
 {
     struct RegressionLineSegment
     {
         unsigned start_index, end_index;
-        LineSegment line_segment;
+        LineSegment2D line_segment;
     };
 
-    std::vector<LineSegment> line_segments;
+    std::vector<LineSegment2D> line_segments;
     if (pts.size() < 2)
     {
         return line_segments;
@@ -976,7 +961,7 @@ std::vector<LineSegment> Utils::piecewiseRegressionSplit(
 }
 
 void Utils::mergeCloseLines(
-        std::vector<LineSegment>& line_segments,
+        std::vector<LineSegment2D>& line_segments,
         float distance_threshold,
         float angle_threshold)
 {
@@ -1004,7 +989,7 @@ void Utils::mergeCloseLines(
 }
 
 void Utils::mergeCloseLinesBF(
-        std::vector<LineSegment>& line_segments,
+        std::vector<LineSegment2D>& line_segments,
         float distance_threshold,
         float angle_threshold)
 {
@@ -1036,13 +1021,13 @@ void Utils::mergeCloseLinesBF(
     }
 }
 
-std::vector<LineSegment> Utils::fitLineSegments(
-        const PointCloud& pts,
+std::vector<LineSegment2D> Utils::fitLineSegments(
+        const PointCloud2D& pts,
         float regression_error_threshold,
         float distance_threshold,
         float angle_threshold)
 {
-    std::vector<LineSegment> lines = Utils::piecewiseRegression(pts, regression_error_threshold);
+    std::vector<LineSegment2D> lines = Utils::piecewiseRegression(pts, regression_error_threshold);
     Utils::mergeCloseLines(lines, distance_threshold, angle_threshold);
     return lines;
 }
@@ -1121,7 +1106,22 @@ float Utils::linearInterpolate(
 }
 
 sensor_msgs::PointCloud Utils::convertToROSPC(
-        const PointCloud& pc,
+        const PointCloud2D& pc,
+        const std::string& frame)
+{
+    sensor_msgs::PointCloud cloud;
+    // cloud.header.stamp = ros::Time::now();
+    cloud.header.frame_id = frame;
+    cloud.points.reserve(pc.size());
+    for ( Point3D pt : pc ) // also converts Point2D to Point3D
+    {
+        cloud.points.push_back(pt.getPoint32());
+    }
+    return cloud;
+}
+
+sensor_msgs::PointCloud Utils::convertToROSPC(
+        const PointCloud3D& pc,
         const std::string& frame)
 {
     sensor_msgs::PointCloud cloud;
@@ -1135,7 +1135,7 @@ sensor_msgs::PointCloud Utils::convertToROSPC(
     return cloud;
 }
 
-PointCloud Utils::convertFromROSPC(
+PointCloud3D Utils::convertFromROSPC(
         const sensor_msgs::PointCloud& pc)
 {
     std::vector<Point3D> points;
@@ -1147,7 +1147,7 @@ PointCloud Utils::convertFromROSPC(
     return points;
 }
 
-PointCloud Utils::convertFromROSPC(
+PointCloud3D Utils::convertFromROSPC(
         const sensor_msgs::PointCloud2& cloud_msg,
         size_t row_sub_sample_factor,
         size_t col_sub_sample_factor)
@@ -1156,7 +1156,7 @@ PointCloud Utils::convertFromROSPC(
     {
         return std::vector<Point3D>();
     }
-    PointCloud points;
+    PointCloud3D points;
     if ( cloud_msg.height == 1 ) // unorganised cloud
     {
         row_sub_sample_factor = 1;
@@ -1193,10 +1193,10 @@ PointCloud Utils::convertFromROSPC(
     return points;
 }
 
-PointCloud Utils::convertFromROSScan(
+PointCloud3D Utils::convertFromROSScan(
         const sensor_msgs::LaserScan& scan)
 {
-    PointCloud laser_pts;
+    PointCloud3D laser_pts;
     for ( size_t i = 0; i < scan.ranges.size(); i++ )
     {
         if ( std::isnan(scan.ranges[i]) ||
@@ -1272,21 +1272,21 @@ bool Utils::isAngleWithinBounds(
            : ( angle <= min_angle && angle >= max_angle );
 }
 
-std::vector<Point3D> Utils::generatePerpendicularPoints(
+std::vector<Point2D> Utils::generatePerpendicularPoints(
         const Pose2D& start,
         const Pose2D& end,
-        const Point3D& pt,
+        const Point2D& pt,
         float max_perp_dist,
         float step_size)
 {
     float theta = std::atan2(end.y - start.y, end.x - start.x);
     float perpendicular_angle = Utils::getPerpendicularAngle(theta);
 
-    Point3D unit_vec(std::cos(perpendicular_angle), std::sin(perpendicular_angle)); 
-    std::vector<Point3D> pts;
+    Point2D unit_vec(std::cos(perpendicular_angle), std::sin(perpendicular_angle)); 
+    std::vector<Point2D> pts;
     for ( float perp_dist = step_size; perp_dist < max_perp_dist; perp_dist += step_size )
     {
-        Point3D offset = unit_vec * perp_dist;
+        Point2D offset = unit_vec * perp_dist;
         pts.push_back(pt + offset);
         pts.push_back(pt - offset);
     }
@@ -1294,72 +1294,32 @@ std::vector<Point3D> Utils::generatePerpendicularPoints(
 }
 
 float Utils::getAngleBetweenPoints(
-        const Point3D& a,
-        const Point3D& b,
-        const Point3D& c)
+        const Point2D& a,
+        const Point2D& b,
+        const Point2D& c)
 {
-    Point3D vec_b_a = a - b;
-    Point3D vec_b_c = c - b;
+    Point2D vec_b_a = a - b;
+    Point2D vec_b_c = c - b;
     return Utils::clipAngle(std::atan2(vec_b_c.y, vec_b_c.x) -
                             std::atan2(vec_b_a.y, vec_b_a.x));
 }
 
-bool Utils::isPolygonConvex(
-        const std::vector<Point3D>& polygon)
-{
-    if ( polygon.size() <= 2 )
-    {
-        return true;
-    }
-
-    Point3D m = Utils::getMeanPoint(polygon);
-    if ( !Utils::isPointInPolygon(polygon, m) )
-    {
-        return false;
-    }
-
-    for ( size_t i = 0; i < polygon.size(); i++ )
-    {
-        Point3D p1(polygon[i]);
-        Point3D p2(polygon[(i+2)%polygon.size()]);
-        m = (p1 + p2) * 0.5f;
-        if ( !Utils::isPointInPolygon(polygon, m) )
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-float Utils::calcPolygonArea(
-        const std::vector<Point3D>& polygon)
-{
-    float area = 0.0f;
-    size_t i, j;
-    for ( i = 0; i < polygon.size(); i++ )
-    {
-        j = (i+1) % polygon.size();
-        area += (polygon[i].x * polygon[j].y) - (polygon[i].y * polygon[j].x);
-    }
-    return area/2;
-}
-
-std::vector<Point3D> Utils::calcConvexHullOfPolygons(
-        const std::vector<Point3D>& polygon_a,
-        const std::vector<Point3D>& polygon_b)
+Polygon2D Utils::calcConvexHullOfPolygons(
+        const Polygon2D& polygon_a,
+        const Polygon2D& polygon_b)
 {
     /* aggregate all points */
-    std::vector<Point3D> pts;
-    pts.reserve(pts.size() + polygon_a.size() + polygon_b.size());
-    pts.insert(pts.end(), polygon_a.begin(), polygon_a.end());
-    pts.insert(pts.end(), polygon_b.begin(), polygon_b.end());
+    PointVec2D pts;
+    pts.reserve(pts.size() + polygon_a.vertices.size() + polygon_b.vertices.size());
+    pts.insert(pts.end(), polygon_a.vertices.begin(), polygon_a.vertices.end());
+    pts.insert(pts.end(), polygon_b.vertices.begin(), polygon_b.vertices.end());
     if ( pts.size() < 3 )
     {
         return pts;
     }
 
     /* find the lowest left most point */
-    Point3D lower_left_pt(pts[0]);
+    Point2D lower_left_pt(pts[0]);
     for ( size_t i = 0; i < pts.size(); i++ )
     {
         if ( pts[i].y < lower_left_pt.y )
@@ -1374,19 +1334,19 @@ std::vector<Point3D> Utils::calcConvexHullOfPolygons(
 
     /* sort points in increasing order of angle they and lower_left_pt makes with X axis */
     std::sort(pts.begin(), pts.end(),
-              [&lower_left_pt](const Point3D& a, const Point3D& b)
+              [&lower_left_pt](const Point2D& a, const Point2D& b)
               {
                   return std::atan2(a.y - lower_left_pt.y, a.x - lower_left_pt.x)
                        < std::atan2(b.y - lower_left_pt.y, b.x - lower_left_pt.x);
               });
 
     /* walk along pts and remove points that form non counter clockwise turn */
-    std::vector<Point3D> convex_hull;
-    for ( Point3D& p : pts )
+    PointVec2D convex_hull;
+    for ( Point2D& p : pts )
     {
         while ( convex_hull.size() > 1 )
         {
-            std::vector<Point3D>::const_iterator it = convex_hull.end();
+            PointVec2D::const_iterator it = convex_hull.end();
             float angle = Utils::getAngleBetweenPoints(p, *(it-1), *(it-2));
             if ( angle > 0 ) // counter clockwise turn is allowed
             {
@@ -1396,7 +1356,7 @@ std::vector<Point3D> Utils::calcConvexHullOfPolygons(
         }
         convex_hull.push_back(p);
     }
-    return convex_hull;
+    return Polygon2D(convex_hull);
 }
 
 nav_msgs::Path Utils::getPathMsgFromTrajectory(const std::vector<Pose2D>& trajectory,
@@ -1445,7 +1405,7 @@ visualization_msgs::Marker Utils::getGeometricPathAsMarker(
 }
 
 visualization_msgs::Marker Utils::getPointcloudAsMarker(
-        const PointCloud& cloud,
+        const PointCloud2D& cloud,
         const std::string& frame,
         float diameter,
         float red,
@@ -1465,39 +1425,39 @@ visualization_msgs::Marker Utils::getPointcloudAsMarker(
     cloud_marker.header.frame_id = frame;
     // cloud_marker.header.stamp = ros::Time::now();
     cloud_marker.points.reserve(cloud.size());
-    for ( size_t i = 0; i < cloud.size(); i++ )
+    for ( Point3D pt : cloud ) // also converts Point2D to Point3D
     {
-        cloud_marker.points.push_back(cloud[i].getPoint());
+        cloud_marker.points.push_back(pt.getPoint());
     }
     return cloud_marker;
 }
 
-visualization_msgs::Marker Utils::getPolygonAsMarker(
-        const std::vector<Point3D>& polygon,
+visualization_msgs::Marker Utils::getPointcloudAsMarker(
+        const PointCloud3D& cloud,
         const std::string& frame,
+        float diameter,
         float red,
         float green,
         float blue,
-        float alpha,
-        float line_width)
+        float alpha)
 {
-    visualization_msgs::Marker marker;
-    marker.type = visualization_msgs::Marker::LINE_STRIP;
-    // marker.header.stamp = ros::Time::now();
-    marker.header.frame_id = frame;
-    marker.color.r = red;
-    marker.color.g = green;
-    marker.color.b = blue;
-    marker.color.a = alpha;
-    marker.scale.x = line_width;
-    marker.pose.orientation.w = 1.0f;
-    size_t N = polygon.size();
-    marker.points.reserve(N+1);
-    for ( size_t i = 0; i < N+1; i++ )
+    visualization_msgs::Marker cloud_marker;
+    cloud_marker.type = visualization_msgs::Marker::POINTS;
+    cloud_marker.pose.orientation.w = 1.0f;
+    cloud_marker.scale.x = diameter;
+    cloud_marker.scale.y = diameter;
+    cloud_marker.color.r = red;
+    cloud_marker.color.g = green;
+    cloud_marker.color.b = blue;
+    cloud_marker.color.a = alpha;
+    cloud_marker.header.frame_id = frame;
+    // cloud_marker.header.stamp = ros::Time::now();
+    cloud_marker.points.reserve(cloud.size());
+    for ( const Point3D& pt : cloud )
     {
-        marker.points.push_back(polygon[i%N].getPoint());
+        cloud_marker.points.push_back(pt.getPoint());
     }
-    return marker;
+    return cloud_marker;
 }
 
 visualization_msgs::Marker Utils::getStringAsMarker(
