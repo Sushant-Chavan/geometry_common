@@ -25,6 +25,18 @@ class Polygon2D
 
         virtual ~Polygon2D();
 
+        bool containsPoint(const Point2D& point) const;
+
+        Point2D getMeanPoint() const;
+
+        /*
+         * Note: area can be negative (the sign informs if the polygon is
+         * clockwise or not)
+         */
+        float getArea() const;
+
+        bool isConvex() const;
+
         visualization_msgs::Marker getMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
