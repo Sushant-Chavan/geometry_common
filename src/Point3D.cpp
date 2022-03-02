@@ -1,4 +1,4 @@
-#include <geometry_common/Point3d.h>
+#include <geometry_common/Point3D.h>
 
 namespace kelo::geometry_common
 {

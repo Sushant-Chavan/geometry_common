@@ -5,7 +5,7 @@
 #include <geometry_msgs/Point32.h>
 #include <geometry_msgs/Point.h>
 
-#include <geometry_common/Point2d.h>
+#include <geometry_common/Point2D.h>
 
 namespace kelo::geometry_common
 {
@@ -79,7 +79,8 @@ class Point3D
         friend bool operator == (const Point3D& p1, const Point3D& p2);
 };
 
-typedef std::vector<Point3D> PointCloud;
+using PointVec3D = std::vector<Point3D>;
+using PointCloud = std::vector<Point3D>;
 
 }; // namespace kelo::geometry_common
 #endif // KELO_GEOMETRY_COMMON_POINT_3D_H

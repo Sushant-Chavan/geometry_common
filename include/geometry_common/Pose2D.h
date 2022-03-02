@@ -6,7 +6,7 @@
 #include <visualization_msgs/Marker.h>
 #include <tf/transform_datatypes.h>
 
-#include <geometry_common/Point3d.h>
+#include <geometry_common/Point3D.h>
 
 #include <cmath>
 

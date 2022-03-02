@@ -11,7 +11,7 @@
 #include <sensor_msgs/LaserScan.h>
 
 #include <geometry_common/Pose2D.h>
-#include <geometry_common/Point3d.h>
+#include <geometry_common/Point3D.h>
 #include <geometry_common/LineSegment.h>
 
 namespace kelo::geometry_common

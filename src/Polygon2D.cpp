@@ -1,5 +1,5 @@
-#include <geometry_common/Point3d.h>
-#include <geometry_common/Polygon2d.h>
+#include <geometry_common/Point3D.h>
+#include <geometry_common/Polygon2D.h>
 
 namespace kelo::geometry_common
 {

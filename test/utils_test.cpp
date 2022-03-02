@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <geometry_common/Point3d.h>
+#include <geometry_common/Point3D.h>
 #include <geometry_common/Utils.h>
 
 TEST(UtilsTest, getAngleBetweenPoints)

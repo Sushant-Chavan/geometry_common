@@ -8,7 +8,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include <geometry_common/Utils.h>
-#include <geometry_common/Point3d.h>
+#include <geometry_common/Point3D.h>
 
 typedef std::function<bool (const kelo::geometry_common::Point3D& )>
     ValidityFunction;
