@@ -60,5 +60,8 @@ class Point2D
         friend bool operator == (const Point2D& p1, const Point2D& p2);
 };
 
+using PointVec2D = std::vector<Point2D>;
+using PointCloud2D = std::vector<Point2D>;
+
 }; // namespace kelo::geometry_common
 #endif // KELO_GEOMETRY_COMMON_POINT_H

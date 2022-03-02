@@ -12,10 +12,12 @@ bool Polygon2D::containsPoint(const Point2D& point) const
      * Source: https://stackoverflow.com/a/2922778/10460994
      */
     size_t i, j, counter = 0;
-    for (i = 0, j = corners.size()-1; i < corners.size(); j = i++)
+    for (i = 0, j = vertices.size()-1; i < vertices.size(); j = i++)
     {
-        if ( ((corners[i].y > point.y) != (corners[j].y > point.y)) &&
-             (point.x < (corners[j].x - corners[i].x) * (point.y - corners[i].y) / (corners[j].y - corners[i].y) + corners[i].x) )
+        const Point2D& currVert = vertices[i];
+        const Point2D& prevVert = vertices[j];
+        if ( ((currVert.y > point.y) != (prevVert.y > point.y)) &&
+             (point.x < (prevVert.x - currVert.x) * (point.y - currVert.y) / (prevVert.y - currVert.y) + currVert.x) )
         {
             counter++;
         }
@@ -26,13 +28,13 @@ bool Polygon2D::containsPoint(const Point2D& point) const
 Point2D Polygon2D::getMeanPoint() const
 {
     Point2D mean;
-    if (!corners.empty())
+    if (!vertices.empty())
     {
-        for (const auto& corner: corners)
+        for (const auto& corner: vertices)
         {
             mean = mean + corner;
         }
-        mean = mean * (1.0f/corners.size());
+        mean = mean * (1.0f/vertices.size());
     }
     return mean;
 }
@@ -41,17 +43,17 @@ float Polygon2D::getArea() const
 {
     float area = 0.0f;
     size_t i, j;
-    for ( i = 0; i < corners.size(); i++ )
+    for ( i = 0; i < vertices.size(); i++ )
     {
-        j = (i+1) % corners.size();
-        area += (corners[i].x * corners[j].y) - (corners[i].y * corners[j].x);
+        j = (i+1) % vertices.size();
+        area += (vertices[i].x * vertices[j].y) - (vertices[i].y * vertices[j].x);
     }
     return area/2;
 }
 
 bool Polygon2D::isConvex() const
 {
-    if ( corners.size() <= 2 )
+    if ( vertices.size() <= 2 )
     {
         return true;
     }
@@ -62,10 +64,10 @@ bool Polygon2D::isConvex() const
         return false;
     }
 
-    for ( size_t i = 0; i < corners.size(); i++ )
+    for ( size_t i = 0; i < vertices.size(); i++ )
     {
-        Point3D p1(corners[i]);
-        Point3D p2(corners[(i+2)%corners.size()]);
+        Point3D p1(vertices[i]);
+        Point3D p2(vertices[(i+2)%vertices.size()]);
         meanPt = (p1 + p2) * 0.5f;
         if ( !containsPoint(meanPt) )
         {
@@ -91,14 +93,14 @@ visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
     marker.color.a = alpha;
     marker.scale.x = line_width;
     marker.pose.orientation.w = 1.0f;
-    if (!corners.empty())
+    if (!vertices.empty())
     {
-        for (const auto& corner : corners)
+        for (const auto& corner : vertices)
         {
             marker.points.push_back(Point3D(corner, z).getPoint());
         }
         // Repeat first point again to close the polygon loop
-        marker.points.push_back(Point3D(corners[0], z).getPoint());
+        marker.points.push_back(Point3D(vertices[0], z).getPoint());
     }
     return marker;
 }
@@ -106,7 +108,7 @@ visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
 std::ostream& operator<<(std::ostream& out, const Polygon2D& polygon)
 {
     out << "Polygon corners:" << std::endl;
-    for (const auto& corner : polygon.corners)
+    for (const auto& corner : polygon.vertices)
     {
         out << corner;
     }

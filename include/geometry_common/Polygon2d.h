@@ -11,17 +11,15 @@ namespace kelo::geometry_common
 class Polygon2D
 {
     public:
-        using Points2D = std::vector<Point2D>;
-
-        Points2D corners;
+        PointVec2D vertices;
 
         Polygon2D() = default;
 
         Polygon2D(const Polygon2D& polygon):
-            corners(polygon.corners) {}
+            vertices(polygon.vertices) {}
 
-        Polygon2D(const Points2D& cornerPts):
-            corners(cornerPts) {}
+        Polygon2D(const PointVec2D& verts):
+            vertices(verts) {}
 
         virtual ~Polygon2D();
 
