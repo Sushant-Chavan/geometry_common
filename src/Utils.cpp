@@ -37,17 +37,17 @@ Point3D Utils::getMeanPoint(
 }
 
 template <typename T>
-Pose2d Utils::getMeanPose(
+Pose2D Utils::getMeanPose(
         const T& poses)
 {
-    Pose2d mean_cart_pose;
+    Pose2D mean_cart_pose;
     if ( poses.size() == 0 )
     {
         return mean_cart_pose;
     }
     float cos_theta_sum = 0.0f;
     float sin_theta_sum = 0.0f;
-    for ( const Pose2d& p : poses )
+    for ( const Pose2D& p : poses )
     {
         mean_cart_pose.x += p.x;
         mean_cart_pose.y += p.y;
@@ -60,9 +60,9 @@ Pose2d Utils::getMeanPose(
                                       cos_theta_sum/poses.size());
     return mean_cart_pose;
 }
-template Pose2d Utils::getMeanPose(const std::vector<Pose2d>& poses);
-template Pose2d Utils::getMeanPose(const std::deque<Pose2d>& poses);
-template Pose2d Utils::getMeanPose(const std::list<Pose2d>& poses);
+template Pose2D Utils::getMeanPose(const std::vector<Pose2D>& poses);
+template Pose2D Utils::getMeanPose(const std::deque<Pose2D>& poses);
+template Pose2D Utils::getMeanPose(const std::list<Pose2D>& poses);
 
 Point3D Utils::getClosestPoint(
         const PointCloud& points,
@@ -220,7 +220,7 @@ bool Utils::isFootprintSafe(
 }
 
 Point3D Utils::getTransformedPoint(
-        const Pose2d& tf,
+        const Pose2D& tf,
         const Point3D& pt)
 {
     Point3D transformed_pt = pt;
@@ -270,23 +270,23 @@ void Utils::transformPoint(
     pt.z = transformed_p_vec[2];
 }
 
-Pose2d Utils::getTransformedPose(
+Pose2D Utils::getTransformedPose(
         const std::vector<float> tf_mat,
-        const Pose2d& pose)
+        const Pose2D& pose)
 {
     assert(tf_mat.size() == 9);
-    return Pose2d(Utils::multiplyMatrices(tf_mat, pose.getMat(), 3));
+    return Pose2D(Utils::multiplyMatrices(tf_mat, pose.getMat(), 3));
 }
 
-Pose2d Utils::getTransformedPose(
-        const Pose2d& tf,
-        const Pose2d& pose)
+Pose2D Utils::getTransformedPose(
+        const Pose2D& tf,
+        const Pose2D& pose)
 {
     return Utils::getTransformedPose(tf.getMat(), pose);
 }
 
 std::vector<Point3D> Utils::getTransformedFootprint(
-        const Pose2d& tf,
+        const Pose2D& tf,
         const std::vector<Point3D>& footprint)
 { 
     std::vector<Point3D> fp;
@@ -298,27 +298,27 @@ std::vector<Point3D> Utils::getTransformedFootprint(
     return footprint;
 }
 
-std::vector<Pose2d> Utils::getTrajectory(
-        const Pose2d& vel,
+std::vector<Pose2D> Utils::getTrajectory(
+        const Pose2D& vel,
         size_t num_of_poses,
         float future_time)
 {
-    std::vector<Pose2d> traj;
+    std::vector<Pose2D> traj;
     traj.reserve(num_of_poses+1);
 
     float delta_t = future_time/num_of_poses;
 
-    Pose2d tf = vel * delta_t;
+    Pose2D tf = vel * delta_t;
     std::vector<float> tf_mat = tf.getMat();
-    std::vector<float> pos_mat = Pose2d().getMat(); // identity mat
+    std::vector<float> pos_mat = Pose2D().getMat(); // identity mat
 
     /* add current pose (for extra safety) */
-    traj.push_back(Pose2d());
+    traj.push_back(Pose2D());
 
     for ( size_t i = 0; i < num_of_poses; i++ )
     {
         pos_mat = Utils::multiplyMatrices(pos_mat, tf_mat, 3);
-        traj.push_back(Pose2d(pos_mat));
+        traj.push_back(Pose2D(pos_mat));
     }
     return traj;
 }
@@ -1079,26 +1079,26 @@ float Utils::clipAngle(
     return angle;
 }
 
-Pose2d Utils::applyVelLimits(
-        const Pose2d& vel,
-        const Pose2d& max_vel,
-        const Pose2d& min_vel)
+Pose2D Utils::applyVelLimits(
+        const Pose2D& vel,
+        const Pose2D& max_vel,
+        const Pose2D& min_vel)
 {
-    Pose2d clipped_vel;
+    Pose2D clipped_vel;
     clipped_vel.x = Utils::clip(vel.x, max_vel.x, min_vel.x);
     clipped_vel.y = Utils::clip(vel.y, max_vel.y, min_vel.y);
     clipped_vel.theta = Utils::clip(vel.theta, max_vel.theta, min_vel.theta);
     return clipped_vel;
 }
 
-Pose2d Utils::applyAccLimits(
-        const Pose2d& cmd_vel,
-        const Pose2d& curr_vel,
-        const Pose2d& max_acc,
+Pose2D Utils::applyAccLimits(
+        const Pose2D& cmd_vel,
+        const Pose2D& curr_vel,
+        const Pose2D& max_acc,
         float loop_rate)
 {
-    Pose2d vel;
-    Pose2d max_acc_per_loop = max_acc * (1.0f/loop_rate);
+    Pose2D vel;
+    Pose2D max_acc_per_loop = max_acc * (1.0f/loop_rate);
     vel.x = Utils::clip(cmd_vel.x,
                         curr_vel.x + max_acc_per_loop.x,
                         curr_vel.x - max_acc_per_loop.x);
@@ -1215,9 +1215,9 @@ PointCloud Utils::convertFromROSScan(
 }
 
 std::vector<float> Utils::getInverted2DTransformMat(
-        const Pose2d& tf)
+        const Pose2D& tf)
 {
-    Pose2d inv_tf(tf);
+    Pose2D inv_tf(tf);
     inv_tf.theta *= -1.0f; // reverse angle
     std::vector<float> inv_mat = inv_tf.getMat();
     std::vector<float> p_vec{-tf.x, -tf.y, 0.0f};
@@ -1231,13 +1231,13 @@ std::vector<float> Utils::getInverted2DTransformMat(
         const std::vector<float>& tf)
 {
     assert(tf.size() == 9);
-    return Utils::getInverted2DTransformMat(Pose2d(tf));
+    return Utils::getInverted2DTransformMat(Pose2D(tf));
 }
 
-Pose2d Utils::getInverted2DTransformPose(
-        const Pose2d& tf)
+Pose2D Utils::getInverted2DTransformPose(
+        const Pose2D& tf)
 {
-    return Pose2d(Utils::getInverted2DTransformMat(tf));
+    return Pose2D(Utils::getInverted2DTransformMat(tf));
 }
 
 float Utils::getPerpendicularAngle(
@@ -1273,8 +1273,8 @@ bool Utils::isAngleWithinBounds(
 }
 
 std::vector<Point3D> Utils::generatePerpendicularPoints(
-        const Pose2d& start,
-        const Pose2d& end,
+        const Pose2D& start,
+        const Pose2D& end,
         const Point3D& pt,
         float max_perp_dist,
         float step_size)
@@ -1399,7 +1399,7 @@ std::vector<Point3D> Utils::calcConvexHullOfPolygons(
     return convex_hull;
 }
 
-nav_msgs::Path Utils::getPathMsgFromTrajectory(const std::vector<Pose2d>& trajectory,
+nav_msgs::Path Utils::getPathMsgFromTrajectory(const std::vector<Pose2D>& trajectory,
                                                const std::string& frame)
 {
     nav_msgs::Path path_msg;
@@ -1407,7 +1407,7 @@ nav_msgs::Path Utils::getPathMsgFromTrajectory(const std::vector<Pose2d>& trajec
     path_msg.header.frame_id = frame;
     path_msg.poses.clear();
 
-    for ( Pose2d pose : trajectory )
+    for ( Pose2D pose : trajectory )
     {
         path_msg.poses.push_back(pose.getPoseStamped(frame));
     }
@@ -1415,7 +1415,7 @@ nav_msgs::Path Utils::getPathMsgFromTrajectory(const std::vector<Pose2d>& trajec
 }
 
 visualization_msgs::Marker Utils::getGeometricPathAsMarker(
-        const std::vector<Pose2d>& geometric_path,
+        const std::vector<Pose2D>& geometric_path,
         const std::string& frame,
         float red,
         float green,
