@@ -1,5 +1,5 @@
-#ifndef KELO_GEOMETRY_COMMON_POLYGON_H
-#define KELO_GEOMETRY_COMMON_POLYGON_H
+#ifndef KELO_GEOMETRY_COMMON_POLYGON_2D_H
+#define KELO_GEOMETRY_COMMON_POLYGON_2D_H
 
 #include <visualization_msgs/Marker.h>
 
@@ -48,4 +48,4 @@ class Polygon2D
 };
 
 } // namespace kelo::geometry_common
-#endif // KELO_GEOMETRY_COMMON_POLYGON_H
+#endif // KELO_GEOMETRY_COMMON_POLYGON_2D_H
