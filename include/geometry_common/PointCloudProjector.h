@@ -16,6 +16,9 @@ typedef std::function<bool (const kelo::geometry_common::Point3D& )>
 class PointCloudProjector
 {
     public:
+        using Ptr = std::shared_ptr<PointCloudProjector>;
+        using ConstPtr = std::shared_ptr<const PointCloudProjector>;
+
         PointCloudProjector();
         virtual ~PointCloudProjector();
 

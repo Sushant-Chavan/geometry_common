@@ -13,6 +13,9 @@ class Box
 {
     public:
         float min_x, max_x, min_y, max_y, min_z, max_z;
+        
+        using Ptr = std::shared_ptr<Box>;
+        using ConstPtr = std::shared_ptr<const Box>;
 
         Box(float _min_x = 0.0f, float _max_x = 0.0f,
             float _min_y = 0.0f, float _max_y = 0.0f,

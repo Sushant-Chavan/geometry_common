@@ -16,6 +16,9 @@ class Point2D
     public:
         float x{0.0f}, y{0.0f};
 
+        using Ptr = std::shared_ptr<Point2D>;
+        using ConstPtr = std::shared_ptr<const Point2D>;
+
         Point2D(float _x = 0.0f, float _y = 0.0f):
             x(_x),
             y(_y) {}

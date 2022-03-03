@@ -16,6 +16,9 @@ class LineSegment2D
     public:
         Point2D start, end;
 
+        using Ptr = std::shared_ptr<LineSegment2D>;
+        using ConstPtr = std::shared_ptr<const LineSegment2D>;
+
         LineSegment2D(float start_x = 0.0f, float start_y = 0.0f,
                       float end_x = 0.0f, float end_y = 0.0f):
             start(start_x, start_y), end(end_x, end_y) {}
