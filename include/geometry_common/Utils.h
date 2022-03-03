@@ -234,10 +234,10 @@ class Utils
                 const Point2D& p);
 
         /**
-         * @brief
+         * @brief Get the Projected Point On Line object
          * 
-         * @param a 
-         * @param b 
+         * @param line_start 
+         * @param line_end 
          * @param p 
          * @param is_segment 
          * @return Point2D 
