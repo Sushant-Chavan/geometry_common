@@ -127,5 +127,5 @@ class PointCloudProjector
 
 };
 
-}; // namespace kelo
+} // namespace kelo
 #endif // KELO_POINTCLOUD_PROJECTOR_H

@@ -329,4 +329,4 @@ size_t PointCloudProjector::calculateNumOfScanPts(
            : 1 + std::round((angle_max - angle_min) / angle_increment);
 }
 
-}; // namespace kelo
+} // namespace kelo
