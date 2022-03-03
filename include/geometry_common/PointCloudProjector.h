@@ -10,6 +10,9 @@
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Point3D.h>
 
+namespace kelo
+{
+
 typedef std::function<bool (const kelo::geometry_common::Point3D& )>
     ValidityFunction;
 
@@ -104,19 +107,25 @@ class PointCloudProjector
 
     private:
         std::vector<float> camera_to_target_tf_mat_;
-        float passthrough_min_z_, passthrough_max_z_;
-        float radial_dist_min_, radial_dist_max_;
-        float radial_dist_min_sq_, radial_dist_max_sq_;
-        float angle_min_, angle_max_;
-        bool is_angle_flipped_;
-        float angle_increment_, angle_increment_inv_;
-        size_t num_of_scan_pts_;
+        float passthrough_min_z_{0.0f};
+        float passthrough_max_z_{2.0f};
+        float radial_dist_min_{0.1f};
+        float radial_dist_max_{1e3f};
+        float radial_dist_min_sq_{0.01f};
+        float radial_dist_max_sq_{1e6f};
+        float angle_min_{-M_PI};
+        float angle_max_{M_PI};
+        bool is_angle_flipped_{false};
+        float angle_increment_{0.01f};
+        float angle_increment_inv_{100.0f};
+        size_t num_of_scan_pts_{0};
 
-        ValidityFunction external_validity_func_;
+        ValidityFunction external_validity_func_{NULL};
 
         bool isPointValid(
                 const kelo::geometry_common::Point3D& pt) const;
 
 };
 
+}; // namespace kelo
 #endif // KELO_POINTCLOUD_PROJECTOR_H

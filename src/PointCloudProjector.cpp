@@ -2,25 +2,16 @@
 #include <geometry_common/Utils.h>
 #include <geometry_common/PointCloudProjector.h>
 
-using kelo::geometry_common::Point2D;
-using kelo::geometry_common::Point3D;
-using kelo::geometry_common::PointCloud2D;
-using kelo::geometry_common::PointCloud3D;
-using kelo::geometry_common::Utils;
+namespace kelo
+{
 
-PointCloudProjector::PointCloudProjector():
-    passthrough_min_z_(0.0f),
-    passthrough_max_z_(2.0f),
-    radial_dist_min_(0.1f),
-    radial_dist_max_(1e3f),
-    radial_dist_min_sq_(0.01f),
-    radial_dist_max_sq_(1e6f),
-    angle_min_(-3.14f),
-    angle_max_(3.14f),
-    is_angle_flipped_(false),
-    angle_increment_(0.01f),
-    num_of_scan_pts_(0),
-    external_validity_func_(NULL)
+using geometry_common::Point2D;
+using geometry_common::Point3D;
+using geometry_common::PointCloud2D;
+using geometry_common::PointCloud3D;
+using geometry_common::Utils;
+
+PointCloudProjector::PointCloudProjector()
 {
     /* initialise identity transformation matrix */
     camera_to_target_tf_mat_ = Utils::getTransformMat(0, 0, 0, 0, 0, 0);
@@ -337,3 +328,5 @@ size_t PointCloudProjector::calculateNumOfScanPts(
            ? 1 + std::round((angle_max - angle_min + 2*M_PI) / angle_increment)
            : 1 + std::round((angle_max - angle_min) / angle_increment);
 }
+
+}; // namespace kelo
