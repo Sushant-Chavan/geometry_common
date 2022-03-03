@@ -120,7 +120,7 @@ class PointCloudProjector
         float angle_increment_inv_{100.0f};
         size_t num_of_scan_pts_{0};
 
-        ValidityFunction external_validity_func_{NULL};
+        ValidityFunction external_validity_func_{nullptr};
 
         bool isPointValid(
                 const kelo::geometry_common::Point3D& pt) const;
