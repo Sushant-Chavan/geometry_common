@@ -21,7 +21,7 @@ class Polyline2D
         Polyline2D(const PointVec2D& verts):
             vertices(verts) {}
 
-        virtual ~Polyline2D();
+        virtual ~Polyline2D() {}
 
         virtual void transform(const std::vector<float>& tf_mat);
 

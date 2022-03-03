@@ -4,21 +4,19 @@
 namespace kelo::geometry_common
 {
 
-Polyline2D::~Polyline2D() {}
-
 void Polyline2D::transform(const std::vector<float>& tf_mat)
 {
-    for ( Point2D& vert : vertices )
+    for ( Point2D& vertex : vertices )
     {
-        vert.transform(tf_mat);
+        vertex.transform(tf_mat);
     }
 }
 
 void Polyline2D::transform(const Pose2D& tf)
 {
-    for ( Point2D& vert : vertices )
+    for ( Point2D& vertex : vertices )
     {
-        vert.transform(tf);
+        vertex.transform(tf);
     }
 }
 
@@ -53,9 +51,9 @@ visualization_msgs::Marker Polyline2D::getMarker(const std::string& frame,
     if (!vertices.empty())
     {
         marker.points.reserve(vertices.size());
-        for ( const Point2D& corner : vertices )
+        for ( const Point2D& vertex : vertices )
         {
-            marker.points.push_back(Point3D(corner, z).getPoint());
+            marker.points.push_back(Point3D(vertex, z).getPoint());
         }
     }
     return marker;
@@ -64,9 +62,9 @@ visualization_msgs::Marker Polyline2D::getMarker(const std::string& frame,
 std::ostream& operator<<(std::ostream& out, const Polyline2D& polyline)
 {
     out << "Polyline vertices:" << std::endl;
-    for (const auto& corner : polyline.vertices)
+    for (const auto& vertex : polyline.vertices)
     {
-        out << corner;
+        out << vertex;
     }
     return out;
 }
