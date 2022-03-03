@@ -71,14 +71,22 @@ geometry_msgs::PointStamped Point3D::getPointStamped(const std::string& frame) c
     return point;
 }
 
-Point3D Point3D::normalise() const
+void Point3D::normalise()
 {
     float mag = magnitude();
-    if ( mag == 0 )
+    if ( mag > 0 )
     {
-        return Point3D();
+        x /= mag;
+        y /= mag;
+        z /= mag;
     }
-    return Point3D(x/mag, y/mag, z/mag);
+}
+
+Point3D Point3D::getNormalised() const
+{
+    Point3D normalised_pt(*this);
+    normalised_pt.normalise();
+    return normalised_pt;
 }
 
 void Point3D::transform(const std::vector<float>& tf_mat)

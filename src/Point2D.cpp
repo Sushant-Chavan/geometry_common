@@ -44,14 +44,21 @@
 namespace kelo::geometry_common
 {
 
-Point2D Point2D::normalise() const
+void Point2D::normalise()
 {
     float mag = magnitude();
-    if ( mag == 0 )
+    if ( mag > 0 )
     {
-        return Point2D();
+        x /= mag;
+        y /= mag;
     }
-    return Point2D(x/mag, y/mag);
+}
+
+Point2D Point2D::getNormalised() const
+{
+    Point2D normalised_pt(*this);
+    normalised_pt.normalise();
+    return normalised_pt;
 }
 
 float Point2D::scalarCrossProduct(const Point2D& point) const

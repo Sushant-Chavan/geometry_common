@@ -176,11 +176,18 @@ class Point3D
         };
 
         /**
-         * @brief 
+         * @brief Normalise vector in place
          * 
          * @return Point3D 
          */
-        Point3D normalise() const;
+        void normalise();
+
+        /**
+         * @brief: Return a normalised vector
+         *
+         * @return: Point3D
+         */
+        Point3D getNormalised() const;
 
         /**
          * @brief 

@@ -120,12 +120,18 @@ class Point2D
         };
 
         /**
-         * @brief 
+         * @brief Normalise vector in place
          * 
          * @return Point2D 
          */
-        Point2D normalise() const;
+        void normalise();
 
+        /**
+         * @brief: Return a normalised vector
+         *
+         * @return: Point2D
+         */
+        Point2D getNormalised() const;
 
         /**
          * @brief 
