@@ -137,9 +137,10 @@ class Polygon2D : public Polyline2D
         Polygon2D getTransformedPolygon(const Pose2D& tf) const;
 
         /**
-         * @brief Get an RViz visualization marker for the polyline object
+         * @brief Get an RViz visualization marker for the polygon object.
+         * The generated marker object will be a non-filled polygon boundary.
          * 
-         * @param frame The frame in which the polyline marker points are specified
+         * @param frame The frame in which the polygon marker points are specified
          * @param red The red color-component to be used in the line marker
          * color in the range [0.0, 1.0]
          * @param green The green color-component to be used in the line marker
@@ -147,11 +148,11 @@ class Polygon2D : public Polyline2D
          * @param blue The blue color-component to be used in the line marker
          * color in the range [0.0, 1.0]
          * @param alpha The transparency of the generated line marker
-         *  in the range [0.0, 1.0]
+         * in the range [0.0, 1.0]
          * @param line_width The width of the line marker
-         * @param z The Z-coordinate to be appended to all vertices of the line
-         * string to represent the 2D point in a 3D space. (Default: 0.0)
-         * @return visualization_msgs::Marker A marker object representing the polyline
+         * @param z The Z-coordinate to be appended to all vertices of the polygon
+         * to represent the 2D point in a 3D space. (Default: 0.0)
+         * @return visualization_msgs::Marker A marker object representing the polygon
          */
         visualization_msgs::Marker getMarker(
                 const std::string& frame = "base_link",

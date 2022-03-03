@@ -92,7 +92,7 @@ class Polyline2D
          * @param blue The blue color-component to be used in the line marker
          * color in the range [0.0, 1.0]
          * @param alpha The transparency of the generated line marker
-         *  in the range [0.0, 1.0]
+         * in the range [0.0, 1.0]
          * @param line_width The width of the line marker
          * @param z The Z-coordinate to be appended to all vertices of the line
          * string to represent the 2D point in a 3D space. (Default: 0.0)
