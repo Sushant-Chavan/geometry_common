@@ -83,6 +83,7 @@ class Point3D
         friend bool operator == (const Point3D& p1, const Point3D& p2);
 };
 
+using Vec3D = Point3D;
 using PointVec3D = std::vector<Point3D>;
 using PointCloud3D = std::vector<Point3D>;
 

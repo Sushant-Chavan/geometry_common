@@ -17,7 +17,7 @@ class LineSegment2D
         Point2D start, end;
 
         LineSegment2D(float start_x = 0.0f, float start_y = 0.0f,
-                    float end_x = 0.0f, float end_y = 0.0f):
+                      float end_x = 0.0f, float end_y = 0.0f):
             start(start_x, start_y), end(end_x, end_y) {}
 
         LineSegment2D(const Point2D &start, const Point2D &end):
@@ -39,6 +39,20 @@ class LineSegment2D
         Point2D getCenter() const;
 
         Point2D getUnitVector() const;
+
+        bool isIntersecting(const LineSegment2D& line_segment) const;
+
+        bool getIntersectionPoint(
+                const LineSegment2D& line_segment,
+                Point2D& intersection_point) const;
+
+        Point2D getClosestPointFrom(const Point2D& point) const;
+
+        float getMinDistFrom(const Point2D& point) const;
+
+        bool containsPoint(
+                const Point2D& point,
+                float dist_threshold = 1e-3f) const;
 
         visualization_msgs::Marker getMarker(
                 const std::string& frame = "base_link",
