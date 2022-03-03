@@ -4,8 +4,6 @@
 namespace kelo::geometry_common
 {
 
-Polygon2D::~Polygon2D() {}
-
 bool Polygon2D::containsPoint(const Point2D& point) const
 {
     /* 
@@ -42,9 +40,9 @@ Point2D Polygon2D::getMeanPoint() const
     Point2D mean;
     if (!vertices.empty())
     {
-        for (const auto& corner: vertices)
+        for (const auto& vertex: vertices)
         {
-            mean = mean + corner;
+            mean = mean + vertex;
         }
         mean = mean * (1.0f/vertices.size());
     }
@@ -148,34 +146,14 @@ Polygon2D Polygon2D::calcConvexHullOfPolygons(
     return Polygon2D(convex_hull);
 }
 
-void Polygon2D::transform(const std::vector<float>& tf_mat)
-{
-    for ( Point2D& vert : vertices )
-    {
-        vert.transform(tf_mat);
-    }
-}
-
-void Polygon2D::transform(const Pose2D& tf)
-{
-    for ( Point2D& vert : vertices )
-    {
-        vert.transform(tf);
-    }
-}
-
 Polygon2D Polygon2D::getTransformedPolygon(const std::vector<float>& tf_mat) const
 {
-    Polygon2D transformed_poly(*this);
-    transformed_poly.transform(tf_mat);
-    return transformed_poly;
+    return getTransformedPolyline(tf_mat);
 }
 
 Polygon2D Polygon2D::getTransformedPolygon(const Pose2D& tf) const
 {
-    Polygon2D transformed_poly(*this);
-    transformed_poly.transform(tf);
-    return transformed_poly;
+    return getTransformedPolyline(tf);
 }
 
 visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
@@ -194,9 +172,10 @@ visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
     marker.pose.orientation.w = 1.0f;
     if (!vertices.empty())
     {
-        for ( const Point2D& corner : vertices )
+        marker.points.reserve(vertices.size());
+        for ( const Point2D& vertex : vertices )
         {
-            marker.points.push_back(Point3D(corner, z).getPoint());
+            marker.points.push_back(Point3D(vertex, z).getPoint());
         }
         // Repeat first point again to close the polygon loop
         marker.points.push_back(Point3D(vertices[0], z).getPoint());
@@ -206,10 +185,10 @@ visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
 
 std::ostream& operator<<(std::ostream& out, const Polygon2D& polygon)
 {
-    out << "Polygon corners:" << std::endl;
-    for (const auto& corner : polygon.vertices)
+    out << "Polygon vertices:" << std::endl;
+    for (const auto& vertex : polygon.vertices)
     {
-        out << corner;
+        out << vertex;
     }
     return out;
 }

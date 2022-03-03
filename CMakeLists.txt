@@ -51,6 +51,7 @@ add_library(geometry_utils
         src/Point2D.cpp
         src/Point3D.cpp
         src/Polygon2D.cpp
+        src/Polyline2D.cpp
         src/Pose2D.cpp
         src/Box.cpp
         src/LineSegment2D.cpp
