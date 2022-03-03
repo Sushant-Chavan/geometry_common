@@ -117,7 +117,7 @@ class Utils
          * @return std::vector<Pose2D> 
          */
         static std::vector<Pose2D> getTrajectory(
-                const Pose2D& vel,
+                const Velocity2D& vel,
                 size_t num_of_poses,
                 float future_time);
 
@@ -499,12 +499,12 @@ class Utils
          * @param vel 
          * @param max_vel 
          * @param min_vel 
-         * @return Pose2D 
+         * @return Velocity2D 
          */
-        static Pose2D applyVelLimits(
-                const Pose2D& vel,
-                const Pose2D& max_vel,
-                const Pose2D& min_vel);
+        static Velocity2D applyVelLimits(
+                const Velocity2D& vel,
+                const Velocity2D& max_vel,
+                const Velocity2D& min_vel);
 
         /**
          * @brief 
@@ -513,12 +513,12 @@ class Utils
          * @param curr_vel 
          * @param max_acc 
          * @param loop_rate 
-         * @return Pose2D 
+         * @return Velocity2D 
          */
-        static Pose2D applyAccLimits(
-                const Pose2D& cmd_vel,
-                const Pose2D& curr_vel,
-                const Pose2D& max_acc,
+        static Velocity2D applyAccLimits(
+                const Velocity2D& cmd_vel,
+                const Velocity2D& curr_vel,
+                const Acceleration2D& max_acc,
                 float loop_rate);
 
         /**

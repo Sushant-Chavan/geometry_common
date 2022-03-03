@@ -11,6 +11,9 @@ namespace kelo::geometry_common
 class Polygon2D : public Polyline2D
 {
     public:
+        using Ptr = std::shared_ptr<Polygon2D>;
+        using ConstPtr = std::shared_ptr<const Polygon2D>;
+
         Polygon2D():
             Polyline2D() {}
 
