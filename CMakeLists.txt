@@ -36,7 +36,7 @@ catkin_package(
 )
 
 # The documentation build option set to OFF by default
-option(BUILD_DOC "Build documentation" ON)
+option(BUILD_DOC "Build documentation" OFF)
 if(BUILD_DOC)
     # check if Doxygen is installed
     find_package(Doxygen)
