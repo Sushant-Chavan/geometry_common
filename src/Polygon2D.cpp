@@ -148,12 +148,12 @@ Polygon2D Polygon2D::calcConvexHullOfPolygons(
 
 Polygon2D Polygon2D::getTransformedPolygon(const std::vector<float>& tf_mat) const
 {
-    return Polygon2D(Polyline2D::getTransformedPolyline(tf_mat));
+    return getTransformedPolyline(tf_mat);
 }
 
 Polygon2D Polygon2D::getTransformedPolygon(const Pose2D& tf) const
 {
-    return Polygon2D(Polyline2D::getTransformedPolyline(tf));
+    return getTransformedPolyline(tf);
 }
 
 visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,

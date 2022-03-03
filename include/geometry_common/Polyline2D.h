@@ -40,7 +40,7 @@ class Polyline2D
                 float line_width = 0.1f,
                 float z = 0.0f) const;
 
-        friend std::ostream& operator << (std::ostream &out, const Polyline2D& line_segment);
+        friend std::ostream& operator << (std::ostream &out, const Polyline2D& polyline);
 };
 
 } // namespace kelo::geometry_common
