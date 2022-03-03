@@ -59,6 +59,16 @@ visualization_msgs::Marker Polyline2D::getMarker(const std::string& frame,
     return marker;
 }
 
+Point2D& Polyline2D::operator [] (unsigned int index)
+{
+    return vertices[index];
+}
+
+const Point2D& Polyline2D::operator [] (unsigned int index) const
+{
+    return vertices[index];
+}
+
 std::ostream& operator<<(std::ostream& out, const Polyline2D& polyline)
 {
     out << "Polyline vertices:" << std::endl;

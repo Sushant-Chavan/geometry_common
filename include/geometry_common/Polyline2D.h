@@ -40,6 +40,15 @@ class Polyline2D
                 float line_width = 0.1f,
                 float z = 0.0f) const;
 
+        size_t size() const
+        {
+            return vertices.size();
+        }
+
+        Point2D& operator [] (unsigned int index);
+
+        const Point2D& operator [] (unsigned int index) const;
+
         friend std::ostream& operator << (std::ostream &out, const Polyline2D& polyline);
 };
 
