@@ -67,6 +67,39 @@ TEST(UtilsTest, calcConvexHullOfPolygons)
     EXPECT_EQ(convex_hull[5], polygon_a[3]);
 }
 
+TEST(UtilsTest, getInflatedPolygon)
+{
+    Polygon2D polygon(
+    {
+        Point2D(0.0f, 0.0f),
+        Point2D(5.0f, 0.0f),
+        Point2D(5.0f, 5.0f),
+        Point2D(0.0f, 5.0f)
+    });
+    Polygon2D inflated_polygon = polygon.getInflatedPolygon(0.1f);
+
+    EXPECT_EQ(inflated_polygon.size(), 4u);
+    EXPECT_EQ(inflated_polygon[0], Point2D(-0.1f, -0.1f));
+    EXPECT_EQ(inflated_polygon[1], Point2D( 5.1f, -0.1f));
+    EXPECT_EQ(inflated_polygon[2], Point2D( 5.1f,  5.1f));
+    EXPECT_EQ(inflated_polygon[3], Point2D(-0.1f,  5.1f));
+
+    Polygon2D polygon2(
+    {
+        Point2D(0.0f, 0.0f),
+        Point2D(5.0f, 0.0f),
+        Point2D(4.0f, 4.0f),
+        Point2D(0.0f, 3.0f)
+    });
+    Polygon2D inflated_polygon2 = polygon2.getInflatedPolygon(0.1f);
+
+    EXPECT_EQ(inflated_polygon2.size(), 4u);
+    EXPECT_EQ(inflated_polygon2[0], Point2D(-0.1f, -0.1f));
+    EXPECT_EQ(inflated_polygon2[1], Point2D( 5.128f, -0.1f));
+    EXPECT_EQ(inflated_polygon2[2], Point2D( 4.073f,  4.121f));
+    EXPECT_EQ(inflated_polygon2[3], Point2D(-0.1f,  3.078f));
+}
+
 int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);

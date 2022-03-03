@@ -38,6 +38,7 @@
  *
  ******************************************************************************/
 
+#include <cmath>
 #include <geometry_common/Utils.h>
 #include <geometry_common/Polygon2D.h>
 
@@ -184,6 +185,65 @@ Polygon2D Polygon2D::calcConvexHullOfPolygons(
         convex_hull.push_back(p);
     }
     return Polygon2D(convex_hull);
+}
+
+Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
+{
+    Polygon2D inflated_polygon(*this);
+    size_t N = vertices.size();
+    if ( N < 3 )
+    {
+        return inflated_polygon;
+    }
+
+    // calculate shortest side length
+    float shortest_side_len = 1e6f;
+    for ( size_t i = 0; i < N; i++ )
+    {
+        float side_len = vertices[i].getCartDist(vertices[(i+1)%N]);
+        if ( side_len < shortest_side_len )
+        {
+            shortest_side_len = side_len;
+        }
+    }
+    float offset_dist = shortest_side_len/10; // just a rule of thumb
+
+    // inflate each point in the polygon based on the angle with prev and next pt
+    for ( size_t i = 0; i < N; i++ )
+    {
+        const Point2D& a = vertices[(i+N-1) % N]; // prev pt
+        const Point2D& b = vertices[i]; // current pt
+        const Point2D& c = vertices[(i+1) % N]; // next pt
+
+        const Vec2D vec_b_a = (a - b).getNormalised();
+        const Vec2D vec_b_c = (c - b).getNormalised();
+
+        // calculate inflation dist based on the angle formed between a, b and c
+        float theta = std::fabs(Utils::getAngleBetweenPoints(a, b, c));
+        float rhombus_side_length = inflation_dist / std::sin(theta);
+        float diag_1_length = 2 * rhombus_side_length * std::cos(theta/2);
+        float diag_2_length = 2 * rhombus_side_length * std::sin(theta/2);
+        float bigger_diag_length = ( std::fabs(diag_1_length) > std::fabs(diag_2_length) )
+                                   ? diag_1_length : diag_2_length;
+        float smaller_diag_length = ( std::fabs(diag_1_length) > std::fabs(diag_2_length) )
+                                    ? diag_2_length : diag_1_length;
+        float scaled_inflation_dist = ( std::fabs(theta) < M_PI/2 )
+                                      ? bigger_diag_length : smaller_diag_length;
+
+        // calculate normalised vec along which to move current vertex
+        Point2D intermediate_a = b + (vec_b_a * offset_dist);
+        Point2D intermediate_c = b + (vec_b_c * offset_dist);
+        Point2D mid_intermediate_pt = (intermediate_a + intermediate_c) * 0.5f;
+        Vec2D diff = (mid_intermediate_pt - b).getNormalised();
+
+        // calculate sign of inflation dist based on direction of normalised vec
+        Point2D test_pt = b + (diff * offset_dist);
+        int sign = ( containsPoint(test_pt) ) ? -1 : 1;
+
+        Point2D final_pt = b + (diff * (sign * scaled_inflation_dist));
+        inflated_polygon.vertices[i] = final_pt;
+    }
+    return inflated_polygon;
 }
 
 Polygon2D Polygon2D::getTransformedPolygon(const std::vector<float>& tf_mat) const

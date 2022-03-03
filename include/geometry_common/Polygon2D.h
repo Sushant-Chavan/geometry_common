@@ -160,6 +160,16 @@ class Polygon2D : public Polyline2D
                 const Polygon2D& polygon_b);
 
         /**
+         * @brief Inflate/Deflate a polygon by given distance.
+         * 
+         * @param inflation_dist Distance by which to inflate/deflate the
+         * polygon. Positive number would inflate and negative number would
+         * deflate.
+         * @return Polygon2D An inflated/deflated polygon
+         */
+        Polygon2D getInflatedPolygon(float inflation_dist);
+
+        /**
          * @brief Get a transformed copy of the polygon using a 2D transform matrix.
          * 
          * @param tf_mat A 2D homogeneous transform matrix as a 1-dimensional
