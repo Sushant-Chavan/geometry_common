@@ -22,6 +22,9 @@ class Pose2D
     public:
         float x, y, theta;
 
+        using Ptr = std::shared_ptr<Pose2D>;
+        using ConstPtr = std::shared_ptr<const Pose2D>;
+
         /**
          * @brief
          * 
@@ -267,6 +270,9 @@ class Pose2D
          */
         friend std::ostream& operator << (std::ostream &out, const Pose2D& pose_2d);
 };
+
+using Velocity2D = Pose2D;
+using Acceleration2D = Pose2D;
 
 } // namespace kelo::geometry_common
 

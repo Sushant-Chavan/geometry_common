@@ -19,6 +19,9 @@ class Point3D
     public:
         float x{0.0f}, y{0.0f}, z{0.0f};
 
+        using Ptr = std::shared_ptr<Point3D>;
+        using ConstPtr = std::shared_ptr<const Point3D>;
+
         /**
          * @brief
          * 

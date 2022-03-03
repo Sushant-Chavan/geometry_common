@@ -20,6 +20,9 @@ class LineSegment2D
     public:
         Point2D start, end;
 
+        using Ptr = std::shared_ptr<LineSegment2D>;
+        using ConstPtr = std::shared_ptr<const LineSegment2D>;
+
         /**
          * @brief
          * 

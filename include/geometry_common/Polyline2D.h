@@ -17,6 +17,9 @@ class Polyline2D
     public:
         PointVec2D vertices;
 
+        using Ptr = std::shared_ptr<Polyline2D>;
+        using ConstPtr = std::shared_ptr<const Polyline2D>;
+
         /**
          * @brief
          * 
