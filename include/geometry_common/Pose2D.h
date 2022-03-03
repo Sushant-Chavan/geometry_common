@@ -97,6 +97,9 @@ class Pose2D
         friend std::ostream& operator << (std::ostream &out, const Pose2D& pose_2d);
 };
 
+using Velocity2D = Pose2D;
+using Acceleration2D = Pose2D;
+
 } // namespace kelo::geometry_common
 
 #endif // KELO_GEOMETRY_COMMON_POSE_2D_H

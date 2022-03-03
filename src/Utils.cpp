@@ -203,7 +203,7 @@ std::vector<PointCloud2D> Utils::clusterOrderedPoints(
 }
 
 std::vector<Pose2D> Utils::getTrajectory(
-        const Pose2D& vel,
+        const Velocity2D& vel,
         size_t num_of_poses,
         float future_time)
 {
@@ -984,26 +984,26 @@ float Utils::clipAngle(
     return angle;
 }
 
-Pose2D Utils::applyVelLimits(
-        const Pose2D& vel,
-        const Pose2D& max_vel,
-        const Pose2D& min_vel)
+Velocity2D Utils::applyVelLimits(
+        const Velocity2D& vel,
+        const Velocity2D& max_vel,
+        const Velocity2D& min_vel)
 {
-    Pose2D clipped_vel;
+    Velocity2D clipped_vel;
     clipped_vel.x = Utils::clip(vel.x, max_vel.x, min_vel.x);
     clipped_vel.y = Utils::clip(vel.y, max_vel.y, min_vel.y);
     clipped_vel.theta = Utils::clip(vel.theta, max_vel.theta, min_vel.theta);
     return clipped_vel;
 }
 
-Pose2D Utils::applyAccLimits(
-        const Pose2D& cmd_vel,
-        const Pose2D& curr_vel,
-        const Pose2D& max_acc,
+Velocity2D Utils::applyAccLimits(
+        const Velocity2D& cmd_vel,
+        const Velocity2D& curr_vel,
+        const Acceleration2D& max_acc,
         float loop_rate)
 {
-    Pose2D vel;
-    Pose2D max_acc_per_loop = max_acc * (1.0f/loop_rate);
+    Velocity2D vel;
+    Acceleration2D max_acc_per_loop = max_acc * (1.0f/loop_rate);
     vel.x = Utils::clip(cmd_vel.x,
                         curr_vel.x + max_acc_per_loop.x,
                         curr_vel.x - max_acc_per_loop.x);
