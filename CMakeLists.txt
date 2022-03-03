@@ -103,6 +103,14 @@ if (CATKIN_ENABLE_TESTING)
         ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
+    catkin_add_gtest(polygon_2d_test
+        test/polygon_2d_test.cpp
+    )
+    target_link_libraries(polygon_2d_test
+        geometry_utils
+        ${YAML_CPP_LIBRARIES}
+        ${catkin_LIBRARIES}
+    )
 endif ()
 
 # =======
