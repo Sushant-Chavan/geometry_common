@@ -9,7 +9,8 @@ namespace kelo::geometry_common
 {
 
 /**
- * @brief 
+ * @brief Represents a polyline (or a linestring) as a sequence of consecutive 
+ * 2D waypoints(or vertices).
  * 
  */
 class Polyline2D
@@ -21,74 +22,81 @@ class Polyline2D
         using ConstPtr = std::shared_ptr<const Polyline2D>;
 
         /**
-         * @brief
+         * @brief Construct a new empty Polyline2D object
          * 
          */
         Polyline2D() = default;
 
         /**
-         * @brief
+         * @brief Copy constructor
          * 
-         * @param polyline 
+         * @param polyline The polyline to be copied
          */
         Polyline2D(const Polyline2D& polyline):
             vertices(polyline.vertices) {}
 
         /**
-         * @brief
+         * @brief Construct a new Polyline2D object from a vector of 2D points
          * 
-         * @param verts 
+         * @param verts An ordered vector of 2D points representing the polyline
          */
         Polyline2D(const PointVec2D& verts):
             vertices(verts) {}
 
         /**
-         * @brief
+         * @brief Destroy the Polyline2D object
          * 
          */
         virtual ~Polyline2D() {}
 
         /**
-         * @brief 
+         * @brief Transform the polyline (in-place) using a transform matrix
          * 
-         * @param tf_mat 
+         * @param tf_mat A 2D homogeneous transform matrix as a 1-dimensional
+         * row-major vector
          */
         virtual void transform(const std::vector<float>& tf_mat);
 
         /**
-         * @brief 
+         * @brief Transform the polyline (in-place) using a 2D transform object
          * 
-         * @param tf 
+         * @param tf The 2D transformation [x, y, theta] as a Pose2D object
          */
         virtual void transform(const Pose2D& tf);
 
         /**
-         * @brief
+         * @brief Get a transformed copy of the polyline using a 2D transform matrix.
          * 
-         * @param tf_mat 
-         * @return Polyline2D 
+         * @param tf_mat A 2D homogeneous transform matrix as a 1-dimensional
+         * row-major vector
+         * @return Polyline2D A transformed copy of this polyline
          */
         Polyline2D getTransformedPolyline(const std::vector<float>& tf_mat) const;
 
         /**
-         * @brief
+         * @brief Get a transformed copy of the polyline using a 2D transform object.
          * 
-         * @param tf 
-         * @return Polyline2D 
+         * @param tf The 2D transformation [x, y, theta] as a Pose2D object
+         * @return Polyline2D A transformed copy of this polyline
          */
         Polyline2D getTransformedPolyline(const Pose2D& tf) const;
 
         /**
-         * @brief
+         * @brief Get an RViz visualization marker for the polyline object
          * 
-         * @param frame 
-         * @param red 
-         * @param green 
-         * @param blue 
-         * @param alpha 
-         * @param line_width 
-         * @param z 
-         * @return visualization_msgs::Marker 
+         * @param frame The frame in which the polyline marker points are specified
+         * @param red The red color-component to be used in the line marker
+         * color in the range [0.0, 1.0]
+         * @param green The green color-component to be used in the line marker
+         * color in the range [0.0, 1.0]
+         * @param blue The blue color-component to be used in the line marker
+         * color in the range [0.0, 1.0]
+         * @param alpha The transparency of the generated line marker
+         *  in the range [0.0, 1.0]
+         * @param line_width The width of the line marker
+         * @param z The Z-coordinate to be appended to all vertices of the line
+         * string to represent the 2D point in a 3D space. (Default: 0.0)
+         * @return visualization_msgs::Marker A marker object representing the polyline
          */
         virtual visualization_msgs::Marker getMarker(
                 const std::string& frame = "base_link",
@@ -100,9 +108,9 @@ class Polyline2D
                 float z = 0.0f) const;
 
         /**
-         * @brief 
+         * @brief Get the number of vertices representing the polyline
          * 
-         * @return size_t 
+         * @return size_t Num of vertices
          */
         size_t size() const
         {
@@ -110,27 +118,30 @@ class Polyline2D
         }
 
         /**
-         * @brief 
+         * @brief Indexing operator to access each individual vertex by its index.
+         * This method can be used to update the vertex data.
          * 
-         * @param index 
-         * @return Point2D& 
+         * @param index The index of the vertex to be accessed.
+         * @return Point2D& The polyline vertex at the specified index
          */
         Point2D& operator [] (unsigned int index);
 
         /**
-         * @brief 
+         * @brief Indexing operator to access each individual vertex by its index.
+         * The returned vertex data cannot be modified
          * 
-         * @param index 
-         * @return const Point2D& 
+         * @param index The index of the vertex to be accessed.
+         * @return const Point2D& The polyline vertex at the specified index
          */
         const Point2D& operator [] (unsigned int index) const;
 
         /**
-         * @brief 
+         * @brief Append the Polyline information as string to the input stream object
          * 
-         * @param out 
-         * @param polyline 
-         * @return std::ostream& 
+         * @param out The stream object to which the polyline information should be appended
+         * @param polyline The polyline whose data should be appended to the stream object
+         * @return std::ostream& The stream object representing the concatenation
+         * of the input stream and the polyline information
          */
         friend std::ostream& operator << (std::ostream &out, const Polyline2D& polyline);
 };
