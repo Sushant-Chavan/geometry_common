@@ -17,10 +17,13 @@
 namespace kelo::geometry_common
 {
 
+/**
+ * @brief 
+ * 
+ */
 class Utils
 {
     public:
-
         /**
          * @brief 
          * 
@@ -33,7 +36,7 @@ class Utils
                 unsigned decimal_places);
 
         /**
-         * @brief Get the Mean Point object
+         * @brief
          * 
          * @tparam T 
          * @param points 
@@ -48,7 +51,7 @@ class Utils
                 unsigned end_index);
 
         /**
-         * @brief Get the Mean Point object
+         * @brief
          * 
          * @tparam T 
          * @param points 
@@ -59,7 +62,7 @@ class Utils
                 const std::vector<T>& points);
 
         /**
-         * @brief Get the Mean Pose object
+         * @brief
          * 
          * @tparam T 
          * @param poses 
@@ -70,7 +73,7 @@ class Utils
                 const T& poses);
 
         /**
-         * @brief Get the Closest Point object
+         * @brief
          * 
          * @tparam T 
          * @param points 
@@ -109,7 +112,7 @@ class Utils
                 size_t min_cluster_size = 3);
 
         /**
-         * @brief Get the Trajectory object
+         * @brief
          * 
          * @param vel 
          * @param num_of_poses 
@@ -159,7 +162,7 @@ class Utils
                 float theta);
 
         /**
-         * @brief Get the Transform Mat object
+         * @brief
          * 
          * @param x 
          * @param y 
@@ -178,7 +181,7 @@ class Utils
                 float yaw);
 
         /**
-         * @brief Get the Shortest Angle object
+         * @brief
          * 
          * @param angle1 
          * @param angle2 
@@ -218,7 +221,7 @@ class Utils
                 const Point2D& p);
 
         /**
-         * @brief Get the Projected Point On Line object
+         * @brief
          * 
          * @param m 
          * @param c 
@@ -231,10 +234,10 @@ class Utils
                 const Point2D& p);
 
         /**
-         * @brief Get the Projected Point On Segment object
+         * @brief Get the Projected Point On Line object
          * 
-         * @param a 
-         * @param b 
+         * @param line_start 
+         * @param line_end 
          * @param p 
          * @param is_segment 
          * @return Point2D 
@@ -246,7 +249,7 @@ class Utils
                 bool is_segment);
 
         /**
-         * @brief Get the Projected Point On Major Axis object
+         * @brief
          * 
          * @param m 
          * @param c 
@@ -259,7 +262,7 @@ class Utils
                 const Point2D& p);
 
         /**
-         * @brief find the distance of point p from a line formed by points a and b
+         * @brief Find the distance of point p from a line formed by points a and b
          * source: https://stackoverflow.com/a/1501725/10460994
          * 
          * @param a 
@@ -592,7 +595,7 @@ class Utils
                 const sensor_msgs::LaserScan& scan);
 
         /**
-         * @brief Get the Inverted2 D Transform Mat object
+         * @brief
          * 
          * @param tf 
          * @return std::vector<float> 
@@ -601,7 +604,7 @@ class Utils
                 const std::vector<float>& tf);
 
         /**
-         * @brief Get the Perpendicular Angle object
+         * @brief
          * 
          * @param angle 
          * @return float 
@@ -610,7 +613,7 @@ class Utils
                 float angle);
 
         /**
-         * @brief Get the Reverse Angle object
+         * @brief
          * 
          * @param angle 
          * @return float 
@@ -653,7 +656,7 @@ class Utils
                 float step_size = 0.1f);
 
         /**
-         * @brief Get the Angle Between Points object
+         * @brief
          * 
          * @param a 
          * @param b 
@@ -666,7 +669,7 @@ class Utils
                 const Point2D& c);
 
         /**
-         * @brief Get the Path Msg From Trajectory object
+         * @brief
          * 
          * @param trajectory 
          * @param frame 
@@ -677,7 +680,7 @@ class Utils
                 const std::string& frame);
 
         /**
-         * @brief Get the Geometric Path As Marker object
+         * @brief
          * 
          * @param geometric_path 
          * @param frame 
@@ -698,7 +701,7 @@ class Utils
                 float line_width = 0.05f);
 
         /**
-         * @brief Get the Pointcloud As Marker object
+         * @brief
          * 
          * @param cloud 
          * @param frame 
@@ -719,7 +722,7 @@ class Utils
                 float alpha = 1.0f);
 
         /**
-         * @brief Get the Pointcloud As Marker object
+         * @brief
          * 
          * @param cloud 
          * @param frame 
@@ -740,7 +743,7 @@ class Utils
                 float alpha = 1.0f);
 
         /**
-         * @brief Get the String As Marker object
+         * @brief
          * 
          * @param string_label 
          * @param frame 
@@ -761,7 +764,7 @@ class Utils
                 float size = 0.2f);
 
         /**
-         * @brief Get the Matrix As String object
+         * @brief
          * 
          * @param mat 
          * @param N 
