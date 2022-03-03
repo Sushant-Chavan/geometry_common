@@ -239,9 +239,9 @@ class Utils
          * @param is_segment 
          * @return Point2D 
          */
-        static Point2D getProjectedPointOnSegment(
-                const Point2D& a,
-                const Point2D& b,
+        static Point2D getProjectedPointOnLine(
+                const Point2D& line_start,
+                const Point2D& line_end,
                 const Point2D& p,
                 bool is_segment);
 

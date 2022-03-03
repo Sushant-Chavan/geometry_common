@@ -14,6 +14,11 @@ Point2D Point2D::normalise() const
     return Point2D(x/mag, y/mag);
 }
 
+float Point2D::scalarCrossProduct(const Point2D& point) const
+{
+	return (x * point.y) - (y * point.x);
+}
+
 void Point2D::transform(const std::vector<float>& tf_mat)
 {
     assert(tf_mat.size() == 9);

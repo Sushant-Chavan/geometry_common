@@ -344,26 +344,27 @@ Point2D Utils::getProjectedPointOnLine(
     return proj_pt;
 }
 
-Point2D Utils::getProjectedPointOnSegment(
-        const Point2D& a,
-        const Point2D& b,
+Point2D Utils::getProjectedPointOnLine(
+        const Point2D& line_start,
+        const Point2D& line_end,
         const Point2D& p,
         bool is_segment)
 {
     Point2D proj_pt;
-    float length_sq = a.getCartDistSquared(b);
-    if ( length_sq == 0.0f )
+    float length_sq = line_start.getCartDistSquared(line_end);
+    if ( length_sq < 1e-10f ) // check == 0
     {
-        proj_pt = Point2D(a);
+        proj_pt = Point2D(line_start);
         return proj_pt;
     }
-    float t = ((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / length_sq;
+    float t = ((p.x - line_start.x) * (line_end.x - line_start.x) +
+               (p.y - line_start.y) * (line_end.y - line_start.y)) / length_sq;
     if ( is_segment )
     {
         t = Utils::clip(t, 1.0f, 0.0f);
     }
-    proj_pt.x = a.x + t * (b.x - a.x);
-    proj_pt.y = a.y + t * (b.y - a.y);
+    proj_pt.x = line_start.x + t * (line_end.x - line_start.x);
+    proj_pt.y = line_start.y + t * (line_end.y - line_start.y);
     return proj_pt;
 }
 
@@ -393,7 +394,7 @@ float Utils::distToLineSquared(
         const Point2D& p,
         bool is_segment)
 {
-    return p.getCartDistSquared(Utils::getProjectedPointOnSegment(a, b, p, is_segment));
+    return p.getCartDistSquared(Utils::getProjectedPointOnLine(a, b, p, is_segment));
 }
 
 float Utils::distToLineSegmentSquared(

@@ -1,3 +1,5 @@
+#include <cmath>
+#include <geometry_common/Utils.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/LineSegment2D.h>
 
@@ -10,9 +12,8 @@ LineSegment2D::~LineSegment2D()
 
 float LineSegment2D::getAngle() const
 {
-    float dx = end.x - start.x;
-    float dy = end.y - start.y;
-    return atan2(dy, dx);
+    Vec2D diff = end - start;
+    return std::atan2(diff.y, diff.x);
 }
 
 float LineSegment2D::getLength() const
@@ -22,13 +23,12 @@ float LineSegment2D::getLength() const
 
 float LineSegment2D::getSlope() const
 {
-    float dx = end.x - start.x;
-    float dy = end.y - start.y;
-    if ( fabs(dx) < 1e-6f )
+    Vec2D diff = end - start;
+    if ( fabs(diff.x) < 1e-6f )
     {
-        dx = 1e-6f;
+        diff.x = 1e-6f;
     }
-    return dy/dx;
+    return diff.y/diff.x;
 }
 
 float LineSegment2D::getConstant() const
@@ -45,6 +45,65 @@ Point2D LineSegment2D::getCenter() const
 Point2D LineSegment2D::getUnitVector() const
 {
     return (end - start) * (1.0f/getLength());
+}
+
+bool LineSegment2D::isIntersecting(const LineSegment2D& line_segment) const
+{
+    Point2D intersection_pt;
+    return getIntersectionPoint(line_segment, intersection_pt);
+}
+
+bool LineSegment2D::getIntersectionPoint(
+        const LineSegment2D& line_segment,
+        Point2D& intersection_point) const
+{
+    /**
+     * source: https://www.codeproject.com/Tips/862988/Find-the-Intersection-Point-of-Two-Line-Segments
+     */
+    Vec2D vec1 = end - start;
+    Vec2D vec2 = line_segment.end - line_segment.start;
+    Vec2D vec3 = line_segment.start - start;
+    const float vec1_cross_vec2 = vec1.scalarCrossProduct(vec2);
+	const float vec3_cross_vec1 = vec3.scalarCrossProduct(vec1);
+    const float vec3_cross_vec2 = vec3.scalarCrossProduct(vec2);
+
+	if ( ( std::abs(vec1_cross_vec2) < 1e-10f &&
+           std::abs(vec3_cross_vec1) < 1e-10f ) || // the two lines are collinear
+		 ( std::abs(vec1_cross_vec2) < 1e-10f &&
+           std::abs(vec3_cross_vec1) > 1e-10f ) ) // the two lines are parallel and non-intersecting
+    {
+		return false;
+	}
+
+	const float t = vec3_cross_vec2/vec1_cross_vec2;
+	const float u = vec3_cross_vec1/vec1_cross_vec2;
+
+	if ( std::abs(vec1_cross_vec2) > 1e-10f &&
+         0.0f <= t && t <= 1.0f &&
+         0.0f <= u && u <= 1.0f )
+	{
+		intersection_point = start + (vec1 * t);
+		return true;
+	}
+
+	return false; // The two line segments are not parallel but do not intersect.
+}
+
+Point2D LineSegment2D::getClosestPointFrom(const Point2D& point) const
+{
+    return Utils::getProjectedPointOnLine(start, end, point, true);
+}
+
+float LineSegment2D::getMinDistFrom(const Point2D& point) const
+{
+    return point.getCartDist(getClosestPointFrom(point));
+}
+
+bool LineSegment2D::containsPoint(
+        const Point2D& point,
+        float dist_threshold) const
+{
+    return ( getMinDistFrom(point) < dist_threshold );
 }
 
 visualization_msgs::Marker LineSegment2D::getMarker(const std::string& frame,

@@ -42,6 +42,8 @@ class Point2D
 
         Point2D normalise() const;
 
+        float scalarCrossProduct(const Point2D& point) const;
+
         void transform(const std::vector<float>& tf_mat);
 
         void transform(const Pose2D& tf);
@@ -74,6 +76,7 @@ class Point2D
         friend bool operator == (const Point2D& p1, const Point2D& p2);
 };
 
+using Vec2D = Point2D;
 using PointVec2D = std::vector<Point2D>;
 using PointCloud2D = std::vector<Point2D>;
 

@@ -95,6 +95,14 @@ if (CATKIN_ENABLE_TESTING)
         ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
+    catkin_add_gtest(line_segment_2d_test
+        test/line_segment_2d_test.cpp
+    )
+    target_link_libraries(line_segment_2d_test
+        geometry_utils
+        ${YAML_CPP_LIBRARIES}
+        ${catkin_LIBRARIES}
+    )
 endif ()
 
 # =======
