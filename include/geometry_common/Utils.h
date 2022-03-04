@@ -709,6 +709,46 @@ class Utils
                 const Point2D& c);
 
         /**
+         * @brief Convert from Quaternion to Euler angles
+         *
+         * @param qx
+         * @param qy
+         * @param qz
+         * @param qw
+         * @param roll rotation on X axis
+         * @param pitch rotation on Y axis
+         * @param yaw rotation on Z axis
+         */
+        static void getEulerFromQuaternion(
+                float qx,
+                float qy,
+                float qz,
+                float qw,
+                float& roll,
+                float& pitch,
+                float& yaw);
+
+        /**
+         * @brief Convert from Euler to Quaternion angles
+         *
+         * @param roll rotation on X axis
+         * @param pitch rotation on Y axis
+         * @param yaw rotation on Z axis
+         * @param qx
+         * @param qy
+         * @param qz
+         * @param qw
+         */
+        static void getQuaternionFromEuler(
+                float roll,
+                float pitch,
+                float yaw,
+                float& qx,
+                float& qy,
+                float& qz,
+                float& qw);
+
+        /**
          * @brief
          * 
          * @param trajectory 

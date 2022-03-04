@@ -1247,6 +1247,61 @@ float Utils::getAngleBetweenPoints(
                             std::atan2(vec_b_a.y, vec_b_a.x));
 }
 
+void Utils::getEulerFromQuaternion(
+        float qx,
+        float qy,
+        float qz,
+        float qw,
+        float& roll,
+        float& pitch,
+        float& yaw)
+{
+    /**
+     * source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
+     */
+    // roll (x-axis rotation)
+    float sinroll_cospitch = 2 * (qw * qx + qy * qz);
+    float cosroll_cospitch = 1 - 2 * (qx * qx + qy * qy);
+    roll = std::atan2(sinroll_cospitch, cosroll_cospitch);
+
+    // pitch (y-axis rotation)
+    float sinpitch = 2 * (qw * qy - qz * qx);
+    if (std::abs(sinpitch) >= 1)
+        pitch = std::copysign(M_PI/2, sinpitch); // use 90 degrees if out of range
+    else
+        pitch = std::asin(sinpitch);
+
+    // yaw (z-axis rotation)
+    float sinyaw_cospitch = 2 * (qw * qz + qx * qy);
+    float cosyaw_cospitch = 1 - 2 * (qy * qy + qz * qz);
+    yaw = std::atan2(sinyaw_cospitch, cosyaw_cospitch);
+}
+
+void Utils::getQuaternionFromEuler(
+        float roll,
+        float pitch,
+        float yaw,
+        float& qx,
+        float& qy,
+        float& qz,
+        float& qw)
+{
+    /**
+     * source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code
+     */
+    float cy = std::cos(yaw * 0.5f);
+    float sy = std::sin(yaw * 0.5f);
+    float cp = std::cos(pitch * 0.5f);
+    float sp = std::sin(pitch * 0.5f);
+    float cr = std::cos(roll * 0.5f);
+    float sr = std::sin(roll * 0.5f);
+
+    qw = (cr * cp * cy) + (sr * sp * sy);
+    qx = (sr * cp * cy) - (cr * sp * sy);
+    qy = (cr * sp * cy) + (sr * cp * sy);
+    qz = (cr * cp * sy) - (sr * sp * cy);
+}
+
 nav_msgs::Path Utils::getPathMsgFromTrajectory(
         const std::vector<Pose2D>& trajectory,
         const std::string& frame)
