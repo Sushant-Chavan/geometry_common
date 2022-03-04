@@ -38,11 +38,25 @@
  *
  ******************************************************************************/
 
+#include <geometry_common/LineSegment2D.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/Polyline2D.h>
 
 namespace kelo::geometry_common
 {
+
+bool Polyline2D::isIntersecting(const LineSegment2D& line_segment) const
+{
+    // Conditions also ensures that there are atleast 2 vertices
+    for ( unsigned int start = 0, end = start + 1; end < vertices.size(); start = end++ )
+    {
+        if ( LineSegment2D(vertices[start], vertices[end]).isIntersecting(line_segment) )
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 void Polyline2D::transform(const std::vector<float>& tf_mat)
 {
