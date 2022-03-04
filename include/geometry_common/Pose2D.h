@@ -46,9 +46,9 @@
 #include <visualization_msgs/Marker.h>
 #include <tf/transform_datatypes.h>
 
-#include <geometry_common/Point3D.h>
-
 #include <cmath>
+
+#include <geometry_common/Point2D.h>
 
 namespace kelo::geometry_common
 {
@@ -190,9 +190,9 @@ class Pose2D
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Point3D& p) const
+        inline float getCartDist(const Point2D& p) const
         {
-            return std::sqrt(pow(x - p.x, 2) + std::pow(y - p.y, 2));
+            return std::sqrt(std::pow(x - p.x, 2) + std::pow(y - p.y, 2));
         };
 
         /**
