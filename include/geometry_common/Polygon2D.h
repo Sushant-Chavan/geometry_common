@@ -116,6 +116,18 @@ class Polygon2D : public Polyline2D
         bool isIntersecting(const LineSegment2D& line_segment) const override;
 
         /**
+         * @brief If the 2D polygon intersects with a 2D line segment, this function returns the 
+         * intersection point that is closest to the start vertex of the line segment
+         * @param line_segment The 2D line segment to be checked for intersection
+         * @param intersection_pt The intersection point closest to the start vertex of the line segment
+         * @return bool True if the polygon intersects the 2D line segment at
+         * atleast one point, false otherwise
+         */
+        bool getClosestIntersectionPoint(
+                const LineSegment2D& line_segment,
+                Point2D& intersection_pt) override;
+
+        /**
          * @brief Check if a 2D point lies within the polygon.
          * 
          * @param point The 2D point to be checked
