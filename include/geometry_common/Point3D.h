@@ -178,7 +178,6 @@ class Point3D
         /**
          * @brief Normalise vector in place
          * 
-         * @return Point3D 
          */
         void normalise();
 

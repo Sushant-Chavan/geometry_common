@@ -122,7 +122,6 @@ class Point2D
         /**
          * @brief Normalise vector in place
          * 
-         * @return Point2D 
          */
         void normalise();
 
