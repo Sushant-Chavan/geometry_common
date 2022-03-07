@@ -38,11 +38,48 @@
  *
  ******************************************************************************/
 
+#include <geometry_common/LineSegment2D.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/Polyline2D.h>
 
 namespace kelo::geometry_common
 {
+
+bool Polyline2D::isIntersecting(const LineSegment2D& line_segment) const
+{
+    // Conditions also ensures that there are atleast 2 vertices
+    for ( unsigned int start = 0, end = start + 1; end < vertices.size(); start = end++ )
+    {
+        if ( LineSegment2D(vertices[start], vertices[end]).isIntersecting(line_segment) )
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Polyline2D::getClosestIntersectionPoint(
+        const LineSegment2D& line_segment,
+        Point2D& intersection_pt)
+{
+    bool intersects = false;
+    double minDist = std::numeric_limits<double>::max();
+    for ( unsigned int start = 0, end = start + 1; end < vertices.size(); start = end++ )
+    {
+        Point2D pt;
+        if ( line_segment.getIntersectionPoint(LineSegment2D(vertices[start], vertices[end]), pt) )
+        {
+            double dist = line_segment.start.getCartDist(pt);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                intersection_pt = pt;
+                intersects = true;
+            }
+        }
+    }
+    return intersects;
+}
 
 visualization_msgs::Marker Polyline2D::getMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float line_width,

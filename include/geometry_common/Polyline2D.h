@@ -48,6 +48,9 @@
 namespace kelo::geometry_common
 {
 
+// Forward declaration
+class LineSegment2D;
+
 /**
  * @brief Represents a polyline (or a linestring) as a sequence of consecutive 
  * 2D waypoints(or vertices).
@@ -88,6 +91,28 @@ class Polyline2D
          * 
          */
         virtual ~Polyline2D() {}
+
+        /**
+         * @brief Checks if the 2D polyline and a 2D line segment intersect at
+         * atleast one point
+         * 
+         * @param line_segment The 2D line segment to be checked for intersection
+         * @return bool True if the polyline intersects the 2D line segment at
+         * atleast one point, false otherwise
+         */
+        virtual bool isIntersecting(const LineSegment2D& line_segment) const;
+
+        /**
+         * @brief If the 2D polyline intersects with a 2D line segment, this function returns the 
+         * intersection point that is closest to the start vertex of the line segment
+         * @param line_segment The 2D line segment to be checked for intersection
+         * @param intersection_pt The intersection point closest to the start vertex of the line segment
+         * @return bool True if the polyline intersects the 2D line segment at
+         * atleast one point, false otherwise
+         */
+        virtual bool getClosestIntersectionPoint(
+                const LineSegment2D& line_segment,
+                Point2D& intersection_pt);
 
         /**
          * @brief Get an RViz visualization marker for the polyline object
