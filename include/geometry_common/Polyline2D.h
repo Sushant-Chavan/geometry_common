@@ -176,7 +176,7 @@ class Polyline2D
          * @return std::ostream& The stream object representing the concatenation
          * of the input stream and the polyline information
          */
-        friend std::ostream& operator << (std::ostream &out, const Polyline2D& polyline);
+        friend std::ostream& operator << (std::ostream& out, const Polyline2D& polyline);
 };
 
 } // namespace kelo::geometry_common

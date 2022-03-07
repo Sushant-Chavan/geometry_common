@@ -81,7 +81,7 @@ class LineSegment2D
          * @param start 
          * @param end 
          */
-        LineSegment2D(const Point2D &start, const Point2D &end):
+        LineSegment2D(const Point2D& start, const Point2D& end):
             start(start), end(end) {}
 
         /**
@@ -89,7 +89,7 @@ class LineSegment2D
          * 
          * @param line_segment 
          */
-        LineSegment2D(const LineSegment2D &line_segment):
+        LineSegment2D(const LineSegment2D& line_segment):
             LineSegment2D(line_segment.start, line_segment.end) {}
 
         /**
@@ -212,7 +212,9 @@ class LineSegment2D
          * @param line_segment 
          * @return std::ostream& 
          */
-        friend std::ostream& operator << (std::ostream &out, const LineSegment2D& line_segment);
+        friend std::ostream& operator << (
+                std::ostream& out,
+                const LineSegment2D& line_segment);
 };
 
 } // namespace kelo::geometry_common

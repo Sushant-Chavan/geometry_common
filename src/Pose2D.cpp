@@ -46,14 +46,14 @@
 namespace kelo::geometry_common
 {
 
-Pose2D::Pose2D(const geometry_msgs::PoseStamped &pose)
+Pose2D::Pose2D(const geometry_msgs::PoseStamped& pose)
 {
     x = pose.pose.position.x;
     y = pose.pose.position.y;
     theta = Pose2D::getThetaFromQuaternion(pose.pose.orientation);
 }
 
-Pose2D::Pose2D(const geometry_msgs::Pose &pose)
+Pose2D::Pose2D(const geometry_msgs::Pose& pose)
 {
     x = pose.position.x;
     y = pose.position.y;
@@ -159,7 +159,7 @@ bool Pose2D::operator == (const Pose2D& pose) const
              Utils::getShortestAngle(theta, pose.theta) < 1e-2f );
 }
 
-std::ostream& operator << (std::ostream &out, const Pose2D& pose)
+std::ostream& operator << (std::ostream& out, const Pose2D& pose)
 {
     out << "<x: " << pose.x
         << ", y: " << pose.y

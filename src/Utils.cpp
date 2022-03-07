@@ -423,8 +423,8 @@ float Utils::fitLineRANSAC(
 
 float Utils::fitLineRANSAC(
         const PointCloud2D& pts,
-        float &m,
-        float &c,
+        float& m,
+        float& c,
         float delta,
         size_t itr_limit)
 {

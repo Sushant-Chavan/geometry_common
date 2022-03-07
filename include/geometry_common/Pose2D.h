@@ -83,7 +83,7 @@ class Pose2D
          * 
          * @param pose 
          */
-        Pose2D(const Pose2D &pose):
+        Pose2D(const Pose2D& pose):
             x(pose.x), y(pose.y), theta(pose.theta) {}
 
         /**
@@ -91,14 +91,14 @@ class Pose2D
          * 
          * @param pose 
          */
-        Pose2D(const geometry_msgs::PoseStamped &pose);
+        Pose2D(const geometry_msgs::PoseStamped& pose);
 
         /**
          * @brief
          * 
          * @param pose 
          */
-        Pose2D(const geometry_msgs::Pose &pose);
+        Pose2D(const geometry_msgs::Pose& pose);
 
         /**
          * @brief
@@ -112,7 +112,7 @@ class Pose2D
          * 
          * @param stamped_transform 
          */
-        Pose2D(const tf::StampedTransform &stamped_transform);
+        Pose2D(const tf::StampedTransform& stamped_transform);
 
         /**
          * @brief
@@ -267,7 +267,8 @@ class Pose2D
          * @param pose_2d 
          * @return std::ostream& 
          */
-        friend std::ostream& operator << (std::ostream &out, const Pose2D& pose_2d);
+        friend std::ostream& operator << (std::ostream& out, const Pose2D& pose_2d);
+
 };
 
 using Velocity2D = Pose2D;

@@ -440,7 +440,7 @@ class Utils
          * @return std::vector<LineSegment2D> 
          */
         static std::vector<LineSegment2D> fitLineSegments(
-                const std::vector<Point2D> &pts,
+                const std::vector<Point2D>& pts,
                 float regression_error_threshold = 0.1f,
                 float distance_threshold = 0.2,
                 float angle_threshold = 0.2);
