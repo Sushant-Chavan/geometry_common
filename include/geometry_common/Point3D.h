@@ -214,7 +214,7 @@ class Point3D
          * @param p2 
          * @return Point3D 
          */
-        friend Point3D operator - (const Point3D& p1, const Point3D& p2);
+        Point3D operator - (const Point3D& p) const;
 
         /**
          * @brief 
@@ -223,7 +223,7 @@ class Point3D
          * @param p2 
          * @return Point3D 
          */
-        friend Point3D operator + (const Point3D& p1, const Point3D& p2);
+        Point3D operator + (const Point3D& p) const;
 
         /**
          * @brief 
@@ -232,7 +232,7 @@ class Point3D
          * @param scalar 
          * @return Point3D 
          */
-        friend Point3D operator * (const Point3D& p1, float scalar);
+        Point3D operator * (float scalar) const;
 
         /**
          * @brief 
@@ -250,7 +250,7 @@ class Point3D
          * @param p2 
          * @return bool 
          */
-        friend bool operator == (const Point3D& p1, const Point3D& p2);
+        bool operator == (const Point3D& p) const;
 };
 
 /**

@@ -87,27 +87,27 @@ visualization_msgs::Marker Point2D::getMarker(const std::string& frame,
     return marker;
 }
 
-Point2D operator - (const Point2D& p1, const Point2D& p2)
+Point2D Point2D::operator - (const Point2D& p) const
 {
     Point2D diff;
-    diff.x = p1.x - p2.x;
-    diff.y = p1.y - p2.y;
+    diff.x = x - p.x;
+    diff.y = y - p.y;
     return diff;
 }
 
-Point2D operator + (const Point2D& p1, const Point2D& p2)
+Point2D Point2D::operator + (const Point2D& p) const
 {
     Point2D sum;
-    sum.x = p1.x + p2.x;
-    sum.y = p1.y + p2.y;
+    sum.x = x + p.x;
+    sum.y = y + p.y;
     return sum;
 }
 
-Point2D operator * (const Point2D& p1, float scalar)
+Point2D Point2D::operator * (float scalar) const
 {
     Point2D scaled;
-    scaled.x = p1.x * scalar;
-    scaled.y = p1.y * scalar;
+    scaled.x = x * scalar;
+    scaled.y = y * scalar;
     return scaled;
 }
 
@@ -117,9 +117,9 @@ std::ostream& operator << (std::ostream& out, const Point2D& point)
     return out;
 }
 
-bool operator == (const Point2D& p1, const Point2D& p2)
+bool Point2D::operator == (const Point2D& p) const
 {
-    return ( p1.getCartDist(p2) < 1e-3f );
+    return ( getCartDist(p) < 1e-3f );
 }
 
 } // namespace kelo::geometry_common

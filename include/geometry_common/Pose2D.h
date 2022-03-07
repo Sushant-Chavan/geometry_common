@@ -240,7 +240,7 @@ class Pose2D
          * @param p2 
          * @return Pose2D 
          */
-        friend Pose2D operator - (const Pose2D& p1, const Pose2D& p2);
+        Pose2D operator - (const Pose2D& p) const;
 
         /**
          * @brief 
@@ -249,7 +249,7 @@ class Pose2D
          * @param scalar 
          * @return Pose2D 
          */
-        friend Pose2D operator * (const Pose2D& pose, float scalar);
+        Pose2D operator * (float scalar) const;
 
         /**
          * @brief 
@@ -258,7 +258,7 @@ class Pose2D
          * @param p2 
          * @return bool 
          */
-        friend bool operator == (const Pose2D& p1, const Pose2D& p2);
+        bool operator == (const Pose2D& p) const;
 
         /**
          * @brief 

@@ -135,28 +135,28 @@ std::string Pose2D::str() const
     return ss.str();
 }
 
-Pose2D operator - (const Pose2D& pose_1, const Pose2D& pose_2)
+Pose2D Pose2D::operator - (const Pose2D& pose) const
 {
     Pose2D diff;
-    diff.x = pose_1.x - pose_2.x;
-    diff.y = pose_1.y - pose_2.y;
-    diff.theta = Utils::getShortestAngle(pose_1.theta, pose_2.theta);
+    diff.x = x - pose.x;
+    diff.y = y - pose.y;
+    diff.theta = Utils::getShortestAngle(theta, pose.theta);
     return diff;
 }
 
-Pose2D operator * (const Pose2D& pose, float scalar)
+Pose2D Pose2D::operator * (float scalar) const
 {
     Pose2D scaled;
-    scaled.x = pose.x * scalar;
-    scaled.y = pose.y * scalar;
-    scaled.theta = pose.theta * scalar;
+    scaled.x = x * scalar;
+    scaled.y = y * scalar;
+    scaled.theta = theta * scalar;
     return scaled;
 }
 
-bool operator == (const Pose2D& pose_1, const Pose2D& pose_2)
+bool Pose2D::operator == (const Pose2D& pose) const
 {
-    return ( pose_1.getCartDist(pose_2) < 1e-3f &&
-             Utils::getShortestAngle(pose_1.theta, pose_2.theta) < 1e-2f );
+    return ( getCartDist(pose) < 1e-3f &&
+             Utils::getShortestAngle(theta, pose.theta) < 1e-2f );
 }
 
 std::ostream& operator << (std::ostream &out, const Pose2D& pose)

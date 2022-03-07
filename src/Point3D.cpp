@@ -109,30 +109,30 @@ visualization_msgs::Marker Point3D::getMarker(const std::string& frame,
     return marker;
 }
 
-Point3D operator - (const Point3D& p1, const Point3D& p2)
+Point3D Point3D::operator - (const Point3D& p) const
 {
     Point3D diff;
-    diff.x = p1.x - p2.x;
-    diff.y = p1.y - p2.y;
-    diff.z = p1.z - p2.z;
+    diff.x = x - p.x;
+    diff.y = y - p.y;
+    diff.z = z - p.z;
     return diff;
 }
 
-Point3D operator + (const Point3D& p1, const Point3D& p2)
+Point3D Point3D::operator + (const Point3D& p) const
 {
     Point3D sum;
-    sum.x = p1.x + p2.x;
-    sum.y = p1.y + p2.y;
-    sum.z = p1.z + p2.z;
+    sum.x = x + p.x;
+    sum.y = y + p.y;
+    sum.z = z + p.z;
     return sum;
 }
 
-Point3D operator * (const Point3D& p1, float scalar)
+Point3D Point3D::operator * (float scalar) const
 {
     Point3D scaled;
-    scaled.x = p1.x * scalar;
-    scaled.y = p1.y * scalar;
-    scaled.z = p1.z * scalar;
+    scaled.x = x * scalar;
+    scaled.y = y * scalar;
+    scaled.z = z * scalar;
     return scaled;
 }
 
@@ -142,9 +142,9 @@ std::ostream& operator << (std::ostream& out, const Point3D& point)
     return out;
 }
 
-bool operator == (const Point3D& p1, const Point3D& p2)
+bool Point3D::operator == (const Point3D& p) const
 {
-    return ( p1.getCartDist(p2) < 1e-3f );
+    return ( getCartDist(p) < 1e-3f );
 }
 
 } // namespace kelo::geometry_common

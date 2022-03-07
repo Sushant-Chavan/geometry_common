@@ -168,7 +168,7 @@ class Point2D
          * @param p2 
          * @return Point2D 
          */
-        friend Point2D operator - (const Point2D& p1, const Point2D& p2);
+        Point2D operator - (const Point2D& p2) const;
 
         /**
          * @brief 
@@ -177,7 +177,7 @@ class Point2D
          * @param p2 
          * @return Point2D 
          */
-        friend Point2D operator + (const Point2D& p1, const Point2D& p2);
+        Point2D operator + (const Point2D& p2) const;
 
         /**
          * @brief 
@@ -186,7 +186,7 @@ class Point2D
          * @param scalar 
          * @return Point2D 
          */
-        friend Point2D operator * (const Point2D& p1, float scalar);
+        Point2D operator * (float scalar) const;
 
         /**
          * @brief 
@@ -204,7 +204,7 @@ class Point2D
          * @param p2 
          * @return bool 
          */
-        friend bool operator == (const Point2D& p1, const Point2D& p2);
+        bool operator == (const Point2D& p2) const;
 };
 
 /**
