@@ -105,7 +105,7 @@ class Pose2D
          * 
          * @param mat 
          */
-        Pose2D(const std::vector<float>& mat);
+        Pose2D(const TransformMat2D& mat);
 
         /**
          * @brief

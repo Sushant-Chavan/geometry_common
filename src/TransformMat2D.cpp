@@ -61,9 +61,8 @@ TransformMat2D::TransformMat2D(const tf::StampedTransform& stamped_transform)
     float x = stamped_transform.getOrigin().x();
     float y = stamped_transform.getOrigin().y();
 
-    tf::Quaternion quat = stamped_transform.getRotation();
-    float theta = tf::getYaw(quat);
-    update(x, y, theta);
+    tf::Quaternion q = stamped_transform.getRotation();
+    update(x, y, q.x(), q.y(), q.z(), q.w());
 }
 
 TransformMat2D::TransformMat2D(const Pose2D& pose)

@@ -60,21 +60,19 @@ Pose2D::Pose2D(const geometry_msgs::Pose &pose)
     theta = Pose2D::getThetaFromQuaternion(pose.orientation);
 }
 
-Pose2D::Pose2D(const std::vector<float>& mat)
+Pose2D::Pose2D(const TransformMat2D& tf_mat)
 {
-    assert(mat.size() == 9);
-    x = mat[2];
-    y = mat[5];
-    theta = std::atan2(mat[3], mat[0]);
+    x = tf_mat.getX();
+    y = tf_mat.getY();
+    theta = tf_mat.getTheta();
 }
 
-Pose2D::Pose2D(const tf::StampedTransform &stamped_transform)
+Pose2D::Pose2D(const tf::StampedTransform& stamped_transform)
 {
-    x = stamped_transform.getOrigin().x();
-    y = stamped_transform.getOrigin().y();
-
-    tf::Quaternion quat = stamped_transform.getRotation();
-    theta = tf::getYaw(quat);
+    TransformMat2D tf_mat(stamped_transform);
+    x = tf_mat.getX();
+    y = tf_mat.getY();
+    theta = tf_mat.getTheta();
 }
 
 geometry_msgs::PoseStamped Pose2D::getPoseStamped(const std::string& frame) const
