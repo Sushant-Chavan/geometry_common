@@ -45,6 +45,41 @@
 namespace kelo::geometry_common
 {
 
+bool Polygon2D::isIntersecting(const LineSegment2D& line_segment) const
+{
+    for ( unsigned int start = vertices.size() - 1, end = 0; end < vertices.size(); start = end++ )
+    {
+        if ( LineSegment2D(vertices[start], vertices[end]).isIntersecting(line_segment) )
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Polygon2D::getClosestIntersectionPoint(
+        const LineSegment2D& line_segment,
+        Point2D& intersection_pt)
+{
+    bool intersects = false;
+    double minDist = std::numeric_limits<double>::max();
+    for ( unsigned int start = vertices.size() - 1, end = 0; end < vertices.size(); start = end++ )
+    {
+        Point2D pt;
+        if ( line_segment.getIntersectionPoint(LineSegment2D(vertices[start], vertices[end]), pt) )
+        {
+            double dist = line_segment.start.getCartDist(pt);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                intersection_pt = pt;
+                intersects = true;
+            }
+        }
+    }
+    return intersects;
+}
+
 bool Polygon2D::containsPoint(const Point2D& point) const
 {
     /* 
