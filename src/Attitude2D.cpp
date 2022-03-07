@@ -40,7 +40,6 @@
 
 #include <cmath>
 #include <geometry_common/Attitude2D.h>
-#include <geometry_common/Pose2D.h>
 #include <geometry_common/Utils.h>
 
 namespace kelo::geometry_common

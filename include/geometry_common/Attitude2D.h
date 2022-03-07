@@ -47,9 +47,6 @@
 namespace kelo::geometry_common
 {
 
-// Forward declaration 
-class Pose2D;
-
 /**
  * @brief 
  * 
@@ -135,4 +132,4 @@ using Acceleration2D = Attitude2D;
 
 } // namespace kelo::geometry_common
 
-#endif // KELO_GEOMETRY_COMMON_POSE_2D_H
+#endif // KELO_GEOMETRY_COMMON_ATTITUDE_2D_H
