@@ -50,14 +50,22 @@ Pose2D::Pose2D(const geometry_msgs::PoseStamped& pose)
 {
     x = pose.pose.position.x;
     y = pose.pose.position.y;
-    theta = Pose2D::getThetaFromQuaternion(pose.pose.orientation);
+    float roll, pitch;
+    Utils::getEulerFromQuaternion(
+            pose.pose.orientation.x, pose.pose.orientation.y,
+            pose.pose.orientation.z, pose.pose.orientation.w,
+            roll, pitch, theta);
 }
 
 Pose2D::Pose2D(const geometry_msgs::Pose& pose)
 {
     x = pose.position.x;
     y = pose.position.y;
-    theta = Pose2D::getThetaFromQuaternion(pose.orientation);
+    float roll, pitch;
+    Utils::getEulerFromQuaternion(
+            pose.orientation.x, pose.orientation.y,
+            pose.orientation.z, pose.orientation.w,
+            roll, pitch, theta);
 }
 
 Pose2D::Pose2D(const TransformMat2D& tf_mat)

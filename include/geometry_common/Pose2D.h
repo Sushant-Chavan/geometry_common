@@ -199,34 +199,6 @@ class Pose2D
         };
 
         /**
-         * @brief
-         * 
-         * @param q 
-         * @return float 
-         */
-        static float getThetaFromQuaternion(const geometry_msgs::Quaternion& q);
-
-        /**
-         * @brief
-         * 
-         * @param qx 
-         * @param qy 
-         * @param qz 
-         * @param qw 
-         * @return float 
-         */
-        static float getThetaFromQuaternion(float qx, float qy, float qz, float qw);
-
-        /**
-         * @brief
-         * 
-         * @param _theta 
-         * @param qz 
-         * @param qw 
-         */
-        static void getQuaternionFromTheta(float _theta, float& qz, float& qw);
-
-        /**
          * @brief 
          * 
          * @return std::string 
