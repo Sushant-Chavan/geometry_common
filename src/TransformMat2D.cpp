@@ -219,14 +219,6 @@ void TransformMat2D::transform(Polyline2D& polyline) const
     }
 }
 
-void TransformMat2D::transform(Polygon2D& polygon) const
-{
-    for ( Point2D& vertex : polygon.vertices )
-    {
-        transform(vertex);
-    }
-}
-
 TransformMat2D TransformMat2D::operator * (const TransformMat2D& tf_mat) const
 {
     TransformMat2D result_tf_mat(*this);

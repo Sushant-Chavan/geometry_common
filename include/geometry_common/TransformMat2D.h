@@ -142,8 +142,6 @@ class TransformMat2D
 
         void transform(Polyline2D& polyline) const;
 
-        void transform(Polygon2D& polygon) const;
-
         TransformMat2D operator * (const TransformMat2D& tf_mat) const;
 
         TransformMat2D& operator *= (const TransformMat2D& tf_mat);
