@@ -152,15 +152,6 @@ Pose2D Pose2D::operator - (const Pose2D& pose) const
     return diff;
 }
 
-Pose2D Pose2D::operator * (float scalar) const
-{
-    Pose2D scaled;
-    scaled.x = x * scalar;
-    scaled.y = y * scalar;
-    scaled.theta = theta * scalar;
-    return scaled;
-}
-
 bool Pose2D::operator == (const Pose2D& pose) const
 {
     return ( getCartDist(pose) < 1e-3f &&

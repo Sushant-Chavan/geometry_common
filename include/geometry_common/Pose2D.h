@@ -49,6 +49,7 @@
 #include <cmath>
 
 #include <geometry_common/Point2D.h>
+#include <geometry_common/Attitude2D.h>
 
 namespace kelo::geometry_common
 {
@@ -60,11 +61,9 @@ class TransformMat2D;
  * @brief 
  * 
  */
-class Pose2D
+class Pose2D : public Attitude2D
 {
     public:
-        float x, y, theta;
-
         using Ptr = std::shared_ptr<Pose2D>;
         using ConstPtr = std::shared_ptr<const Pose2D>;
 
@@ -76,7 +75,7 @@ class Pose2D
          * @param _theta 
          */
         Pose2D(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
-            x(_x), y(_y), theta(_theta) {}
+            Attitude2D(_x, _y, _theta) {}
 
         /**
          * @brief
@@ -84,7 +83,15 @@ class Pose2D
          * @param pose 
          */
         Pose2D(const Pose2D& pose):
-            x(pose.x), y(pose.y), theta(pose.theta) {}
+            Attitude2D(pose.x, pose.y, pose.theta) {}
+
+        /**
+         * @brief 
+         *
+         * @param attitude):
+         */
+        Pose2D(const Attitude2D& attitude):
+            Attitude2D(attitude) {}
 
         /**
          * @brief
@@ -126,7 +133,8 @@ class Pose2D
          * @param frame 
          * @return geometry_msgs::PoseStamped 
          */
-        geometry_msgs::PoseStamped getPoseStamped(const std::string& frame="map") const;
+        geometry_msgs::PoseStamped getPoseStamped(
+                const std::string& frame = "map") const;
 
         /**
          * @brief
@@ -217,34 +225,13 @@ class Pose2D
         /**
          * @brief 
          * 
-         * @param pose 
-         * @param scalar 
-         * @return Pose2D 
-         */
-        Pose2D operator * (float scalar) const;
-
-        /**
-         * @brief 
-         * 
          * @param p1 
          * @param p2 
          * @return bool 
          */
         bool operator == (const Pose2D& p) const;
 
-        /**
-         * @brief 
-         * 
-         * @param out 
-         * @param pose_2d 
-         * @return std::ostream& 
-         */
-        friend std::ostream& operator << (std::ostream& out, const Pose2D& pose_2d);
-
 };
-
-using Velocity2D = Pose2D;
-using Acceleration2D = Pose2D;
 
 } // namespace kelo::geometry_common
 

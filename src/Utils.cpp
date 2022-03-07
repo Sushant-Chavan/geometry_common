@@ -255,8 +255,8 @@ std::vector<Pose2D> Utils::getTrajectory(
 
     float delta_t = future_time/num_of_poses;
 
-    Pose2D tf = vel * delta_t;
-    TransformMat2D vel_tf_mat = tf.getMat();
+    // d = v * t
+    TransformMat2D vel_tf_mat = Pose2D(vel * delta_t).getMat();
     TransformMat2D pos_mat; // identity mat
 
     /* add current pose (for extra safety) */
