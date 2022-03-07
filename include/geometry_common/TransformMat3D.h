@@ -122,13 +122,13 @@ class TransformMat3D
 
         void setQuaternion(float qx, float qy, float qz, float qw);
 
-        void transform(Vec3D& vec) const;
+        void transform(Point3D& point) const;
 
         TransformMat3D operator * (const TransformMat3D& tf_mat) const;
 
         TransformMat3D& operator *= (const TransformMat3D& tf_mat);
 
-        Vec3D operator * (const Vec3D& vec) const;
+        Point3D operator * (const Point3D& point) const;
 
         const float& operator [] (unsigned int index) const;
 

@@ -234,14 +234,17 @@ void TransformMat3D::setQuaternion(float qx, float qy, float qz, float qw)
     setRollPitchYaw(roll, pitch, yaw);
 }
 
-void TransformMat3D::transform(Vec3D& vec) const
+void TransformMat3D::transform(Point3D& point) const
 {
-    float temp_x = (mat_[0] * vec.x) + (mat_[1] * vec.y) + (mat_[2] * vec.z) + mat_[3];
-    float temp_y = (mat_[4] * vec.x) + (mat_[5] * vec.y) + (mat_[6] * vec.z) + mat_[7];
-    float temp_z = (mat_[8] * vec.x) + (mat_[9] * vec.y) + (mat_[10] * vec.z) + mat_[11];
-    vec.x = temp_x;
-    vec.y = temp_y;
-    vec.z = temp_z;
+    float temp_x = (mat_[0] * point.x) + (mat_[1] * point.y) +
+                   (mat_[2] * point.z) + mat_[3];
+    float temp_y = (mat_[4] * point.x) + (mat_[5] * point.y) +
+                   (mat_[6] * point.z) + mat_[7];
+    float temp_z = (mat_[8] * point.x) + (mat_[9] * point.y) +
+                   (mat_[10] * point.z) + mat_[11];
+    point.x = temp_x;
+    point.y = temp_y;
+    point.z = temp_z;
 }
 
 TransformMat3D TransformMat3D::operator * (const TransformMat3D& tf_mat) const
@@ -280,11 +283,11 @@ TransformMat3D& TransformMat3D::operator *= (const TransformMat3D& tf_mat)
     return *this;
 }
 
-Vec3D TransformMat3D::operator * (const Vec3D& vec) const
+Point3D TransformMat3D::operator * (const Point3D& point) const
 {
-    Vec3D result_vec(vec);
-    transform(result_vec);
-    return result_vec;
+    Point3D transformed_point(point);
+    transform(transformed_point);
+    return transformed_point;
 }
 
 const float& TransformMat3D::operator [] (unsigned int index) const

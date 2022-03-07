@@ -191,12 +191,12 @@ void TransformMat2D::setQuaternion(float qx, float qy, float qz, float qw)
     setTheta(yaw);
 }
 
-void TransformMat2D::transform(Vec2D& vec) const
+void TransformMat2D::transform(Point2D& point) const
 {
-    float temp_x = (mat_[0] * vec.x) + (mat_[1] * vec.y) + mat_[2];
-    float temp_y = (mat_[3] * vec.x) + (mat_[4] * vec.y) + mat_[5];
-    vec.x = temp_x;
-    vec.y = temp_y;
+    float temp_x = (mat_[0] * point.x) + (mat_[1] * point.y) + mat_[2];
+    float temp_y = (mat_[3] * point.x) + (mat_[4] * point.y) + mat_[5];
+    point.x = temp_x;
+    point.y = temp_y;
 }
 
 void TransformMat2D::transform(Pose2D& pose) const
@@ -246,11 +246,11 @@ TransformMat2D& TransformMat2D::operator *= (const TransformMat2D& tf_mat)
     return *this;
 }
 
-Vec2D TransformMat2D::operator * (const Vec2D& vec) const
+Point2D TransformMat2D::operator * (const Point2D& point) const
 {
-    Vec2D result_vec(vec);
-    transform(result_vec);
-    return result_vec;
+    Point2D transformed_point(point);
+    transform(transformed_point);
+    return transformed_point;
 }
 
 Pose2D TransformMat2D::operator * (const Pose2D& pose) const

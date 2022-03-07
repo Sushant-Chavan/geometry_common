@@ -134,7 +134,7 @@ class TransformMat2D
 
         void setQuaternion(float qx, float qy, float qz, float qw);
 
-        void transform(Vec2D& vec) const;
+        void transform(Point2D& point) const;
 
         void transform(Pose2D& pose) const;
 
@@ -146,7 +146,7 @@ class TransformMat2D
 
         TransformMat2D& operator *= (const TransformMat2D& tf_mat);
 
-        Vec2D operator * (const Vec2D& vec) const;
+        Point2D operator * (const Point2D& vec) const;
 
         Pose2D operator * (const Pose2D& vec) const;
 
