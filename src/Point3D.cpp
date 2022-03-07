@@ -89,6 +89,11 @@ Point3D Point3D::getNormalised() const
     return normalised_pt;
 }
 
+float Point3D::dotProduct(const Point3D& point) const
+{
+    return (x * point.x) + (y * point.y) + (z * point.z);
+}
+
 visualization_msgs::Marker Point3D::getMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float diameter) const
 {

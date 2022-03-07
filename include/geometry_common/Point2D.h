@@ -141,6 +141,15 @@ class Point2D
         float scalarCrossProduct(const Point2D& point) const;
 
         /**
+         * @brief calculates dot product of two 2D vectors
+         *
+         * @param point Second vector
+         *
+         * @return float dot product
+         */
+        float dotProduct(const Point2D& point) const;
+
+        /**
          * @brief
          * 
          * @param frame 

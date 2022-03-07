@@ -189,6 +189,15 @@ class Point3D
         Point3D getNormalised() const;
 
         /**
+         * @brief Calculate dot product of two 3D vectors
+         *
+         * @param point Second vector
+         *
+         * @return float dot product
+         */
+        float dotProduct(const Point3D& point) const;
+
+        /**
          * @brief
          * 
          * @param frame 

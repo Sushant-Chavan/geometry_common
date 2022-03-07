@@ -66,6 +66,11 @@ float Point2D::scalarCrossProduct(const Point2D& point) const
 	return (x * point.y) - (y * point.x);
 }
 
+float Point2D::dotProduct(const Point2D& point) const
+{
+    return (x * point.x) + (y * point.y);
+}
+
 visualization_msgs::Marker Point2D::getMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float diameter, 
         float z) const
