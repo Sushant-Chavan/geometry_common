@@ -89,21 +89,9 @@ Point3D Point3D::getNormalised() const
     return normalised_pt;
 }
 
-void Point3D::transform(const std::vector<float>& tf_mat)
+float Point3D::dotProduct(const Point3D& point) const
 {
-    assert(tf_mat.size() == 16);
-    std::vector<float> p_vec{x, y, z, 1.0f};
-    std::vector<float> transformed_p_vec = Utils::multiplyMatrixToVector(tf_mat, p_vec);
-    x = transformed_p_vec[0];
-    y = transformed_p_vec[1];
-    z = transformed_p_vec[2];
-}
-
-Point3D Point3D::getTransformedPoint(const std::vector<float>& tf_mat) const
-{
-    Point3D transformed_pt(*this);
-    transformed_pt.transform(tf_mat);
-    return transformed_pt;
+    return (x * point.x) + (y * point.y) + (z * point.z);
 }
 
 visualization_msgs::Marker Point3D::getMarker(const std::string& frame,
@@ -126,30 +114,30 @@ visualization_msgs::Marker Point3D::getMarker(const std::string& frame,
     return marker;
 }
 
-Point3D operator - (const Point3D& p1, const Point3D& p2)
+Point3D Point3D::operator - (const Point3D& p) const
 {
     Point3D diff;
-    diff.x = p1.x - p2.x;
-    diff.y = p1.y - p2.y;
-    diff.z = p1.z - p2.z;
+    diff.x = x - p.x;
+    diff.y = y - p.y;
+    diff.z = z - p.z;
     return diff;
 }
 
-Point3D operator + (const Point3D& p1, const Point3D& p2)
+Point3D Point3D::operator + (const Point3D& p) const
 {
     Point3D sum;
-    sum.x = p1.x + p2.x;
-    sum.y = p1.y + p2.y;
-    sum.z = p1.z + p2.z;
+    sum.x = x + p.x;
+    sum.y = y + p.y;
+    sum.z = z + p.z;
     return sum;
 }
 
-Point3D operator * (const Point3D& p1, float scalar)
+Point3D Point3D::operator * (float scalar) const
 {
     Point3D scaled;
-    scaled.x = p1.x * scalar;
-    scaled.y = p1.y * scalar;
-    scaled.z = p1.z * scalar;
+    scaled.x = x * scalar;
+    scaled.y = y * scalar;
+    scaled.z = z * scalar;
     return scaled;
 }
 
@@ -159,9 +147,9 @@ std::ostream& operator << (std::ostream& out, const Point3D& point)
     return out;
 }
 
-bool operator == (const Point3D& p1, const Point3D& p2)
+bool Point3D::operator == (const Point3D& p) const
 {
-    return ( p1.getCartDist(p2) < 1e-3f );
+    return ( getCartDist(p) < 1e-3f );
 }
 
 } // namespace kelo::geometry_common

@@ -46,12 +46,15 @@
 #include <visualization_msgs/Marker.h>
 #include <tf/transform_datatypes.h>
 
-#include <geometry_common/Point3D.h>
-
 #include <cmath>
+
+#include <geometry_common/Point2D.h>
 
 namespace kelo::geometry_common
 {
+
+// Forward declaration 
+class TransformMat2D;
 
 /**
  * @brief 
@@ -73,49 +76,49 @@ class Pose2D
          * @param _theta 
          */
         Pose2D(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
-            x(_x), y(_y), theta(_theta) {};
+            x(_x), y(_y), theta(_theta) {}
 
         /**
          * @brief
          * 
          * @param pose 
          */
-        Pose2D(const Pose2D &pose):
-            x(pose.x), y(pose.y), theta(pose.theta) {};
+        Pose2D(const Pose2D& pose):
+            x(pose.x), y(pose.y), theta(pose.theta) {}
 
         /**
          * @brief
          * 
          * @param pose 
          */
-        Pose2D(const geometry_msgs::PoseStamped &pose);
+        Pose2D(const geometry_msgs::PoseStamped& pose);
 
         /**
          * @brief
          * 
          * @param pose 
          */
-        Pose2D(const geometry_msgs::Pose &pose);
+        Pose2D(const geometry_msgs::Pose& pose);
 
         /**
          * @brief
          * 
          * @param mat 
          */
-        Pose2D(const std::vector<float>& mat);
+        Pose2D(const TransformMat2D& mat);
 
         /**
          * @brief
          * 
          * @param stamped_transform 
          */
-        Pose2D(const tf::StampedTransform &stamped_transform);
+        Pose2D(const tf::StampedTransform& stamped_transform);
 
         /**
          * @brief
          * 
          */
-        virtual ~Pose2D();
+        virtual ~Pose2D() {}
 
         /**
          * @brief
@@ -135,9 +138,9 @@ class Pose2D
         /**
          * @brief
          * 
-         * @return std::vector<float> 
+         * @return TransformMat2D
          */
-        std::vector<float> getMat() const;
+        TransformMat2D getMat() const;
 
         /**
          * @brief
@@ -190,82 +193,10 @@ class Pose2D
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Point3D& p) const
+        inline float getCartDist(const Point2D& p) const
         {
-            return std::sqrt(pow(x - p.x, 2) + std::pow(y - p.y, 2));
+            return std::sqrt(std::pow(x - p.x, 2) + std::pow(y - p.y, 2));
         };
-
-        /**
-         * @brief
-         * 
-         * @param q 
-         * @return float 
-         */
-        static float getThetaFromQuaternion(const geometry_msgs::Quaternion& q);
-
-        /**
-         * @brief
-         * 
-         * @param qx 
-         * @param qy 
-         * @param qz 
-         * @param qw 
-         * @return float 
-         */
-        static float getThetaFromQuaternion(float qx, float qy, float qz, float qw);
-
-        /**
-         * @brief
-         * 
-         * @param _theta 
-         * @param qz 
-         * @param qw 
-         */
-        static void getQuaternionFromTheta(float _theta, float& qz, float& qw);
-
-        /**
-         * @brief 
-         * 
-         * @param tf_mat 
-         */
-        void transform(const std::vector<float>& tf_mat);
-
-        /**
-         * @brief 
-         * 
-         * @param tf 
-         */
-        void transform(const Pose2D& tf);
-
-        /**
-         * @brief
-         * 
-         * @param tf_mat 
-         * @return Pose2D 
-         */
-        Pose2D getTransformedPose(const std::vector<float> tf_mat) const;
-
-        /**
-         * @brief
-         * 
-         * @param tf 
-         * @return Pose2D 
-         */
-        Pose2D getTransformedPose(const Pose2D& tf) const;
-
-        /**
-         * @brief
-         * 
-         * @return std::vector<float> 
-         */
-        std::vector<float> getInverseTransformMat() const;
-
-        /**
-         * @brief
-         * 
-         * @return Pose2D 
-         */
-        Pose2D getInverseTransform() const;
 
         /**
          * @brief 
@@ -281,7 +212,7 @@ class Pose2D
          * @param p2 
          * @return Pose2D 
          */
-        friend Pose2D operator - (const Pose2D& p1, const Pose2D& p2);
+        Pose2D operator - (const Pose2D& p) const;
 
         /**
          * @brief 
@@ -290,7 +221,7 @@ class Pose2D
          * @param scalar 
          * @return Pose2D 
          */
-        friend Pose2D operator * (const Pose2D& pose, float scalar);
+        Pose2D operator * (float scalar) const;
 
         /**
          * @brief 
@@ -299,7 +230,7 @@ class Pose2D
          * @param p2 
          * @return bool 
          */
-        friend bool operator == (const Pose2D& p1, const Pose2D& p2);
+        bool operator == (const Pose2D& p) const;
 
         /**
          * @brief 
@@ -308,7 +239,8 @@ class Pose2D
          * @param pose_2d 
          * @return std::ostream& 
          */
-        friend std::ostream& operator << (std::ostream &out, const Pose2D& pose_2d);
+        friend std::ostream& operator << (std::ostream& out, const Pose2D& pose_2d);
+
 };
 
 using Velocity2D = Pose2D;

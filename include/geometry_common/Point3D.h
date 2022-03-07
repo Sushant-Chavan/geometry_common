@@ -178,7 +178,6 @@ class Point3D
         /**
          * @brief Normalise vector in place
          * 
-         * @return Point3D 
          */
         void normalise();
 
@@ -190,19 +189,13 @@ class Point3D
         Point3D getNormalised() const;
 
         /**
-         * @brief 
-         * 
-         * @param tf_mat 
+         * @brief Calculate dot product of two 3D vectors
+         *
+         * @param point Second vector
+         *
+         * @return float dot product
          */
-        void transform(const std::vector<float>& tf_mat);
-
-        /**
-         * @brief
-         * 
-         * @param tf_mat 
-         * @return Point3D 
-         */
-        Point3D getTransformedPoint(const std::vector<float>& tf_mat) const;
+        float dotProduct(const Point3D& point) const;
 
         /**
          * @brief
@@ -230,7 +223,7 @@ class Point3D
          * @param p2 
          * @return Point3D 
          */
-        friend Point3D operator - (const Point3D& p1, const Point3D& p2);
+        Point3D operator - (const Point3D& p) const;
 
         /**
          * @brief 
@@ -239,7 +232,7 @@ class Point3D
          * @param p2 
          * @return Point3D 
          */
-        friend Point3D operator + (const Point3D& p1, const Point3D& p2);
+        Point3D operator + (const Point3D& p) const;
 
         /**
          * @brief 
@@ -248,7 +241,7 @@ class Point3D
          * @param scalar 
          * @return Point3D 
          */
-        friend Point3D operator * (const Point3D& p1, float scalar);
+        Point3D operator * (float scalar) const;
 
         /**
          * @brief 
@@ -266,7 +259,7 @@ class Point3D
          * @param p2 
          * @return bool 
          */
-        friend bool operator == (const Point3D& p1, const Point3D& p2);
+        bool operator == (const Point3D& p) const;
 };
 
 /**

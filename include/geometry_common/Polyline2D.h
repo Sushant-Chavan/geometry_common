@@ -115,38 +115,6 @@ class Polyline2D
                 Point2D& intersection_pt);
 
         /**
-         * @brief Transform the polyline (in-place) using a transform matrix
-         * 
-         * @param tf_mat A 2D homogeneous transform matrix as a 1-dimensional
-         * row-major vector
-         */
-        virtual void transform(const std::vector<float>& tf_mat);
-
-        /**
-         * @brief Transform the polyline (in-place) using a 2D transform object
-         * 
-         * @param tf The 2D transformation [x, y, theta] as a Pose2D object
-         */
-        virtual void transform(const Pose2D& tf);
-
-        /**
-         * @brief Get a transformed copy of the polyline using a 2D transform matrix.
-         * 
-         * @param tf_mat A 2D homogeneous transform matrix as a 1-dimensional
-         * row-major vector
-         * @return Polyline2D A transformed copy of this polyline
-         */
-        Polyline2D getTransformedPolyline(const std::vector<float>& tf_mat) const;
-
-        /**
-         * @brief Get a transformed copy of the polyline using a 2D transform object.
-         * 
-         * @param tf The 2D transformation [x, y, theta] as a Pose2D object
-         * @return Polyline2D A transformed copy of this polyline
-         */
-        Polyline2D getTransformedPolyline(const Pose2D& tf) const;
-
-        /**
          * @brief Get an RViz visualization marker for the polyline object
          * 
          * @param frame The frame in which the polyline marker points are specified
@@ -208,7 +176,7 @@ class Polyline2D
          * @return std::ostream& The stream object representing the concatenation
          * of the input stream and the polyline information
          */
-        friend std::ostream& operator << (std::ostream &out, const Polyline2D& polyline);
+        friend std::ostream& operator << (std::ostream& out, const Polyline2D& polyline);
 };
 
 } // namespace kelo::geometry_common

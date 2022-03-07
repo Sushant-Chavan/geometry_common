@@ -192,23 +192,6 @@ class Polygon2D : public Polyline2D
         Polygon2D getInflatedPolygon(float inflation_dist);
 
         /**
-         * @brief Get a transformed copy of the polygon using a 2D transform matrix.
-         * 
-         * @param tf_mat A 2D homogeneous transform matrix as a 1-dimensional
-         * row-major vector
-         * @return Polygon2D A transformed copy of this polygon
-         */
-        Polygon2D getTransformedPolygon(const std::vector<float>& tf_mat) const;
-
-        /**
-         * @brief Get a transformed copy of the polygon using a 2D transform object.
-         * 
-         * @param tf The 2D transformation [x, y, theta] as a Pose2D object
-         * @return Polygon2D A transformed copy of this polygon
-         */
-        Polygon2D getTransformedPolygon(const Pose2D& tf) const;
-
-        /**
          * @brief Get an RViz visualization marker for the polygon object.
          * The generated marker object will be a non-filled polygon boundary.
          * 
@@ -243,7 +226,7 @@ class Polygon2D : public Polyline2D
          * @return std::ostream& The stream object representing the concatenation
          * of the input stream and the polygon information
          */
-        friend std::ostream& operator << (std::ostream &out, const Polygon2D& polygon);
+        friend std::ostream& operator << (std::ostream& out, const Polygon2D& polygon);
 };
 
 } // namespace kelo::geometry_common

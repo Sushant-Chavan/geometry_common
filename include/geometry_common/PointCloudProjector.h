@@ -49,6 +49,7 @@
 
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Point3D.h>
+#include <geometry_common/TransformMat3D.h>
 
 namespace kelo
 {
@@ -74,13 +75,13 @@ class PointCloudProjector
          * @brief
          * 
          */
-        PointCloudProjector();
+        PointCloudProjector() = default;
 
         /**
          * @brief
          * 
          */
-        virtual ~PointCloudProjector();
+        virtual ~PointCloudProjector() {}
 
         /**
          * @brief 
@@ -293,7 +294,7 @@ class PointCloudProjector
                 float angle_increment);
 
     private:
-        std::vector<float> camera_to_target_tf_mat_;
+        kelo::geometry_common::TransformMat3D camera_to_target_tf_mat_;
         float passthrough_min_z_{0.0f};
         float passthrough_max_z_{2.0f};
         float radial_dist_min_{0.1f};

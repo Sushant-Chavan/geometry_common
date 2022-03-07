@@ -164,7 +164,7 @@ visualization_msgs::Marker LineSegment2D::getMarker(const std::string& frame,
     return marker;
 }
 
-std::ostream& operator << (std::ostream &out, const LineSegment2D& line_segment)
+std::ostream& operator << (std::ostream& out, const LineSegment2D& line_segment)
 {
     out << "start: " << line_segment.start << std::endl;
     out << "end: " << line_segment.end << std::endl;

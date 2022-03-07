@@ -40,13 +40,14 @@
  *
  ******************************************************************************/
 
-#include <geometry_common/Utils.h>
 #include <cmath>
 #include <cstdlib>
 #include <cassert>
 #include <list>
 #include <deque>
 #include <sensor_msgs/point_cloud2_iterator.h>
+#include <geometry_common/TransformMat2D.h>
+#include <geometry_common/Utils.h>
 
 namespace kelo::geometry_common
 {
@@ -255,95 +256,18 @@ std::vector<Pose2D> Utils::getTrajectory(
     float delta_t = future_time/num_of_poses;
 
     Pose2D tf = vel * delta_t;
-    std::vector<float> tf_mat = tf.getMat();
-    std::vector<float> pos_mat = Pose2D().getMat(); // identity mat
+    TransformMat2D vel_tf_mat = tf.getMat();
+    TransformMat2D pos_mat; // identity mat
 
     /* add current pose (for extra safety) */
     traj.push_back(Pose2D());
 
     for ( size_t i = 0; i < num_of_poses; i++ )
     {
-        pos_mat = Utils::multiplyMatrices(pos_mat, tf_mat, 3);
-        traj.push_back(Pose2D(pos_mat));
+        pos_mat *= vel_tf_mat;
+        traj.push_back(pos_mat.getPose2D());
     }
     return traj;
-}
-
-std::vector<float> Utils::multiplyMatrixToVector(
-        const std::vector<float>& mat_a,
-        const std::vector<float>& vec_b)
-{
-    size_t N = vec_b.size();
-    assert(N * N == mat_a.size());
-    std::vector<float> vec_c(N, 0.0f);
-    for ( size_t i = 0; i < N; i++ )
-    {
-        for ( size_t j = 0; j < N; j++ )
-        {
-            vec_c[i] += mat_a[i*N + j] * vec_b[j];
-        }
-    }
-    return vec_c;
-}
-
-std::vector<float> Utils::multiplyMatrices(
-        const std::vector<float>& mat_a,
-        const std::vector<float>& mat_b,
-        size_t N)
-{
-    assert(N * N == mat_a.size() && N * N == mat_b.size());
-    std::vector<float> mat_c(N*N, 0.0f);
-    for ( size_t i = 0; i < N; i++ )
-    {
-        for ( size_t j = 0; j < N; j++ )
-        {
-            for ( size_t k = 0; k < N; k++ )
-            {
-                mat_c[i*N + j] += mat_a[i*N + k] * mat_b[k*N + j];
-            }
-        }
-    }
-    return mat_c;
-}
-
-std::vector<float> Utils::get2DTransformMat(
-        float x,
-        float y,
-        float theta)
-{
-    return std::vector<float>
-           {std::cos(theta), -std::sin(theta), x,
-            std::sin(theta),  std::cos(theta), y,
-            0.0f,             0.0f,            1.0f};
-}
-
-std::vector<float> Utils::getTransformMat(
-        float x,
-        float y,
-        float z,
-        float roll,
-        float pitch,
-        float yaw)
-{
-    std::vector<float> tf_mat(16, 0.0f);
-    /* rotation */
-    tf_mat[0] = std::cos(yaw) * std::cos(pitch);
-    tf_mat[1] = (std::cos(yaw) * std::sin(pitch) * std::sin(roll)) - (std::sin(yaw) * std::cos(roll));
-    tf_mat[2] = (std::cos(yaw) * std::sin(pitch) * std::cos(roll)) + (std::sin(yaw) * std::sin(roll));
-    tf_mat[4] = std::sin(yaw)* std::cos(pitch);
-    tf_mat[5] = (std::sin(yaw) * std::sin(pitch) * std::sin(roll)) + (std::cos(yaw) * std::cos(roll));
-    tf_mat[6] = (std::sin(yaw) * std::sin(pitch) * std::cos(roll)) - (std::cos(yaw) * std::sin(roll));
-    tf_mat[8] = -std::sin(pitch);
-    tf_mat[9] = std::cos(pitch) * std::sin(roll);
-    tf_mat[10] = std::cos(pitch) * std::cos(roll);
-
-    /* translation */
-    tf_mat[3] = x;
-    tf_mat[7] = y;
-    tf_mat[11] = z;
-
-    tf_mat[15] = 1.0f;
-    return tf_mat;
 }
 
 float Utils::getShortestAngle(
@@ -499,8 +423,8 @@ float Utils::fitLineRANSAC(
 
 float Utils::fitLineRANSAC(
         const PointCloud2D& pts,
-        float &m,
-        float &c,
+        float& m,
+        float& c,
         float delta,
         size_t itr_limit)
 {
@@ -1176,13 +1100,6 @@ PointCloud3D Utils::convertFromROSScan(
     return laser_pts;
 }
 
-std::vector<float> Utils::getInverted2DTransformMat(
-        const std::vector<float>& tf)
-{
-    assert(tf.size() == 9);
-    return Pose2D(tf).getInverseTransformMat();
-}
-
 float Utils::getPerpendicularAngle(
         float angle)
 {
@@ -1245,6 +1162,61 @@ float Utils::getAngleBetweenPoints(
     Vec2D vec_b_c = c - b;
     return Utils::clipAngle(std::atan2(vec_b_c.y, vec_b_c.x) -
                             std::atan2(vec_b_a.y, vec_b_a.x));
+}
+
+void Utils::getEulerFromQuaternion(
+        float qx,
+        float qy,
+        float qz,
+        float qw,
+        float& roll,
+        float& pitch,
+        float& yaw)
+{
+    /**
+     * source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
+     */
+    // roll (x-axis rotation)
+    float sinroll_cospitch = 2 * (qw * qx + qy * qz);
+    float cosroll_cospitch = 1 - 2 * (qx * qx + qy * qy);
+    roll = std::atan2(sinroll_cospitch, cosroll_cospitch);
+
+    // pitch (y-axis rotation)
+    float sinpitch = 2 * (qw * qy - qz * qx);
+    if (std::abs(sinpitch) >= 1)
+        pitch = std::copysign(M_PI/2, sinpitch); // use 90 degrees if out of range
+    else
+        pitch = std::asin(sinpitch);
+
+    // yaw (z-axis rotation)
+    float sinyaw_cospitch = 2 * (qw * qz + qx * qy);
+    float cosyaw_cospitch = 1 - 2 * (qy * qy + qz * qz);
+    yaw = std::atan2(sinyaw_cospitch, cosyaw_cospitch);
+}
+
+void Utils::getQuaternionFromEuler(
+        float roll,
+        float pitch,
+        float yaw,
+        float& qx,
+        float& qy,
+        float& qz,
+        float& qw)
+{
+    /**
+     * source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code
+     */
+    float cy = std::cos(yaw * 0.5f);
+    float sy = std::sin(yaw * 0.5f);
+    float cp = std::cos(pitch * 0.5f);
+    float sp = std::sin(pitch * 0.5f);
+    float cr = std::cos(roll * 0.5f);
+    float sr = std::sin(roll * 0.5f);
+
+    qw = (cr * cp * cy) + (sr * sp * sy);
+    qx = (sr * cp * cy) - (cr * sp * sy);
+    qy = (cr * sp * cy) + (sr * cp * sy);
+    qz = (cr * cp * sy) - (sr * sp * cy);
 }
 
 nav_msgs::Path Utils::getPathMsgFromTrajectory(
@@ -1369,23 +1341,6 @@ visualization_msgs::Marker Utils::getStringAsMarker(
     marker.pose.orientation.w = 1.0f;
     marker.text = string_label;
     return marker;
-}
-
-std::string Utils::getMatrixAsString(
-        const std::vector<float>& mat,
-        size_t N)
-{
-    std::ostringstream mat_stream;
-    assert(N*N == mat.size());
-    for ( size_t i = 0; i < N; i++ )
-    {
-        for ( size_t j = 0; j < N; j++ )
-        {
-            mat_stream << Utils::roundFloat(mat[i*N + j], 3) << "\t";
-        }
-        mat_stream << std::endl;
-    }
-    return mat_stream.str();
 }
 
 } // namespace kelo::geometry_common

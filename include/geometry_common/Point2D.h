@@ -122,7 +122,6 @@ class Point2D
         /**
          * @brief Normalise vector in place
          * 
-         * @return Point2D 
          */
         void normalise();
 
@@ -142,45 +141,13 @@ class Point2D
         float scalarCrossProduct(const Point2D& point) const;
 
         /**
-         * @brief 
-         * 
-         * @param tf_mat 
+         * @brief calculates dot product of two 2D vectors
+         *
+         * @param point Second vector
+         *
+         * @return float dot product
          */
-        void transform(const std::vector<float>& tf_mat);
-
-        /**
-         * @brief 
-         * 
-         * @param tf 
-         */
-        void transform(const Pose2D& tf);
-
-        /**
-         * @brief
-         * 
-         * @param tf_mat 
-         * @return Point2D 
-         */
-        Point2D getTransformedPoint(const std::vector<float>& tf_mat) const;
-
-        /**
-         * @brief
-         * 
-         * @param tf 
-         * @return Point2D 
-         */
-        Point2D getTransformedPoint(const Pose2D& tf) const;
-
-        /**
-         * @brief
-         * 
-         * @param tf_mat 
-         * @param pt 
-         * @return Point2D 
-         */
-        Point2D getTransformedPoint(
-                const std::vector<float>& tf_mat,
-                const Point2D& pt) const;
+        float dotProduct(const Point2D& point) const;
 
         /**
          * @brief
@@ -210,7 +177,7 @@ class Point2D
          * @param p2 
          * @return Point2D 
          */
-        friend Point2D operator - (const Point2D& p1, const Point2D& p2);
+        Point2D operator - (const Point2D& p2) const;
 
         /**
          * @brief 
@@ -219,7 +186,7 @@ class Point2D
          * @param p2 
          * @return Point2D 
          */
-        friend Point2D operator + (const Point2D& p1, const Point2D& p2);
+        Point2D operator + (const Point2D& p2) const;
 
         /**
          * @brief 
@@ -228,7 +195,7 @@ class Point2D
          * @param scalar 
          * @return Point2D 
          */
-        friend Point2D operator * (const Point2D& p1, float scalar);
+        Point2D operator * (float scalar) const;
 
         /**
          * @brief 
@@ -246,7 +213,7 @@ class Point2D
          * @param p2 
          * @return bool 
          */
-        friend bool operator == (const Point2D& p1, const Point2D& p2);
+        bool operator == (const Point2D& p2) const;
 };
 
 /**
