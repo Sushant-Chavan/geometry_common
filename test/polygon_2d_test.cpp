@@ -7,7 +7,7 @@
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Polygon2D;
 
-TEST(UtilsTest, isPolygonConvex)
+TEST(Polygon2DTest, isPolygonConvex)
 {
     Polygon2D convex_polygon(
     {
@@ -41,7 +41,7 @@ TEST(UtilsTest, isPolygonConvex)
         << "Star polygon is not found to be concave.";
 }
 
-TEST(UtilsTest, calcConvexHullOfPolygons)
+TEST(Polygon2DTest, calcConvexHullOfPolygons)
 {
     Polygon2D polygon_a(
     {
@@ -67,7 +67,7 @@ TEST(UtilsTest, calcConvexHullOfPolygons)
     EXPECT_EQ(convex_hull[5], polygon_a[3]);
 }
 
-TEST(UtilsTest, getInflatedPolygon)
+TEST(Polygon2DTest, getInflatedPolygon)
 {
     Polygon2D polygon(
     {
