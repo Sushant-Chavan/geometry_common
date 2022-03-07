@@ -141,47 +141,6 @@ class Point2D
         float scalarCrossProduct(const Point2D& point) const;
 
         /**
-         * @brief 
-         * 
-         * @param tf_mat 
-         */
-        void transform(const std::vector<float>& tf_mat);
-
-        /**
-         * @brief 
-         * 
-         * @param tf 
-         */
-        void transform(const Pose2D& tf);
-
-        /**
-         * @brief
-         * 
-         * @param tf_mat 
-         * @return Point2D 
-         */
-        Point2D getTransformedPoint(const std::vector<float>& tf_mat) const;
-
-        /**
-         * @brief
-         * 
-         * @param tf 
-         * @return Point2D 
-         */
-        Point2D getTransformedPoint(const Pose2D& tf) const;
-
-        /**
-         * @brief
-         * 
-         * @param tf_mat 
-         * @param pt 
-         * @return Point2D 
-         */
-        Point2D getTransformedPoint(
-                const std::vector<float>& tf_mat,
-                const Point2D& pt) const;
-
-        /**
          * @brief
          * 
          * @param frame 

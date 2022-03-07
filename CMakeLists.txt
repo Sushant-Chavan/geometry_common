@@ -80,6 +80,8 @@ add_library(geometry_utils
         src/Pose2D.cpp
         src/Box.cpp
         src/LineSegment2D.cpp
+        src/TransformMat2D.cpp
+        src/TransformMat3D.cpp
 )
 target_link_libraries(geometry_utils
 )

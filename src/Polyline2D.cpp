@@ -44,36 +44,6 @@
 namespace kelo::geometry_common
 {
 
-void Polyline2D::transform(const std::vector<float>& tf_mat)
-{
-    for ( Point2D& vertex : vertices )
-    {
-        vertex.transform(tf_mat);
-    }
-}
-
-void Polyline2D::transform(const Pose2D& tf)
-{
-    for ( Point2D& vertex : vertices )
-    {
-        vertex.transform(tf);
-    }
-}
-
-Polyline2D Polyline2D::getTransformedPolyline(const std::vector<float>& tf_mat) const
-{
-    Polyline2D transformed_poly(*this);
-    transformed_poly.transform(tf_mat);
-    return transformed_poly;
-}
-
-Polyline2D Polyline2D::getTransformedPolyline(const Pose2D& tf) const
-{
-    Polyline2D transformed_poly(*this);
-    transformed_poly.transform(tf);
-    return transformed_poly;
-}
-
 visualization_msgs::Marker Polyline2D::getMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float line_width,
         float z) const

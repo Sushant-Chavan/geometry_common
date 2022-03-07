@@ -165,62 +165,6 @@ class Utils
                 float future_time);
 
         /**
-         * @brief 
-         * 
-         * @param mat_a 
-         * @param vec_b 
-         * @return std::vector<float> 
-         */
-        static std::vector<float> multiplyMatrixToVector(
-                const std::vector<float>& mat_a,
-                const std::vector<float>& vec_b);
-
-        /**
-         * @brief 
-         * 
-         * @param mat_a 
-         * @param mat_b 
-         * @param N 
-         * @return std::vector<float> 
-         */
-        static std::vector<float> multiplyMatrices(
-                const std::vector<float>& mat_a,
-                const std::vector<float>& mat_b,
-                size_t N);
-
-        /**
-         * @brief 
-         * 
-         * @param x 
-         * @param y 
-         * @param theta 
-         * @return std::vector<float> 
-         */
-        static std::vector<float> get2DTransformMat(
-                float x,
-                float y,
-                float theta);
-
-        /**
-         * @brief
-         * 
-         * @param x 
-         * @param y 
-         * @param z 
-         * @param roll 
-         * @param pitch 
-         * @param yaw 
-         * @return std::vector<float> 
-         */
-        static std::vector<float> getTransformMat(
-                float x,
-                float y,
-                float z,
-                float roll,
-                float pitch,
-                float yaw);
-
-        /**
          * @brief
          * 
          * @param angle1 
@@ -637,15 +581,6 @@ class Utils
         /**
          * @brief
          * 
-         * @param tf 
-         * @return std::vector<float> 
-         */
-        static std::vector<float> getInverted2DTransformMat(
-                const std::vector<float>& tf);
-
-        /**
-         * @brief
-         * 
          * @param angle 
          * @return float 
          */
@@ -842,17 +777,6 @@ class Utils
                 float blue = 0.0f,
                 float alpha = 1.0f,
                 float size = 0.2f);
-
-        /**
-         * @brief
-         * 
-         * @param mat 
-         * @param N 
-         * @return std::string 
-         */
-        static std::string getMatrixAsString(
-                const std::vector<float>& mat,
-                size_t N);
 };
 
 } // namespace kelo::geometry_common

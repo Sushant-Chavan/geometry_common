@@ -38,6 +38,9 @@
  *
  ******************************************************************************/
 
+#include <cmath>
+
+#include <geometry_common/Utils.h>
 #include <geometry_common/TransformMat2D.h>
 
 namespace kelo::geometry_common
@@ -55,6 +58,12 @@ TransformMat2D::TransformMat2D(float x, float y, float qx, float qy, float qz, f
 
 TransformMat2D::TransformMat2D(const tf::StampedTransform& stamped_transform)
 {
+    float x = stamped_transform.getOrigin().x();
+    float y = stamped_transform.getOrigin().y();
+
+    tf::Quaternion quat = stamped_transform.getRotation();
+    float theta = tf::getYaw(quat);
+    update(x, y, theta);
 }
 
 TransformMat2D::TransformMat2D(const Pose2D& pose)
@@ -67,10 +76,10 @@ TransformMat2D::TransformMat2D(const TransformMat2D& tf_mat)
     update(tf_mat);
 }
 
-TransformMat2D::void update(float x, float y, float theta)
+void TransformMat2D::update(float x, float y, float theta)
 {
-    mat[2] = x;
-    mat[5] = y;
+    mat_[2] = x;
+    mat_[5] = y;
     setTheta(theta);
 }
 
@@ -88,40 +97,47 @@ void TransformMat2D::update(const Pose2D& pose)
 
 void TransformMat2D::update(const TransformMat2D& tf_mat)
 {
-    for ( size_t i = 0; i < mat.size(); i++ )
+    for ( size_t i = 0; i < mat_.size(); i++ )
     {
-        mat[i] = tf_mat[i];
+        mat_[i] = tf_mat[i];
     }
 }
 
 TransformMat2D TransformMat2D::getInverse() const
 {
-    TransformMat2D inv_tf_mat(mat[2], mat[5], -getTheta());
-    Vec2D transformed_vec = inv_tf_mat * Vec2D(-mat[2], -mat[5]);
-    inv_tf_mat.setX(transformed_vec.x);
-    inv_tf_mat.setY(transformed_vec.y);
+    TransformMat2D inv_tf_mat(*this);
+    inv_tf_mat.invert();
     return inv_tf_mat;
 }
 
 void TransformMat2D::invert()
 {
-    TransformMat2D inv_tf_mat = getInverse();
-    update(inv_tf_mat);
+    // taking transpose of rotation matrix part since
+    // inverse(M) == transpose(M) : where M is a orthonormal rotation matrix
+    float temp = mat_[1];
+    mat_[1] = mat_[3];
+    mat_[3] = temp;
+
+    // - inverse(M) * T : where M is as above and T is translation vector
+    float x = mat_[2];
+    float y = mat_[5];
+    mat_[2] = -((mat_[0] * x) + (mat_[1] * y));
+    mat_[5] = -((mat_[3] * x) + (mat_[4] * y));
 }
 
 float TransformMat2D::getX() const
 {
-    return mat[2];
+    return mat_[2];
 }
 
 float TransformMat2D::getY() const
 {
-    return mat[5];
+    return mat_[5];
 }
 
 float TransformMat2D::getTheta() const
 {
-    return std::atan2(mat[3], mat[0]);
+    return std::atan2(mat_[3], mat_[0]);
 }
 
 std::array<float, 4> TransformMat2D::getQuaternion() const
@@ -134,39 +150,39 @@ std::array<float, 4> TransformMat2D::getQuaternion() const
 std::array<float, 4> TransformMat2D::getRotationMat() const
 {
     std::array<float, 4> rot_mat;
-    rot_mat[0] = mat[0];
-    rot_mat[1] = mat[1];
-    rot_mat[2] = mat[3];
-    rot_mat[3] = mat[4];
+    rot_mat[0] = mat_[0];
+    rot_mat[1] = mat_[1];
+    rot_mat[2] = mat_[3];
+    rot_mat[3] = mat_[4];
     return rot_mat;
 }
 
 Vec2D TransformMat2D::getTranslationVec() const
 {
-    return Vec2D(mat[2], mat[5]);
+    return Vec2D(mat_[2], mat_[5]);
 }
 
 Pose2D TransformMat2D::getPose2D() const
 {
-    return Pose2D(mat[2], mat[5], getTheta());
+    return Pose2D(mat_[2], mat_[5], getTheta());
 }
 
 void TransformMat2D::setX(float x)
 {
-    mat[2] = x;
+    mat_[2] = x;
 }
 
 void TransformMat2D::setY(float y)
 {
-    mat[5] = x;
+    mat_[5] = y;
 }
 
 void TransformMat2D::setTheta(float theta)
 {
-    mat[0] = std::cos(theta);
-    mat[1] = -std::sin(theta);
-    mat[3] = std::sin(theta);
-    mat[4] = std::cos(theta);
+    mat_[0] = std::cos(theta);
+    mat_[1] = -std::sin(theta);
+    mat_[3] = std::sin(theta);
+    mat_[4] = std::cos(theta);
 }
 
 void TransformMat2D::setQuaternion(float qx, float qy, float qz, float qw)
@@ -176,7 +192,39 @@ void TransformMat2D::setQuaternion(float qx, float qy, float qz, float qw)
     setTheta(yaw);
 }
 
-TransformMat2D TransformMat2D::operator * (const TransformMat2D& tf_mat)
+void TransformMat2D::transform(Vec2D& vec) const
+{
+    float temp_x = (mat_[0] * vec.x) + (mat_[1] * vec.y) + mat_[2];
+    float temp_y = (mat_[3] * vec.x) + (mat_[4] * vec.y) + mat_[5];
+    vec.x = temp_x;
+    vec.y = temp_y;
+}
+
+void TransformMat2D::transform(Pose2D& pose) const
+{
+    TransformMat2D transformed_mat = (*this) * pose.getMat();
+    pose.x = transformed_mat[2];
+    pose.y = transformed_mat[5];
+    pose.theta = std::atan2(transformed_mat[3], transformed_mat[0]);
+}
+
+void TransformMat2D::transform(Polyline2D& polyline) const
+{
+    for ( Point2D& vertex : polyline.vertices )
+    {
+        transform(vertex);
+    }
+}
+
+void TransformMat2D::transform(Polygon2D& polygon) const
+{
+    for ( Point2D& vertex : polygon.vertices )
+    {
+        transform(vertex);
+    }
+}
+
+TransformMat2D TransformMat2D::operator * (const TransformMat2D& tf_mat) const
 {
     TransformMat2D result_tf_mat(*this);
     result_tf_mat *= tf_mat;
@@ -186,38 +234,60 @@ TransformMat2D TransformMat2D::operator * (const TransformMat2D& tf_mat)
 TransformMat2D& TransformMat2D::operator *= (const TransformMat2D& tf_mat)
 {
     float arr[6];
-    arr[0] = (mat[0] * tf_mat[0]) + (mat[1] * tf_mat[3]);
-    arr[1] = (mat[0] * tf_mat[1]) + (mat[1] * tf_mat[4]);
-    arr[2] = (mat[0] * tf_mat[2]) + (mat[1] * tf_mat[5]) + mat[2];
-    arr[3] = (mat[3] * tf_mat[0]) + (mat[4] * tf_mat[3]);
-    arr[4] = (mat[3] * tf_mat[1]) + (mat[4] * tf_mat[4]);
-    arr[5] = (mat[3] * tf_mat[2]) + (mat[4] * tf_mat[5]) + mat[5];
-    mat[0] = arr[0];
-    mat[1] = arr[1];
-    mat[2] = arr[2];
-    mat[3] = arr[3];
-    mat[4] = arr[4];
-    mat[5] = arr[5];
+    arr[0] = (mat_[0] * tf_mat[0]) + (mat_[1] * tf_mat[3]);
+    arr[1] = (mat_[0] * tf_mat[1]) + (mat_[1] * tf_mat[4]);
+    arr[2] = (mat_[0] * tf_mat[2]) + (mat_[1] * tf_mat[5]) + mat_[2];
+    arr[3] = (mat_[3] * tf_mat[0]) + (mat_[4] * tf_mat[3]);
+    arr[4] = (mat_[3] * tf_mat[1]) + (mat_[4] * tf_mat[4]);
+    arr[5] = (mat_[3] * tf_mat[2]) + (mat_[4] * tf_mat[5]) + mat_[5];
+    for ( size_t i = 0; i < 6; i++ )
+    {
+        mat_[i] = arr[i];
+    }
     return *this;
 }
 
-Vec2D TransformMat2D::operator * (const Vec2D& vec)
+Vec2D TransformMat2D::operator * (const Vec2D& vec) const
 {
-    Vec2D result_vec;
-    result_vec.x = (mat[0] * vec.x) + (mat[1] * vec.y) + mat[2];
-    result_vec.y = (mat[3] * vec.x) + (mat[4] * vec.y) + mat[5];
+    Vec2D result_vec(vec);
+    transform(result_vec);
     return result_vec;
+}
+
+Pose2D TransformMat2D::operator * (const Pose2D& pose) const
+{
+    TransformMat2D transformed_mat = (*this) * pose.getMat();
+    return transformed_mat.getPose2D();
+}
+
+Polyline2D TransformMat2D::operator * (const Polyline2D& polyline) const
+{
+    Polyline2D transformed_polyline(polyline);
+    transform(transformed_polyline);
+    return transformed_polyline;
+}
+
+Polygon2D TransformMat2D::operator * (const Polygon2D& polygon) const
+{
+    Polyline2D transformed_polygon(polygon);
+    transform(transformed_polygon);
+    return transformed_polygon;
+}
+
+const float& TransformMat2D::operator [] (unsigned int index) const
+{
+    return mat_[index];
 }
 
 std::ostream& operator << (std::ostream& out, const TransformMat2D& tf_mat)
 {
     out << std::setprecision(3) << std::fixed;
-    out << tf_mat.mat[0] << "\t"
-        << tf_mat.mat[1] << "\t"
-        << tf_mat.mat[2] << std::endl
-        << tf_mat.mat[3] << "\t"
-        << tf_mat.mat[4] << "\t"
-        << tf_mat.mat[5] << std::endl
+    out << tf_mat.mat_[0] << "\t"
+        << tf_mat.mat_[1] << "\t"
+        << tf_mat.mat_[2] << std::endl
+        << tf_mat.mat_[3] << "\t"
+        << tf_mat.mat_[4] << "\t"
+        << tf_mat.mat_[5] << std::endl
         << "0.000\t0.000\t1.000" << std::endl;
     return out;
 }

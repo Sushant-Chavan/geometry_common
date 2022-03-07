@@ -51,16 +51,6 @@ using geometry_common::PointCloud2D;
 using geometry_common::PointCloud3D;
 using geometry_common::Utils;
 
-PointCloudProjector::PointCloudProjector()
-{
-    /* initialise identity transformation matrix */
-    camera_to_target_tf_mat_ = Utils::getTransformMat(0, 0, 0, 0, 0, 0);
-}
-
-PointCloudProjector::~PointCloudProjector()
-{
-}
-
 void PointCloudProjector::configureTransform(
         float cam_x,
         float cam_y,
@@ -69,7 +59,7 @@ void PointCloudProjector::configureTransform(
         float cam_pitch,
         float cam_yaw)
 {
-    camera_to_target_tf_mat_ = Utils::getTransformMat(
+    camera_to_target_tf_mat_.update(
             cam_x, cam_y, cam_z, cam_roll, cam_pitch, cam_yaw);
 }
 
@@ -188,12 +178,12 @@ PointCloud3D PointCloudProjector::transformAndFilterPointCloud(
 {
     PointCloud3D cloud_out;
     cloud_out.reserve(cloud_in.size());
-    for ( Point3D pt : cloud_in )
+    for ( const Point3D& pt : cloud_in )
     {
-        pt.transform(camera_to_target_tf_mat_);
-        if ( isPointValid(pt) )
+        Point3D transformed_pt = camera_to_target_tf_mat_ * pt;
+        if ( isPointValid(transformed_pt) )
         {
-            cloud_out.push_back(pt);
+            cloud_out.push_back(transformed_pt);
         }
     }
     return cloud_out;

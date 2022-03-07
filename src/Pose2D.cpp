@@ -38,9 +38,10 @@
  *
  ******************************************************************************/
 
-#include <geometry_common/Pose2D.h>
-#include <geometry_common/Utils.h>
 #include <cmath>
+#include <geometry_common/Utils.h>
+#include <geometry_common/TransformMat2D.h>
+#include <geometry_common/Pose2D.h>
 
 namespace kelo::geometry_common
 {
@@ -76,10 +77,6 @@ Pose2D::Pose2D(const tf::StampedTransform &stamped_transform)
     theta = tf::getYaw(quat);
 }
 
-Pose2D::~Pose2D()
-{
-}
-
 geometry_msgs::PoseStamped Pose2D::getPoseStamped(const std::string& frame) const
 {
     geometry_msgs::PoseStamped pose;
@@ -96,16 +93,18 @@ geometry_msgs::Pose Pose2D::getPose() const
     pose.position.z = 0.0f;
     pose.orientation.x = 0.0f;
     pose.orientation.y = 0.0f;
-    float z, w;
-    Pose2D::getQuaternionFromTheta(theta, z, w);
-    pose.orientation.z = z;
-    pose.orientation.w = w;
+    float qx, qy, qz, qw;
+    Utils::getQuaternionFromEuler(0.0f, 0.0f, theta, qx, qy, qz, qw);
+    pose.orientation.x = qx;
+    pose.orientation.y = qy;
+    pose.orientation.z = qz;
+    pose.orientation.w = qw;
     return pose;
 }
 
-std::vector<float> Pose2D::getMat() const
+TransformMat2D Pose2D::getMat() const
 {
-    return Utils::get2DTransformMat(x, y, theta);
+    return TransformMat2D(*this);
 }
 
 visualization_msgs::Marker Pose2D::getMarker(const std::string& frame,
@@ -125,71 +124,6 @@ visualization_msgs::Marker Pose2D::getMarker(const std::string& frame,
     marker.scale.z = size_z;
     marker.pose = getPose();
     return marker;
-}
-
-float Pose2D::getThetaFromQuaternion(const geometry_msgs::Quaternion& q)
-{
-    return Pose2D::getThetaFromQuaternion(q.x, q.y, q.z, q.w);
-}
-
-float Pose2D::getThetaFromQuaternion(float qx, float qy, float qz, float qw)
-{
-    /* source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2 */
-    float sinyaw_cospitch = 2 * (qw * qz + qx * qy);
-    float cosyaw_cospitch = 1 - 2 * (qy * qy + qz * qz);
-    return std::atan2(sinyaw_cospitch, cosyaw_cospitch);
-}
-
-void Pose2D::getQuaternionFromTheta(float _theta, float& qz, float& qw)
-{
-    /* source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code */
-    qw = std::cos(_theta * 0.5f);
-    qz = std::sin(_theta * 0.5f);
-}
-
-void Pose2D::transform(const std::vector<float>& tf_mat)
-{
-    assert(tf_mat.size() == 9);
-    std::vector<float> mat = Utils::multiplyMatrices(tf_mat, getMat(), 3);
-    x = mat[2];
-    y = mat[5];
-    theta = std::atan2(mat[3], mat[0]);
-}
-
-void Pose2D::transform(const Pose2D& tf)
-{
-    transform(tf.getMat());
-}
-
-Pose2D Pose2D::getTransformedPose(const std::vector<float> tf_mat) const
-{
-    Pose2D transformed_pose(*this);
-    transformed_pose.transform(tf_mat);
-    return transformed_pose;
-}
-
-Pose2D Pose2D::getTransformedPose(const Pose2D& tf) const
-{
-    Pose2D transformed_pose(*this);
-    transformed_pose.transform(tf);
-    return transformed_pose;
-}
-
-std::vector<float> Pose2D::getInverseTransformMat() const
-{
-    Pose2D inv_tf(*this);
-    inv_tf.theta *= -1.0f; // reverse angle
-    std::vector<float> inv_mat = inv_tf.getMat();
-    std::vector<float> p_vec{-x, -y, 0.0f};
-    std::vector<float> transformed_vec = Utils::multiplyMatrixToVector(inv_mat, p_vec);
-    inv_mat[2] = transformed_vec[0];
-    inv_mat[5] = transformed_vec[1];
-    return inv_mat;
-}
-
-Pose2D Pose2D::getInverseTransform() const
-{
-    return Pose2D(getInverseTransform());
 }
 
 std::string Pose2D::str() const
@@ -227,11 +161,11 @@ bool operator == (const Pose2D& pose_1, const Pose2D& pose_2)
              Utils::getShortestAngle(pose_1.theta, pose_2.theta) < 1e-2f );
 }
 
-std::ostream& operator << (std::ostream &out, const Pose2D& pose_2d)
+std::ostream& operator << (std::ostream &out, const Pose2D& pose)
 {
-    out << "<x: " << pose_2d.x
-        << ", y: " << pose_2d.y
-        << ", theta: " << pose_2d.theta
+    out << "<x: " << pose.x
+        << ", y: " << pose.y
+        << ", theta: " << pose.theta
         << ">";
     return out;
 }

@@ -189,21 +189,6 @@ class Point3D
         Point3D getNormalised() const;
 
         /**
-         * @brief 
-         * 
-         * @param tf_mat 
-         */
-        void transform(const std::vector<float>& tf_mat);
-
-        /**
-         * @brief
-         * 
-         * @param tf_mat 
-         * @return Point3D 
-         */
-        Point3D getTransformedPoint(const std::vector<float>& tf_mat) const;
-
-        /**
          * @brief
          * 
          * @param frame 

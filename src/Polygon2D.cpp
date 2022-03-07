@@ -246,16 +246,6 @@ Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
     return inflated_polygon;
 }
 
-Polygon2D Polygon2D::getTransformedPolygon(const std::vector<float>& tf_mat) const
-{
-    return getTransformedPolyline(tf_mat);
-}
-
-Polygon2D Polygon2D::getTransformedPolygon(const Pose2D& tf) const
-{
-    return getTransformedPolyline(tf);
-}
-
 visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float line_width,
         float z) const
