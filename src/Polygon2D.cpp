@@ -50,7 +50,9 @@ bool Polygon2D::isIntersecting(const LineSegment2D& line_segment) const
     for ( unsigned int start = vertices.size() - 1, end = 0; end < vertices.size(); start = end++ )
     {
         if ( LineSegment2D(vertices[start], vertices[end]).isIntersecting(line_segment) )
+        {
             return true;
+        }
     }
     return false;
 }
