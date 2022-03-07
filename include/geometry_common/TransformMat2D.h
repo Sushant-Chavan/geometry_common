@@ -45,13 +45,15 @@
 
 #include <tf/transform_datatypes.h>
 
-#include <geometry_common/Point2D.h>
-#include <geometry_common/Pose2D.h>
-#include <geometry_common/Polyline2D.h>
-#include <geometry_common/Polygon2D.h>
-
 namespace kelo::geometry_common
 {
+
+// Forward declaration 
+class Pose2D;
+class Point2D;
+class Polyline2D;
+class Polygon2D;
+using Vec2D = Point2D;
 
 /**
  * @brief 

@@ -41,6 +41,7 @@
 #include <cmath>
 
 #include <geometry_common/Utils.h>
+#include <geometry_common/Point3D.h>
 #include <geometry_common/TransformMat3D.h>
 
 namespace kelo::geometry_common

@@ -41,6 +41,10 @@
 #include <cmath>
 
 #include <geometry_common/Utils.h>
+#include <geometry_common/Pose2D.h>
+#include <geometry_common/Point2D.h>
+#include <geometry_common/Polyline2D.h>
+#include <geometry_common/Polygon2D.h>
 #include <geometry_common/TransformMat2D.h>
 
 namespace kelo::geometry_common

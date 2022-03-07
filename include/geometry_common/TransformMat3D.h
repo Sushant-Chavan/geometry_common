@@ -38,17 +38,19 @@
  *
  ******************************************************************************/
 
-#ifndef KELO_GEOMETRY_COMMON_TRANSFORM_MAT_2D_H
-#define KELO_GEOMETRY_COMMON_TRANSFORM_MAT_2D_H
+#ifndef KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
+#define KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
 
 #include <array>
 
 #include <tf/transform_datatypes.h>
 
-#include <geometry_common/Point3D.h>
-
 namespace kelo::geometry_common
 {
+
+// Forward declaration 
+class Point3D;
+using Vec3D = Point3D;
 
 /**
  * @brief 
@@ -149,4 +151,4 @@ class TransformMat3D
 };
 
 }; // namespace kelo::geometry_common
-#endif // KELO_GEOMETRY_COMMON_TRANSFORM_MAT_2D_H
+#endif // KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
