@@ -78,7 +78,7 @@ add_library(geometry_utils
         src/Polygon2D.cpp
         src/Polyline2D.cpp
         src/Pose2D.cpp
-        src/Attitude2D.cpp
+        src/XYTheta.cpp
         src/Box.cpp
         src/LineSegment2D.cpp
         src/TransformMat2D.cpp

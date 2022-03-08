@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef KELO_GEOMETRY_COMMON_ATTITUDE_2D_H
-#define KELO_GEOMETRY_COMMON_ATTITUDE_2D_H
+#ifndef KELO_GEOMETRY_COMMON_X_Y_THETA_H
+#define KELO_GEOMETRY_COMMON_X_Y_THETA_H
 
 #include <iostream>
 #include <memory>
@@ -51,13 +51,13 @@ namespace kelo::geometry_common
  * @brief 
  * 
  */
-class Attitude2D
+class XYTheta
 {
     public:
         float x, y, theta;
 
-        using Ptr = std::shared_ptr<Attitude2D>;
-        using ConstPtr = std::shared_ptr<const Attitude2D>;
+        using Ptr = std::shared_ptr<XYTheta>;
+        using ConstPtr = std::shared_ptr<const XYTheta>;
 
         /**
          * @brief
@@ -66,7 +66,7 @@ class Attitude2D
          * @param _y 
          * @param _theta 
          */
-        Attitude2D(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
+        XYTheta(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
             x(_x), y(_y), theta(_theta) {}
 
         /**
@@ -74,62 +74,62 @@ class Attitude2D
          * 
          * @param pose 
          */
-        Attitude2D(const Attitude2D& attitude):
-            x(attitude.x), y(attitude.y), theta(attitude.theta) {}
+        XYTheta(const XYTheta& x_y_theta):
+            x(x_y_theta.x), y(x_y_theta.y), theta(x_y_theta.theta) {}
 
         /**
          * @brief
          * 
          */
-        virtual ~Attitude2D() {}
+        virtual ~XYTheta() {}
 
         /**
          * @brief 
          *
-         * @param attitude
+         * @param x_y_theta
          * @return 
          */
-        Attitude2D operator + (const Attitude2D& attitude) const;
+        XYTheta operator + (const XYTheta& x_y_theta) const;
 
         /**
          * @brief 
          * 
-         * @param attitude 
-         * @return Attitude2D 
+         * @param x_y_theta 
+         * @return XYTheta 
          */
-        Attitude2D operator - (const Attitude2D& attitude) const;
+        XYTheta operator - (const XYTheta& x_y_theta) const;
 
         /**
          * @brief 
          * 
          * @param scalar 
-         * @return Attitude2D 
+         * @return XYTheta 
          */
-        Attitude2D operator * (float scalar) const;
+        XYTheta operator * (float scalar) const;
 
         /**
          * @brief 
          * 
-         * @param attitude 
+         * @param x_y_theta 
          * @return bool 
          */
-        bool operator == (const Attitude2D& attitude) const;
+        bool operator == (const XYTheta& x_y_theta) const;
 
         /**
          * @brief 
          * 
          * @param out 
-         * @param attitude 
+         * @param x_y_theta 
          * @return std::ostream& 
          */
         friend std::ostream& operator << (
                 std::ostream& out,
-                const Attitude2D& attitude);
+                const XYTheta& x_y_theta);
 };
 
-using Velocity2D = Attitude2D;
-using Acceleration2D = Attitude2D;
+using Velocity2D = XYTheta;
+using Acceleration2D = XYTheta;
 
 } // namespace kelo::geometry_common
 
-#endif // KELO_GEOMETRY_COMMON_ATTITUDE_2D_H
+#endif // KELO_GEOMETRY_COMMON_X_Y_THETA_H

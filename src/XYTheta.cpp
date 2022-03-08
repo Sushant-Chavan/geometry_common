@@ -39,50 +39,50 @@
  ******************************************************************************/
 
 #include <cmath>
-#include <geometry_common/Attitude2D.h>
 #include <geometry_common/Utils.h>
+#include <geometry_common/XYTheta.h>
 
 namespace kelo::geometry_common
 {
 
-Attitude2D Attitude2D::operator + (const Attitude2D& attitude) const
+XYTheta XYTheta::operator + (const XYTheta& x_y_theta) const
 {
-    Attitude2D sum;
-    sum.x = x + attitude.x;
-    sum.y = y + attitude.y;
-    sum.theta = theta + attitude.theta;
+    XYTheta sum;
+    sum.x = x + x_y_theta.x;
+    sum.y = y + x_y_theta.y;
+    sum.theta = theta + x_y_theta.theta;
     return sum;
 }
 
-Attitude2D Attitude2D::operator - (const Attitude2D& attitude) const
+XYTheta XYTheta::operator - (const XYTheta& x_y_theta) const
 {
-    Attitude2D diff;
-    diff.x = x - attitude.x;
-    diff.y = y - attitude.y;
-    diff.theta = theta - attitude.theta;
+    XYTheta diff;
+    diff.x = x - x_y_theta.x;
+    diff.y = y - x_y_theta.y;
+    diff.theta = theta - x_y_theta.theta;
     return diff;
 }
 
-Attitude2D Attitude2D::operator * (float scalar) const
+XYTheta XYTheta::operator * (float scalar) const
 {
-    Attitude2D scaled;
+    XYTheta scaled;
     scaled.x = x * scalar;
     scaled.y = y * scalar;
     scaled.theta = theta * scalar;
     return scaled;
 }
 
-bool Attitude2D::operator == (const Attitude2D& attitude) const
+bool XYTheta::operator == (const XYTheta& x_y_theta) const
 {
-    Attitude2D diff = *this - attitude;
+    XYTheta diff = *this - x_y_theta;
     return ( pow(diff.x, 2) + pow(diff.y, 2) + pow(diff.theta, 2) < 1e-6f );
 }
 
-std::ostream& operator << (std::ostream& out, const Attitude2D& attitude)
+std::ostream& operator << (std::ostream& out, const XYTheta& x_y_theta)
 {
-    out << "<x: " << attitude.x
-        << ", y: " << attitude.y
-        << ", theta: " << attitude.theta
+    out << "<x: " << x_y_theta.x
+        << ", y: " << x_y_theta.y
+        << ", theta: " << x_y_theta.theta
         << ">";
     return out;
 }

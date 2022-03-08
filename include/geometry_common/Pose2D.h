@@ -49,7 +49,7 @@
 #include <cmath>
 
 #include <geometry_common/Point2D.h>
-#include <geometry_common/Attitude2D.h>
+#include <geometry_common/XYTheta.h>
 
 namespace kelo::geometry_common
 {
@@ -61,7 +61,7 @@ class TransformMat2D;
  * @brief 
  * 
  */
-class Pose2D : public Attitude2D
+class Pose2D : public XYTheta
 {
     public:
         using Ptr = std::shared_ptr<Pose2D>;
@@ -75,7 +75,7 @@ class Pose2D : public Attitude2D
          * @param _theta 
          */
         Pose2D(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
-            Attitude2D(_x, _y, _theta) {}
+            XYTheta(_x, _y, _theta) {}
 
         /**
          * @brief
@@ -83,15 +83,15 @@ class Pose2D : public Attitude2D
          * @param pose 
          */
         Pose2D(const Pose2D& pose):
-            Attitude2D(pose.x, pose.y, pose.theta) {}
+            XYTheta(pose.x, pose.y, pose.theta) {}
 
         /**
          * @brief 
          *
          * @param attitude):
          */
-        Pose2D(const Attitude2D& attitude):
-            Attitude2D(attitude) {}
+        Pose2D(const XYTheta& x_y_theta):
+            XYTheta(x_y_theta) {}
 
         /**
          * @brief
