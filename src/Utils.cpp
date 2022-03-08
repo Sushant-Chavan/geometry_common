@@ -46,7 +46,7 @@
 #include <list>
 #include <deque>
 #include <sensor_msgs/point_cloud2_iterator.h>
-#include <geometry_common/TransformMat2D.h>
+#include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/Utils.h>
 
 namespace kelo::geometry_common
@@ -256,8 +256,8 @@ std::vector<Pose2D> Utils::getTrajectory(
     float delta_t = future_time/num_of_poses;
 
     // d = v * t
-    TransformMat2D vel_tf_mat = Pose2D(vel * delta_t).getMat();
-    TransformMat2D pos_mat; // identity mat
+    TransformMatrix2D vel_tf_mat = Pose2D(vel * delta_t).getMat();
+    TransformMatrix2D pos_mat; // identity mat
 
     /* add current pose (for extra safety) */
     traj.push_back(Pose2D());

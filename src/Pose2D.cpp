@@ -40,7 +40,7 @@
 
 #include <cmath>
 #include <geometry_common/Utils.h>
-#include <geometry_common/TransformMat2D.h>
+#include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/Pose2D.h>
 
 namespace kelo::geometry_common
@@ -68,7 +68,7 @@ Pose2D::Pose2D(const geometry_msgs::Pose& pose)
             roll, pitch, theta);
 }
 
-Pose2D::Pose2D(const TransformMat2D& tf_mat)
+Pose2D::Pose2D(const TransformMatrix2D& tf_mat)
 {
     x = tf_mat.getX();
     y = tf_mat.getY();
@@ -77,7 +77,7 @@ Pose2D::Pose2D(const TransformMat2D& tf_mat)
 
 Pose2D::Pose2D(const tf::StampedTransform& stamped_transform)
 {
-    TransformMat2D tf_mat(stamped_transform);
+    TransformMatrix2D tf_mat(stamped_transform);
     x = tf_mat.getX();
     y = tf_mat.getY();
     theta = tf_mat.getTheta();
@@ -108,9 +108,9 @@ geometry_msgs::Pose Pose2D::getPose() const
     return pose;
 }
 
-TransformMat2D Pose2D::getMat() const
+TransformMatrix2D Pose2D::getMat() const
 {
-    return TransformMat2D(*this);
+    return TransformMatrix2D(*this);
 }
 
 visualization_msgs::Marker Pose2D::getMarker(const std::string& frame,

@@ -55,7 +55,7 @@ namespace kelo::geometry_common
 {
 
 // Forward declaration 
-class TransformMat2D;
+class TransformMatrix2D;
 
 /**
  * @brief 
@@ -112,7 +112,7 @@ class Pose2D : public XYTheta
          * 
          * @param mat 
          */
-        Pose2D(const TransformMat2D& mat);
+        Pose2D(const TransformMatrix2D& mat);
 
         /**
          * @brief
@@ -146,9 +146,9 @@ class Pose2D : public XYTheta
         /**
          * @brief
          * 
-         * @return TransformMat2D
+         * @return TransformMatrix2D
          */
-        TransformMat2D getMat() const;
+        TransformMatrix2D getMat() const;
 
         /**
          * @brief

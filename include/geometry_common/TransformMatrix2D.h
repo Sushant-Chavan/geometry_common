@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
-#define KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
+#ifndef KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_2D_H
+#define KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_2D_H
 
 #include <array>
 
@@ -49,44 +49,68 @@ namespace kelo::geometry_common
 {
 
 // Forward declaration 
-class Point3D;
-using Vector3D = Point3D;
+class Pose2D;
+class Point2D;
+class Polyline2D;
+class Polygon2D;
+using Vector2D = Point2D;
 
 /**
  * @brief 
  * 
  */
-class TransformMat3D
+class TransformMatrix2D
 {
     public:
 
-        using Ptr = std::shared_ptr<TransformMat3D>;
-        using ConstPtr = std::shared_ptr<const TransformMat3D>;
+        using Ptr = std::shared_ptr<TransformMatrix2D>;
+        using ConstPtr = std::shared_ptr<const TransformMatrix2D>;
 
-        TransformMat3D():
-            TransformMat3D(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) {}
+        TransformMatrix2D():
+            TransformMatrix2D(0.0f, 0.0f, 0.0f) {}
 
-        TransformMat3D(float x, float y, float z,
-                       float roll, float pitch, float yaw);
+        /**
+         * @brief Construct transformation matrix with euler angle values
+         *
+         * @param x Translation in X axis
+         * @param y Translation in Y axis
+         * @param theta Rotation on Z axis
+         */
+        TransformMatrix2D(float x, float y, float theta);
 
-        TransformMat3D(float x, float y, float z,
-                       float qx, float qy, float qz, float qw);
+        /**
+         * @brief Construct transformation matrix with quaternion angle values
+         *
+         * @param x
+         * @param y
+         * @param qx
+         * @param qy
+         * @param qz
+         * @param qw
+         */
+        TransformMatrix2D(float x, float y, float qx, float qy, float qz, float qw);
 
-        TransformMat3D(const tf::StampedTransform& stamped_transform);
+        TransformMatrix2D(const tf::StampedTransform& stamped_transform);
 
-        TransformMat3D(const TransformMat3D& tf_mat);
+        TransformMatrix2D(const Pose2D& pose);
 
-        virtual ~TransformMat3D() {};
+        TransformMatrix2D(const TransformMatrix2D& tf_mat);
 
-        void update(float x, float y, float z,
-                    float roll, float pitch, float yaw);
+        /**
+         * @brief
+         * 
+         */
+        virtual ~TransformMatrix2D() {}
 
-        void update(float x, float y, float z,
-                    float qx, float qy, float qz, float qw);
+        void update(float x, float y, float theta);
 
-        void update(const TransformMat3D& tf_mat);
+        void update(float x, float y, float qx, float qy, float qz, float qw);
 
-        TransformMat3D getInverse() const;
+        void update(const Pose2D& pose);
+
+        void update(const TransformMatrix2D& tf_mat);
+
+        TransformMatrix2D getInverse() const;
 
         void invert();
 
@@ -94,43 +118,41 @@ class TransformMat3D
 
         float getY() const;
 
-        float getZ() const;
-
-        float getRoll() const;
-
-        float getPitch() const;
-
-        float getYaw() const;
+        float getTheta() const;
 
         std::array<float, 4> getQuaternion() const;
 
-        std::array<float, 9> getRotationMat() const;
+        std::array<float, 4> getRotationMat() const;
 
-        Vector3D getTranslationVec() const;
+        Vector2D getTranslationVec() const;
+
+        Pose2D getPose2D() const;
 
         void setX(float x);
 
         void setY(float y);
 
-        void setZ(float z);
-
-        void setRoll(float roll);
-
-        void setPitch(float pitch);
-
-        void setYaw(float yaw);
-
-        void setRollPitchYaw(float roll, float pitch, float yaw);
+        void setTheta(float theta);
 
         void setQuaternion(float qx, float qy, float qz, float qw);
 
-        void transform(Point3D& point) const;
+        void transform(Point2D& point) const;
 
-        TransformMat3D operator * (const TransformMat3D& tf_mat) const;
+        void transform(Pose2D& pose) const;
 
-        TransformMat3D& operator *= (const TransformMat3D& tf_mat);
+        void transform(Polyline2D& polyline) const;
 
-        Point3D operator * (const Point3D& point) const;
+        TransformMatrix2D operator * (const TransformMatrix2D& tf_mat) const;
+
+        TransformMatrix2D& operator *= (const TransformMatrix2D& tf_mat);
+
+        Point2D operator * (const Point2D& vec) const;
+
+        Pose2D operator * (const Pose2D& vec) const;
+
+        Polyline2D operator * (const Polyline2D& polyline) const;
+
+        Polygon2D operator * (const Polygon2D& polygon) const;
 
         const float& operator [] (unsigned int index) const;
 
@@ -143,12 +165,12 @@ class TransformMat3D
          */
         friend std::ostream& operator << (
                 std::ostream& out,
-                const TransformMat3D& tf_mat);
+                const TransformMatrix2D& tf_mat);
 
     protected:
-        std::array<float, 12> mat_;
+        std::array<float, 6> mat_;
 
 };
 
 }; // namespace kelo::geometry_common
-#endif // KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
+#endif // KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_2D_H
