@@ -1,7 +1,19 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(geometry_common)
 
-add_compile_options(-std=c++11 -Wall -O3)
+add_compile_options(-std=c++11)
+
+# All warning enabled build option set to ON by default
+option(BUILD_WITH_WARNING "Build with all warnings enabled" ON)
+if(BUILD_WITH_WARNING)
+    add_compile_options(-Wall)
+endif(BUILD_WITH_WARNING)
+
+# Optimisation flag (O3) build option set to ON by default
+option(BUILD_WITH_OPTIMISATION "Build with O3 compile option" ON)
+if(BUILD_WITH_OPTIMISATION)
+    add_compile_options(-O3)
+endif(BUILD_WITH_OPTIMISATION)
 
 if (WIN32)
     find_package(yaml-cpp REQUIRED)
