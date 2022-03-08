@@ -110,31 +110,31 @@ class TransformMatrix2D
 
         void update(const TransformMatrix2D& tf_mat);
 
-        TransformMatrix2D getInverse() const;
+        void updateX(float x);
+
+        void updateY(float y);
+
+        void updateTheta(float theta);
+
+        void updateQuaternion(float qx, float qy, float qz, float qw);
+
+        TransformMatrix2D calcInverse() const;
 
         void invert();
 
-        float getX() const;
+        float x() const;
 
-        float getY() const;
+        float y() const;
 
-        float getTheta() const;
+        float theta() const;
 
-        std::array<float, 4> getQuaternion() const;
+        std::array<float, 4> quaternion() const;
 
-        std::array<float, 4> getRotationMat() const;
+        std::array<float, 4> rotationMatrix() const;
 
-        Vector2D getTranslationVec() const;
+        Vector2D translationVector() const;
 
-        Pose2D getPose2D() const;
-
-        void setX(float x);
-
-        void setY(float y);
-
-        void setTheta(float theta);
-
-        void setQuaternion(float qx, float qy, float qz, float qw);
+        Pose2D asPose2D() const;
 
         void transform(Point2D& point) const;
 

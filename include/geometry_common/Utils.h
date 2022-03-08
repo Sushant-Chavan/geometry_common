@@ -85,7 +85,7 @@ class Utils
          * @return T 
          */
         template <typename T>
-        static T getMeanPoint(
+        static T calcMeanPoint(
                 const std::vector<T>& points,
                 unsigned start_index,
                 unsigned end_index);
@@ -98,7 +98,7 @@ class Utils
          * @return T 
          */
         template <typename T>
-        static T getMeanPoint(
+        static T calcMeanPoint(
                 const std::vector<T>& points);
 
         /**
@@ -109,7 +109,7 @@ class Utils
          * @return Pose2D 
          */
         template <typename T>
-        static Pose2D getMeanPose(
+        static Pose2D calcMeanPose(
                 const T& poses);
 
         /**
@@ -121,7 +121,7 @@ class Utils
          * @return T 
          */
         template <typename T>
-        static T getClosestPoint(
+        static T calcClosestPoint(
                 const std::vector<T>& points,
                 const T& pt = T());
 
@@ -159,7 +159,7 @@ class Utils
          * @param future_time 
          * @return std::vector<Pose2D> 
          */
-        static std::vector<Pose2D> getTrajectory(
+        static std::vector<Pose2D> calcTrajectory(
                 const Velocity2D& vel,
                 size_t num_of_poses,
                 float future_time);
@@ -171,7 +171,7 @@ class Utils
          * @param angle2 
          * @return float 
          */
-        static float getShortestAngle(
+        static float calcShortestAngle(
                 float angle1,
                 float angle2);
 
@@ -199,7 +199,7 @@ class Utils
          * @param p 
          * @return float 
          */
-        static float distToLineSquared(
+        static float calcSquaredDistToLine(
                 float m,
                 float c,
                 const Point2D& p);
@@ -212,7 +212,7 @@ class Utils
          * @param p 
          * @return Point2D 
          */
-        static Point2D getProjectedPointOnLine(
+        static Point2D calcProjectedPointOnLine(
                 float m,
                 float c,
                 const Point2D& p);
@@ -226,7 +226,7 @@ class Utils
          * @param is_segment 
          * @return Point2D 
          */
-        static Point2D getProjectedPointOnLine(
+        static Point2D calcProjectedPointOnLine(
                 const Point2D& line_start,
                 const Point2D& line_end,
                 const Point2D& p,
@@ -240,7 +240,7 @@ class Utils
          * @param p 
          * @return Point2D 
          */
-        static Point2D getProjectedPointOnMajorAxis(
+        static Point2D calcProjectedPointOnMajorAxis(
                 float m,
                 float c,
                 const Point2D& p);
@@ -255,22 +255,11 @@ class Utils
          * @param is_segment 
          * @return float 
          */
-        static float distToLineSquared(
+        static float calcSquaredDistToLine(
                 const Point2D& a,
                 const Point2D& b,
                 const Point2D& p,
                 bool is_segment = false);
-
-        /**
-         * @brief 
-         * 
-         * @param line_segment 
-         * @param p 
-         * @return float 
-         */
-        static float distToLineSegmentSquared(
-                const LineSegment2D& line_segment,
-                const Point2D& p);
 
         /**
          * @brief 
@@ -391,7 +380,7 @@ class Utils
          * @param error_threshold 
          * @return std::vector<LineSegment2D> 
          */
-        static std::vector<LineSegment2D> piecewiseRegression(
+        static std::vector<LineSegment2D> applyPiecewiseRegression(
                 const PointCloud2D& pts,
                 float error_threshold = 0.1f);
 
@@ -402,7 +391,7 @@ class Utils
          * @param error_threshold 
          * @return std::vector<LineSegment2D> 
          */
-        static std::vector<LineSegment2D> piecewiseRegressionSplit(
+        static std::vector<LineSegment2D> applyPiecewiseRegressionSplit(
                 const PointCloud2D& pts,
                 float error_threshold = 0.1f);
 
@@ -466,7 +455,7 @@ class Utils
          * @param min_limit 
          * @return float 
          */
-        static float signedClip(
+        static float clipSigned(
                 float value,
                 float max_limit,
                 float min_limit);
@@ -516,7 +505,7 @@ class Utils
          * @param t 
          * @return float 
          */
-        static float linearInterpolate(
+        static float applyLinearInterpolation(
                 float src,
                 float target,
                 float t);
@@ -528,7 +517,7 @@ class Utils
          * @param frame 
          * @return sensor_msgs::PointCloud 
          */
-        static sensor_msgs::PointCloud convertToROSPC(
+        static sensor_msgs::PointCloud convertToROSPointCloud(
                 const PointCloud3D& pc,
                 const std::string& frame);
 
@@ -539,7 +528,7 @@ class Utils
          * @param frame 
          * @return sensor_msgs::PointCloud 
          */
-        static sensor_msgs::PointCloud convertToROSPC(
+        static sensor_msgs::PointCloud convertToROSPointCloud(
                 const PointCloud2D& pc,
                 const std::string& frame);
 
@@ -549,7 +538,7 @@ class Utils
          * @param pc 
          * @return PointCloud3D 
          */
-        static PointCloud3D convertFromROSPC(
+        static PointCloud3D convertToPointCloud3D(
                 const sensor_msgs::PointCloud& pc);
 
         /**
@@ -564,7 +553,7 @@ class Utils
          * @param col_sub_sample_factor 
          * @return PointCloud3D 
          */
-        static PointCloud3D convertFromROSPC(
+        static PointCloud3D convertToPointCloud3D(
                 const sensor_msgs::PointCloud2& cloud_msg,
                 size_t row_sub_sample_factor = 1,
                 size_t col_sub_sample_factor = 1);
@@ -575,7 +564,7 @@ class Utils
          * @param scan 
          * @return PointCloud3D 
          */
-        static PointCloud3D convertFromROSScan(
+        static PointCloud3D convertToPointCloud3D(
                 const sensor_msgs::LaserScan& scan);
 
         /**
@@ -584,7 +573,7 @@ class Utils
          * @param angle 
          * @return float 
          */
-        static float getPerpendicularAngle(
+        static float calcPerpendicularAngle(
                 float angle);
 
         /**
@@ -593,7 +582,7 @@ class Utils
          * @param angle 
          * @return float 
          */
-        static float getReverseAngle(
+        static float calcReverseAngle(
                 float angle);
 
         /**
@@ -623,10 +612,8 @@ class Utils
          * @param step_size 
          * @return std::vector<Point2D> 
          */
-        static std::vector<Point2D> generatePerpendicularPoints(
-                const Pose2D& start,
-                const Pose2D& end,
-                const Point2D& pt,
+        static std::vector<Point2D> generatePerpendicularPointsAt(
+                const Pose2D& pose,
                 float max_perp_dist = 3.0f,
                 float step_size = 0.1f);
 
@@ -638,7 +625,7 @@ class Utils
          * @param c 
          * @return float 
          */
-        static float getAngleBetweenPoints(
+        static float calcAngleBetweenPoints(
                 const Point2D& a,
                 const Point2D& b,
                 const Point2D& c);
@@ -654,7 +641,7 @@ class Utils
          * @param pitch rotation on Y axis
          * @param yaw rotation on Z axis
          */
-        static void getEulerFromQuaternion(
+        static void convertQuaternionToEuler(
                 float qx,
                 float qy,
                 float qz,
@@ -674,7 +661,7 @@ class Utils
          * @param qz
          * @param qw
          */
-        static void getQuaternionFromEuler(
+        static void convertEulerToQuaternion(
                 float roll,
                 float pitch,
                 float yaw,
@@ -690,7 +677,7 @@ class Utils
          * @param frame 
          * @return nav_msgs::Path 
          */
-        static nav_msgs::Path getPathMsgFromTrajectory(
+        static nav_msgs::Path convertToROSPath(
                 const std::vector<Pose2D>& trajectory,
                 const std::string& frame);
 
@@ -706,7 +693,7 @@ class Utils
          * @param line_width 
          * @return visualization_msgs::Marker 
          */
-        static visualization_msgs::Marker getGeometricPathAsMarker(
+        static visualization_msgs::Marker convertGeometricPathToMarker(
                 const std::vector<Pose2D>& geometric_path,
                 const std::string& frame = "base_link",
                 float red = 1.0f,
@@ -727,7 +714,7 @@ class Utils
          * @param alpha 
          * @return visualization_msgs::Marker 
          */
-        static visualization_msgs::Marker getPointcloudAsMarker(
+        static visualization_msgs::Marker convertPointCloudToMarker(
                 const PointCloud2D& cloud,
                 const std::string& frame,
                 float diameter = 0.05f,
@@ -748,7 +735,7 @@ class Utils
          * @param alpha 
          * @return visualization_msgs::Marker 
          */
-        static visualization_msgs::Marker getPointcloudAsMarker(
+        static visualization_msgs::Marker convertPointCloudToMarker(
                 const PointCloud3D& cloud,
                 const std::string& frame,
                 float diameter = 0.05f,
@@ -769,7 +756,7 @@ class Utils
          * @param size 
          * @return visualization_msgs::Marker 
          */
-        static visualization_msgs::Marker getStringAsMarker(
+        static visualization_msgs::Marker convertStringToMarker(
                 const std::string& string_label,
                 const std::string& frame,
                 float red = 0.0f,

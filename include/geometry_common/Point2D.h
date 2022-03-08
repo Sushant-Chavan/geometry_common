@@ -93,9 +93,9 @@ class Point2D
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Point2D& p) const
+        inline float distTo(const Point2D& p) const
         {
-            return std::sqrt(getCartDistSquared(p));
+            return std::sqrt(squaredDistTo(p));
         };
 
         /**
@@ -104,7 +104,7 @@ class Point2D
          * @param p 
          * @return float 
          */
-        inline float getCartDistSquared(const Point2D& p) const
+        inline float squaredDistTo(const Point2D& p) const
         {
             return std::pow(x - p.x, 2) + std::pow(y - p.y, 2);
         };
@@ -130,7 +130,7 @@ class Point2D
          *
          * @return: Point2D
          */
-        Point2D getNormalised() const;
+        Point2D asNormalised() const;
 
         /**
          * @brief 
@@ -161,7 +161,7 @@ class Point2D
          * @param z 
          * @return visualization_msgs::Marker 
          */
-        visualization_msgs::Marker getMarker(
+        visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,

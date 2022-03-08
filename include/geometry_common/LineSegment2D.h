@@ -103,42 +103,42 @@ class LineSegment2D
          * 
          * @return float 
          */
-        float getAngle() const;
+        float angle() const;
 
         /**
          * @brief
          * 
          * @return float 
          */
-        float getLength() const;
+        float length() const;
 
         /**
          * @brief
          * 
          * @return float 
          */
-        float getSlope() const;
+        float slope() const;
 
         /**
          * @brief
          * 
          * @return float 
          */
-        float getConstant() const;
+        float constant() const;
 
         /**
          * @brief
          * 
          * @return Point2D 
          */
-        Point2D getCenter() const;
+        Point2D center() const;
 
         /**
          * @brief
          * 
          * @return Point2D 
          */
-        Point2D getUnitVector() const;
+        Point2D unitVector() const;
 
         /**
          * @brief 
@@ -146,7 +146,7 @@ class LineSegment2D
          * @param line_segment 
          * @return bool 
          */
-        bool isIntersecting(const LineSegment2D& line_segment) const;
+        bool intersects(const LineSegment2D& line_segment) const;
 
         /**
          * @brief
@@ -155,7 +155,7 @@ class LineSegment2D
          * @param intersection_point 
          * @return bool 
          */
-        bool getIntersectionPoint(
+        bool calcIntersectionPointWith(
                 const LineSegment2D& line_segment,
                 Point2D& intersection_point) const;
 
@@ -165,7 +165,7 @@ class LineSegment2D
          * @param point 
          * @return Point2D 
          */
-        Point2D getClosestPointFrom(const Point2D& point) const;
+        Point2D closestPointTo(const Point2D& point) const;
 
         /**
          * @brief 
@@ -173,7 +173,16 @@ class LineSegment2D
          * @param point 
          * @return float 
          */
-        float getMinDistFrom(const Point2D& point) const;
+        float minDistTo(const Point2D& point) const;
+
+        /**
+         * @brief 
+         * 
+         * @param line_segment 
+         * @param p 
+         * @return float 
+         */
+        float squaredMinDistTo(const Point2D& p) const;
 
         /**
          * @brief 
@@ -197,7 +206,7 @@ class LineSegment2D
          * @param line_width 
          * @return visualization_msgs::Marker 
          */
-        visualization_msgs::Marker getMarker(
+        visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,

@@ -55,7 +55,8 @@ TransformMatrix2D::TransformMatrix2D(float x, float y, float theta)
     update(x, y, theta);
 }
 
-TransformMatrix2D::TransformMatrix2D(float x, float y, float qx, float qy, float qz, float qw)
+TransformMatrix2D::TransformMatrix2D(
+        float x, float y, float qx, float qy, float qz, float qw)
 {
     update(x, y, qx, qy, qz, qw);
 }
@@ -81,16 +82,17 @@ TransformMatrix2D::TransformMatrix2D(const TransformMatrix2D& tf_mat)
 
 void TransformMatrix2D::update(float x, float y, float theta)
 {
-    mat_[2] = x;
-    mat_[5] = y;
-    setTheta(theta);
+    updateX(x);
+    updateY(y);
+    updateTheta(theta);
 }
 
-void TransformMatrix2D::update(float x, float y, float qx, float qy, float qz, float qw)
+void TransformMatrix2D::update(
+        float x, float y, float qx, float qy, float qz, float qw)
 {
-    float roll, pitch, yaw;
-    Utils::getEulerFromQuaternion(qx, qy, qz, qw, roll, pitch, yaw);
-    update(x, y, yaw);
+    updateX(x);
+    updateY(y);
+    updateQuaternion(qx, qy, qz, qw);
 }
 
 void TransformMatrix2D::update(const Pose2D& pose)
@@ -106,7 +108,32 @@ void TransformMatrix2D::update(const TransformMatrix2D& tf_mat)
     }
 }
 
-TransformMatrix2D TransformMatrix2D::getInverse() const
+void TransformMatrix2D::updateX(float x)
+{
+    mat_[2] = x;
+}
+
+void TransformMatrix2D::updateY(float y)
+{
+    mat_[5] = y;
+}
+
+void TransformMatrix2D::updateTheta(float theta)
+{
+    mat_[0] = std::cos(theta);
+    mat_[1] = -std::sin(theta);
+    mat_[3] = std::sin(theta);
+    mat_[4] = std::cos(theta);
+}
+
+void TransformMatrix2D::updateQuaternion(float qx, float qy, float qz, float qw)
+{
+    float roll, pitch, yaw;
+    Utils::convertQuaternionToEuler(qx, qy, qz, qw, roll, pitch, yaw);
+    updateTheta(yaw);
+}
+
+TransformMatrix2D TransformMatrix2D::calcInverse() const
 {
     TransformMatrix2D inv_tf_mat(*this);
     inv_tf_mat.invert();
@@ -128,29 +155,29 @@ void TransformMatrix2D::invert()
     mat_[5] = -((mat_[3] * x) + (mat_[4] * y));
 }
 
-float TransformMatrix2D::getX() const
+float TransformMatrix2D::x() const
 {
     return mat_[2];
 }
 
-float TransformMatrix2D::getY() const
+float TransformMatrix2D::y() const
 {
     return mat_[5];
 }
 
-float TransformMatrix2D::getTheta() const
+float TransformMatrix2D::theta() const
 {
     return std::atan2(mat_[3], mat_[0]);
 }
 
-std::array<float, 4> TransformMatrix2D::getQuaternion() const
+std::array<float, 4> TransformMatrix2D::quaternion() const
 {
     std::array<float, 4> q;
-    Utils::getQuaternionFromEuler(0.0f, 0.0f, getTheta(), q[0], q[1], q[2], q[3]);
+    Utils::convertEulerToQuaternion(0.0f, 0.0f, theta(), q[0], q[1], q[2], q[3]);
     return q;
 }
 
-std::array<float, 4> TransformMatrix2D::getRotationMat() const
+std::array<float, 4> TransformMatrix2D::rotationMatrix() const
 {
     std::array<float, 4> rot_mat;
     rot_mat[0] = mat_[0];
@@ -160,39 +187,14 @@ std::array<float, 4> TransformMatrix2D::getRotationMat() const
     return rot_mat;
 }
 
-Vector2D TransformMatrix2D::getTranslationVec() const
+Vector2D TransformMatrix2D::translationVector() const
 {
     return Vector2D(mat_[2], mat_[5]);
 }
 
-Pose2D TransformMatrix2D::getPose2D() const
+Pose2D TransformMatrix2D::asPose2D() const
 {
-    return Pose2D(mat_[2], mat_[5], getTheta());
-}
-
-void TransformMatrix2D::setX(float x)
-{
-    mat_[2] = x;
-}
-
-void TransformMatrix2D::setY(float y)
-{
-    mat_[5] = y;
-}
-
-void TransformMatrix2D::setTheta(float theta)
-{
-    mat_[0] = std::cos(theta);
-    mat_[1] = -std::sin(theta);
-    mat_[3] = std::sin(theta);
-    mat_[4] = std::cos(theta);
-}
-
-void TransformMatrix2D::setQuaternion(float qx, float qy, float qz, float qw)
-{
-    float roll, pitch, yaw;
-    Utils::getEulerFromQuaternion(qx, qy, qz, qw, roll, pitch, yaw);
-    setTheta(yaw);
+    return Pose2D(mat_[2], mat_[5], theta());
 }
 
 void TransformMatrix2D::transform(Point2D& point) const
@@ -205,7 +207,7 @@ void TransformMatrix2D::transform(Point2D& point) const
 
 void TransformMatrix2D::transform(Pose2D& pose) const
 {
-    TransformMatrix2D transformed_mat = (*this) * pose.getMat();
+    TransformMatrix2D transformed_mat = (*this) * pose.asMat();
     pose.x = transformed_mat[2];
     pose.y = transformed_mat[5];
     pose.theta = std::atan2(transformed_mat[3], transformed_mat[0]);
@@ -251,8 +253,8 @@ Point2D TransformMatrix2D::operator * (const Point2D& point) const
 
 Pose2D TransformMatrix2D::operator * (const Pose2D& pose) const
 {
-    TransformMatrix2D transformed_mat = (*this) * pose.getMat();
-    return transformed_mat.getPose2D();
+    TransformMatrix2D transformed_mat = (*this) * pose.asMat();
+    return transformed_mat.asPose2D();
 }
 
 Polyline2D TransformMatrix2D::operator * (const Polyline2D& polyline) const

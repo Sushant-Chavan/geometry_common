@@ -50,50 +50,50 @@ LineSegment2D::~LineSegment2D()
 {
 }
 
-float LineSegment2D::getAngle() const
+float LineSegment2D::angle() const
 {
     Vector2D diff = end - start;
     return std::atan2(diff.y, diff.x);
 }
 
-float LineSegment2D::getLength() const
+float LineSegment2D::length() const
 {
-    return start.getCartDist(end);
+    return start.distTo(end);
 }
 
-float LineSegment2D::getSlope() const
+float LineSegment2D::slope() const
 {
     Vector2D diff = end - start;
-    if ( fabs(diff.x) < 1e-6f )
+    if ( std::fabs(diff.x) < 1e-6f )
     {
         diff.x = 1e-6f;
     }
     return diff.y/diff.x;
 }
 
-float LineSegment2D::getConstant() const
+float LineSegment2D::constant() const
 {
-    float m = getSlope();
+    float m = slope();
     return start.y - (m * start.x);
 }
 
-Point2D LineSegment2D::getCenter() const
+Point2D LineSegment2D::center() const
 {
     return (start + end) * 0.5f;
 }
 
-Point2D LineSegment2D::getUnitVector() const
+Point2D LineSegment2D::unitVector() const
 {
-    return (end - start) * (1.0f/getLength());
+    return (end - start) * (1.0f/length());
 }
 
-bool LineSegment2D::isIntersecting(const LineSegment2D& line_segment) const
+bool LineSegment2D::intersects(const LineSegment2D& line_segment) const
 {
     Point2D intersection_pt;
-    return getIntersectionPoint(line_segment, intersection_pt);
+    return calcIntersectionPointWith(line_segment, intersection_pt);
 }
 
-bool LineSegment2D::getIntersectionPoint(
+bool LineSegment2D::calcIntersectionPointWith(
         const LineSegment2D& line_segment,
         Point2D& intersection_point) const
 {
@@ -129,24 +129,29 @@ bool LineSegment2D::getIntersectionPoint(
 	return false; // The two line segments are not parallel but do not intersect.
 }
 
-Point2D LineSegment2D::getClosestPointFrom(const Point2D& point) const
+Point2D LineSegment2D::closestPointTo(const Point2D& point) const
 {
-    return Utils::getProjectedPointOnLine(start, end, point, true);
+    return Utils::calcProjectedPointOnLine(start, end, point, true);
 }
 
-float LineSegment2D::getMinDistFrom(const Point2D& point) const
+float LineSegment2D::minDistTo(const Point2D& point) const
 {
-    return point.getCartDist(getClosestPointFrom(point));
+    return point.distTo(closestPointTo(point));
+}
+
+float LineSegment2D::squaredMinDistTo(const Point2D& p) const
+{
+    return Utils::calcSquaredDistToLine(start, end, p, true);
 }
 
 bool LineSegment2D::containsPoint(
         const Point2D& point,
         float dist_threshold) const
 {
-    return ( getMinDistFrom(point) < dist_threshold );
+    return ( minDistTo(point) < dist_threshold );
 }
 
-visualization_msgs::Marker LineSegment2D::getMarker(const std::string& frame,
+visualization_msgs::Marker LineSegment2D::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float line_width) const
 {
     visualization_msgs::Marker marker;
@@ -159,8 +164,8 @@ visualization_msgs::Marker LineSegment2D::getMarker(const std::string& frame,
     marker.color.a = alpha;
     marker.scale.x = line_width;
     marker.pose.orientation.w = 1.0f;
-    marker.points.push_back(Point3D(start).getPoint());
-    marker.points.push_back(Point3D(end).getPoint());
+    marker.points.push_back(Point3D(start).asPoint());
+    marker.points.push_back(Point3D(end).asPoint());
     return marker;
 }
 

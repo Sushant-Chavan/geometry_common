@@ -133,7 +133,7 @@ class Pose2D : public XYTheta
          * @param frame 
          * @return geometry_msgs::PoseStamped 
          */
-        geometry_msgs::PoseStamped getPoseStamped(
+        geometry_msgs::PoseStamped asPoseStamped(
                 const std::string& frame = "map") const;
 
         /**
@@ -141,14 +141,14 @@ class Pose2D : public XYTheta
          * 
          * @return geometry_msgs::Pose 
          */
-        geometry_msgs::Pose getPose() const;
+        geometry_msgs::Pose asPose() const;
 
         /**
          * @brief
          * 
          * @return TransformMatrix2D
          */
-        TransformMatrix2D getMat() const;
+        TransformMatrix2D asMat() const;
 
         /**
          * @brief
@@ -163,7 +163,7 @@ class Pose2D : public XYTheta
          * @param size_z 
          * @return visualization_msgs::Marker 
          */
-        visualization_msgs::Marker getMarker(
+        visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,
@@ -179,9 +179,9 @@ class Pose2D : public XYTheta
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Pose2D& p) const
+        inline float distTo(const Pose2D& p) const
         {
-            return std::sqrt(getCartDistSquared(p));
+            return std::sqrt(squaredDistTo(p));
         };
 
         /**
@@ -190,7 +190,7 @@ class Pose2D : public XYTheta
          * @param p 
          * @return float 
          */
-        inline float getCartDistSquared(const Pose2D& p) const
+        inline float squaredDistTo(const Pose2D& p) const
         {
             return std::pow(x - p.x, 2) + std::pow(y - p.y, 2);
         };
@@ -201,7 +201,7 @@ class Pose2D : public XYTheta
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Point2D& p) const
+        inline float distTo(const Point2D& p) const
         {
             return std::sqrt(std::pow(x - p.x, 2) + std::pow(y - p.y, 2));
         };
@@ -211,7 +211,7 @@ class Pose2D : public XYTheta
          * 
          * @return std::string 
          */
-        std::string str() const;
+        std::string asString() const;
 
         /**
          * @brief 

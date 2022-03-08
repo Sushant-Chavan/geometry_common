@@ -77,18 +77,19 @@ TransformMatrix3D::TransformMatrix3D(const TransformMatrix3D& tf_mat)
 void TransformMatrix3D::update(
         float x, float y, float z, float roll, float pitch, float yaw)
 {
-    setX(x);
-    setY(y);
-    setZ(z);
-    setRollPitchYaw(roll, pitch, yaw);
+    updateX(x);
+    updateY(y);
+    updateZ(z);
+    updateRollPitchYaw(roll, pitch, yaw);
 }
 
 void TransformMatrix3D::update(
         float x, float y, float z, float qx, float qy, float qz, float qw)
 {
-    float roll, pitch, yaw;
-    Utils::getEulerFromQuaternion(qx, qy, qz, qw, roll, pitch, yaw);
-    update(x, y, z, roll, pitch, yaw);
+    updateX(x);
+    updateY(y);
+    updateZ(z);
+    updateQuaternion(qx, qy, qz, qw);
 }
 
 void TransformMatrix3D::update(const TransformMatrix3D& tf_mat)
@@ -99,7 +100,61 @@ void TransformMatrix3D::update(const TransformMatrix3D& tf_mat)
     }
 }
 
-TransformMatrix3D TransformMatrix3D::getInverse() const
+void TransformMatrix3D::updateX(float x)
+{
+    mat_[3] = x;
+}
+
+void TransformMatrix3D::updateY(float y)
+{
+    mat_[7] = y;
+}
+
+void TransformMatrix3D::updateZ(float z)
+{
+    mat_[11] = z;
+}
+
+void TransformMatrix3D::updateRoll(float roll)
+{
+    updateRollPitchYaw(roll, pitch(), yaw());
+}
+
+void TransformMatrix3D::updatePitch(float pitch)
+{
+    updateRollPitchYaw(roll(), pitch, yaw());
+}
+
+void TransformMatrix3D::updateYaw(float yaw)
+{
+    updateRollPitchYaw(roll(), pitch(), yaw);
+}
+
+void TransformMatrix3D::updateRollPitchYaw(float roll, float pitch, float yaw)
+{
+    mat_[0] = (std::cos(yaw) * std::cos(pitch));
+    mat_[1] = (std::cos(yaw) * std::sin(pitch) * std::sin(roll)) -
+              (std::sin(yaw) * std::cos(roll));
+    mat_[2] = (std::cos(yaw) * std::sin(pitch) * std::cos(roll)) +
+              (std::sin(yaw) * std::sin(roll));
+    mat_[4] = (std::sin(yaw) * std::cos(pitch));
+    mat_[5] = (std::sin(yaw) * std::sin(pitch) * std::sin(roll)) +
+              (std::cos(yaw) * std::cos(roll));
+    mat_[6] = (std::sin(yaw) * std::sin(pitch) * std::cos(roll)) -
+              (std::cos(yaw) * std::sin(roll));
+    mat_[8] = -std::sin(pitch);
+    mat_[9] = std::cos(pitch) * std::sin(roll);
+    mat_[10] = std::cos(pitch) * std::cos(roll);
+}
+
+void TransformMatrix3D::updateQuaternion(float qx, float qy, float qz, float qw)
+{
+    float roll, pitch, yaw;
+    Utils::convertQuaternionToEuler(qx, qy, qz, qw, roll, pitch, yaw);
+    updateRollPitchYaw(roll, pitch, yaw);
+}
+
+TransformMatrix3D TransformMatrix3D::calcInverse() const
 {
     TransformMatrix3D inv_tf_mat(*this);
     inv_tf_mat.invert();
@@ -129,45 +184,44 @@ void TransformMatrix3D::invert()
     mat_[11] = -((mat_[8] * x) + (mat_[9] * y) + (mat_[10] * z));
 }
 
-float TransformMatrix3D::getX() const
+float TransformMatrix3D::x() const
 {
     return mat_[3];
 }
 
-float TransformMatrix3D::getY() const
+float TransformMatrix3D::y() const
 {
     return mat_[7];
 }
 
-float TransformMatrix3D::getZ() const
+float TransformMatrix3D::z() const
 {
     return mat_[11];
 }
 
-float TransformMatrix3D::getRoll() const
+float TransformMatrix3D::roll() const
 {
     return std::atan2(mat_[9], mat_[10]);
 }
 
-float TransformMatrix3D::getPitch() const
+float TransformMatrix3D::pitch() const
 {
     return std::atan2(-mat_[8], std::sqrt(pow(mat_[9], 2) + pow(mat_[10], 2)));
 }
 
-float TransformMatrix3D::getYaw() const
+float TransformMatrix3D::yaw() const
 {
     return std::atan2(mat_[4], mat_[0]);
 }
 
-std::array<float, 4> TransformMatrix3D::getQuaternion() const
+std::array<float, 4> TransformMatrix3D::quaternion() const
 {
     std::array<float, 4> q;
-    Utils::getQuaternionFromEuler(getRoll(), getPitch(), getYaw(),
-                                  q[0], q[1], q[2], q[3]);
+    Utils::convertEulerToQuaternion(roll(), pitch(), yaw(), q[0], q[1], q[2], q[3]);
     return q;
 }
 
-std::array<float, 9> TransformMatrix3D::getRotationMat() const
+std::array<float, 9> TransformMatrix3D::rotationMatrix() const
 {
     std::array<float, 9> rot_mat;
     for ( size_t i = 0; i < 3; i++ )
@@ -180,63 +234,9 @@ std::array<float, 9> TransformMatrix3D::getRotationMat() const
     return rot_mat;
 }
 
-Vector3D TransformMatrix3D::getTranslationVec() const
+Vector3D TransformMatrix3D::translationVector() const
 {
     return Vector3D(mat_[3], mat_[7], mat_[11]);
-}
-
-void TransformMatrix3D::setX(float x)
-{
-    mat_[3] = x;
-}
-
-void TransformMatrix3D::setY(float y)
-{
-    mat_[7] = y;
-}
-
-void TransformMatrix3D::setZ(float z)
-{
-    mat_[11] = z;
-}
-
-void TransformMatrix3D::setRoll(float roll)
-{
-    setRollPitchYaw(roll, getPitch(), getYaw());
-}
-
-void TransformMatrix3D::setPitch(float pitch)
-{
-    setRollPitchYaw(getRoll(), pitch, getYaw());
-}
-
-void TransformMatrix3D::setYaw(float yaw)
-{
-    setRollPitchYaw(getRoll(), getPitch(), yaw);
-}
-
-void TransformMatrix3D::setRollPitchYaw(float roll, float pitch, float yaw)
-{
-    mat_[0] = (std::cos(yaw) * std::cos(pitch));
-    mat_[1] = (std::cos(yaw) * std::sin(pitch) * std::sin(roll)) -
-              (std::sin(yaw) * std::cos(roll));
-    mat_[2] = (std::cos(yaw) * std::sin(pitch) * std::cos(roll)) +
-              (std::sin(yaw) * std::sin(roll));
-    mat_[4] = (std::sin(yaw) * std::cos(pitch));
-    mat_[5] = (std::sin(yaw) * std::sin(pitch) * std::sin(roll)) +
-              (std::cos(yaw) * std::cos(roll));
-    mat_[6] = (std::sin(yaw) * std::sin(pitch) * std::cos(roll)) -
-              (std::cos(yaw) * std::sin(roll));
-    mat_[8] = -std::sin(pitch);
-    mat_[9] = std::cos(pitch) * std::sin(roll);
-    mat_[10] = std::cos(pitch) * std::cos(roll);
-}
-
-void TransformMatrix3D::setQuaternion(float qx, float qy, float qz, float qw)
-{
-    float roll, pitch, yaw;
-    Utils::getEulerFromQuaternion(qx, qy, qz, qw, roll, pitch, yaw);
-    setRollPitchYaw(roll, pitch, yaw);
 }
 
 void TransformMatrix3D::transform(Point3D& point) const

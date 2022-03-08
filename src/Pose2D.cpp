@@ -51,7 +51,7 @@ Pose2D::Pose2D(const geometry_msgs::PoseStamped& pose)
     x = pose.pose.position.x;
     y = pose.pose.position.y;
     float roll, pitch;
-    Utils::getEulerFromQuaternion(
+    Utils::convertQuaternionToEuler(
             pose.pose.orientation.x, pose.pose.orientation.y,
             pose.pose.orientation.z, pose.pose.orientation.w,
             roll, pitch, theta);
@@ -62,7 +62,7 @@ Pose2D::Pose2D(const geometry_msgs::Pose& pose)
     x = pose.position.x;
     y = pose.position.y;
     float roll, pitch;
-    Utils::getEulerFromQuaternion(
+    Utils::convertQuaternionToEuler(
             pose.orientation.x, pose.orientation.y,
             pose.orientation.z, pose.orientation.w,
             roll, pitch, theta);
@@ -70,28 +70,28 @@ Pose2D::Pose2D(const geometry_msgs::Pose& pose)
 
 Pose2D::Pose2D(const TransformMatrix2D& tf_mat)
 {
-    x = tf_mat.getX();
-    y = tf_mat.getY();
-    theta = tf_mat.getTheta();
+    x = tf_mat.x();
+    y = tf_mat.y();
+    theta = tf_mat.theta();
 }
 
 Pose2D::Pose2D(const tf::StampedTransform& stamped_transform)
 {
     TransformMatrix2D tf_mat(stamped_transform);
-    x = tf_mat.getX();
-    y = tf_mat.getY();
-    theta = tf_mat.getTheta();
+    x = tf_mat.x();
+    y = tf_mat.y();
+    theta = tf_mat.theta();
 }
 
-geometry_msgs::PoseStamped Pose2D::getPoseStamped(const std::string& frame) const
+geometry_msgs::PoseStamped Pose2D::asPoseStamped(const std::string& frame) const
 {
     geometry_msgs::PoseStamped pose;
     pose.header.frame_id = frame;
-    pose.pose = getPose();
+    pose.pose = asPose();
     return pose;
 }
 
-geometry_msgs::Pose Pose2D::getPose() const
+geometry_msgs::Pose Pose2D::asPose() const
 {
     geometry_msgs::Pose pose;
     pose.position.x = x;
@@ -100,7 +100,7 @@ geometry_msgs::Pose Pose2D::getPose() const
     pose.orientation.x = 0.0f;
     pose.orientation.y = 0.0f;
     float qx, qy, qz, qw;
-    Utils::getQuaternionFromEuler(0.0f, 0.0f, theta, qx, qy, qz, qw);
+    Utils::convertEulerToQuaternion(0.0f, 0.0f, theta, qx, qy, qz, qw);
     pose.orientation.x = qx;
     pose.orientation.y = qy;
     pose.orientation.z = qz;
@@ -108,12 +108,12 @@ geometry_msgs::Pose Pose2D::getPose() const
     return pose;
 }
 
-TransformMatrix2D Pose2D::getMat() const
+TransformMatrix2D Pose2D::asMat() const
 {
     return TransformMatrix2D(*this);
 }
 
-visualization_msgs::Marker Pose2D::getMarker(const std::string& frame,
+visualization_msgs::Marker Pose2D::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha,
         float size_x, float size_y, float size_z) const
 {
@@ -128,11 +128,11 @@ visualization_msgs::Marker Pose2D::getMarker(const std::string& frame,
     marker.scale.x = size_x;
     marker.scale.y = size_y;
     marker.scale.z = size_z;
-    marker.pose = getPose();
+    marker.pose = asPose();
     return marker;
 }
 
-std::string Pose2D::str() const
+std::string Pose2D::asString() const
 {
     std::stringstream ss;
     ss << std::fixed << std::setprecision(3);
@@ -148,14 +148,14 @@ Pose2D Pose2D::operator - (const Pose2D& pose) const
     Pose2D diff;
     diff.x = x - pose.x;
     diff.y = y - pose.y;
-    diff.theta = Utils::getShortestAngle(theta, pose.theta);
+    diff.theta = Utils::calcShortestAngle(theta, pose.theta);
     return diff;
 }
 
 bool Pose2D::operator == (const Pose2D& pose) const
 {
-    return ( getCartDist(pose) < 1e-3f &&
-             Utils::getShortestAngle(theta, pose.theta) < 1e-2f );
+    return ( distTo(pose) < 1e-3f &&
+             Utils::calcShortestAngle(theta, pose.theta) < 1e-2f );
 }
 
 std::ostream& operator << (std::ostream& out, const Pose2D& pose)

@@ -126,14 +126,14 @@ class Point3D
          * 
          * @return geometry_msgs::Point 
          */
-        geometry_msgs::Point getPoint() const;
+        geometry_msgs::Point asPoint() const;
 
         /**
          * @brief
          * 
          * @return geometry_msgs::Point32 
          */
-        geometry_msgs::Point32 getPoint32() const;
+        geometry_msgs::Point32 asPoint32() const;
 
         /**
          * @brief
@@ -141,7 +141,7 @@ class Point3D
          * @param frame 
          * @return geometry_msgs::PointStamped 
          */
-        geometry_msgs::PointStamped getPointStamped(const std::string& frame = "map") const;
+        geometry_msgs::PointStamped asPointStamped(const std::string& frame = "map") const;
 
         /**
          * @brief
@@ -149,9 +149,9 @@ class Point3D
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Point3D& p) const
+        inline float distTo(const Point3D& p) const
         {
-            return std::sqrt(getCartDistSquared(p));
+            return std::sqrt(squaredDistTo(p));
         };
 
         /**
@@ -160,7 +160,7 @@ class Point3D
          * @param p 
          * @return float 
          */
-        inline float getCartDistSquared(const Point3D& p) const
+        inline float squaredDistTo(const Point3D& p) const
         {
             return std::pow(x - p.x, 2) + std::pow(y - p.y, 2) + std::pow(z - p.z, 2);
         };
@@ -186,7 +186,7 @@ class Point3D
          *
          * @return: Point3D
          */
-        Point3D getNormalised() const;
+        Point3D asNormalised() const;
 
         /**
          * @brief Calculate dot product of two 3D vectors
@@ -208,7 +208,7 @@ class Point3D
          * @param diameter 
          * @return visualization_msgs::Marker 
          */
-        visualization_msgs::Marker getMarker(
+        visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,

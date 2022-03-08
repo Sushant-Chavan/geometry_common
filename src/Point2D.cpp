@@ -54,7 +54,7 @@ void Point2D::normalise()
     }
 }
 
-Point2D Point2D::getNormalised() const
+Point2D Point2D::asNormalised() const
 {
     Point2D normalised_pt(*this);
     normalised_pt.normalise();
@@ -71,7 +71,7 @@ float Point2D::dotProduct(const Point2D& point) const
     return (x * point.x) + (y * point.y);
 }
 
-visualization_msgs::Marker Point2D::getMarker(const std::string& frame,
+visualization_msgs::Marker Point2D::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float diameter, 
         float z) const
 {
@@ -124,7 +124,7 @@ std::ostream& operator << (std::ostream& out, const Point2D& point)
 
 bool Point2D::operator == (const Point2D& p) const
 {
-    return ( getCartDist(p) < 1e-3f );
+    return ( distTo(p) < 1e-3f );
 }
 
 } // namespace kelo::geometry_common

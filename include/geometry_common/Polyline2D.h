@@ -100,7 +100,7 @@ class Polyline2D
          * @return bool True if the polyline intersects the 2D line segment at
          * atleast one point, false otherwise
          */
-        virtual bool isIntersecting(const LineSegment2D& line_segment) const;
+        virtual bool intersects(const LineSegment2D& line_segment) const;
 
         /**
          * @brief If the 2D polyline intersects with a 2D line segment, this function returns the 
@@ -110,7 +110,7 @@ class Polyline2D
          * @return bool True if the polyline intersects the 2D line segment at
          * atleast one point, false otherwise
          */
-        virtual bool getClosestIntersectionPoint(
+        virtual bool calcClosestIntersectionPointWith(
                 const LineSegment2D& line_segment,
                 Point2D& intersection_pt);
 
@@ -131,7 +131,7 @@ class Polyline2D
          * string to represent the 2D point in a 3D space. (Default: 0.0)
          * @return visualization_msgs::Marker A marker object representing the polyline
          */
-        virtual visualization_msgs::Marker getMarker(
+        virtual visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,
@@ -145,7 +145,7 @@ class Polyline2D
          * 
          * @return size_t Num of vertices
          */
-        size_t size() const
+        inline size_t size() const
         {
             return vertices.size();
         }
@@ -176,7 +176,9 @@ class Polyline2D
          * @return std::ostream& The stream object representing the concatenation
          * of the input stream and the polyline information
          */
-        friend std::ostream& operator << (std::ostream& out, const Polyline2D& polyline);
+        friend std::ostream& operator << (
+                std::ostream& out,
+                const Polyline2D& polyline);
 };
 
 } // namespace kelo::geometry_common

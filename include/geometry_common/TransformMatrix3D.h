@@ -86,43 +86,43 @@ class TransformMatrix3D
 
         void update(const TransformMatrix3D& tf_mat);
 
-        TransformMatrix3D getInverse() const;
+        void updateX(float x);
+
+        void updateY(float y);
+
+        void updateZ(float z);
+
+        void updateRoll(float roll);
+
+        void updatePitch(float pitch);
+
+        void updateYaw(float yaw);
+
+        void updateRollPitchYaw(float roll, float pitch, float yaw);
+
+        void updateQuaternion(float qx, float qy, float qz, float qw);
+
+        TransformMatrix3D calcInverse() const;
 
         void invert();
 
-        float getX() const;
+        float x() const;
 
-        float getY() const;
+        float y() const;
 
-        float getZ() const;
+        float z() const;
 
-        float getRoll() const;
+        float roll() const;
 
-        float getPitch() const;
+        float pitch() const;
 
-        float getYaw() const;
+        float yaw() const;
 
-        std::array<float, 4> getQuaternion() const;
+        std::array<float, 4> quaternion() const;
 
-        std::array<float, 9> getRotationMat() const;
+        std::array<float, 9> rotationMatrix() const;
 
-        Vector3D getTranslationVec() const;
-
-        void setX(float x);
-
-        void setY(float y);
-
-        void setZ(float z);
-
-        void setRoll(float roll);
-
-        void setPitch(float pitch);
-
-        void setYaw(float yaw);
-
-        void setRollPitchYaw(float roll, float pitch, float yaw);
-
-        void setQuaternion(float qx, float qy, float qz, float qw);
+        Vector3D translationVector() const;
 
         void transform(Point3D& point) const;
 

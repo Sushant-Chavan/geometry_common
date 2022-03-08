@@ -113,7 +113,7 @@ class Polygon2D : public Polyline2D
          * @return bool True if the polygon intersects the 2D line segment at
          * atleast one point, false otherwise
          */
-        bool isIntersecting(const LineSegment2D& line_segment) const override;
+        bool intersects(const LineSegment2D& line_segment) const override;
 
         /**
          * @brief If the 2D polygon intersects with a 2D line segment, this function returns the 
@@ -123,7 +123,7 @@ class Polygon2D : public Polyline2D
          * @return bool True if the polygon intersects the 2D line segment at
          * atleast one point, false otherwise
          */
-        bool getClosestIntersectionPoint(
+        bool calcClosestIntersectionPointWith(
                 const LineSegment2D& line_segment,
                 Point2D& intersection_pt) override;
 
@@ -150,7 +150,7 @@ class Polygon2D : public Polyline2D
          * 
          * @return Point2D The computed mean point
          */
-        Point2D getMeanPoint() const;
+        Point2D meanPoint() const;
 
         /**
          * @brief Get the area of the polygon
@@ -160,7 +160,7 @@ class Polygon2D : public Polyline2D
          * 
          * @return float The area of the polygon
          */
-        float getArea() const;
+        float area() const;
 
         /**
          * @brief Check if the polygon is convex
@@ -189,7 +189,7 @@ class Polygon2D : public Polyline2D
          * deflate.
          * @return Polygon2D An inflated/deflated polygon
          */
-        Polygon2D getInflatedPolygon(float inflation_dist);
+        Polygon2D calcInflatedPolygon(float inflation_dist);
 
         /**
          * @brief Get an RViz visualization marker for the polygon object.
@@ -209,7 +209,7 @@ class Polygon2D : public Polyline2D
          * to represent the 2D point in a 3D space. (Default: 0.0)
          * @return visualization_msgs::Marker A marker object representing the polygon
          */
-        visualization_msgs::Marker getMarker(
+        visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,
@@ -226,7 +226,9 @@ class Polygon2D : public Polyline2D
          * @return std::ostream& The stream object representing the concatenation
          * of the input stream and the polygon information
          */
-        friend std::ostream& operator << (std::ostream& out, const Polygon2D& polygon);
+        friend std::ostream& operator << (
+                std::ostream& out,
+                const Polygon2D& polygon);
 };
 
 } // namespace kelo::geometry_common
