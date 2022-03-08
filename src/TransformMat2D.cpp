@@ -160,9 +160,9 @@ std::array<float, 4> TransformMat2D::getRotationMat() const
     return rot_mat;
 }
 
-Vec2D TransformMat2D::getTranslationVec() const
+Vector2D TransformMat2D::getTranslationVec() const
 {
-    return Vec2D(mat_[2], mat_[5]);
+    return Vector2D(mat_[2], mat_[5]);
 }
 
 Pose2D TransformMat2D::getPose2D() const

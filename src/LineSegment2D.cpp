@@ -52,7 +52,7 @@ LineSegment2D::~LineSegment2D()
 
 float LineSegment2D::getAngle() const
 {
-    Vec2D diff = end - start;
+    Vector2D diff = end - start;
     return std::atan2(diff.y, diff.x);
 }
 
@@ -63,7 +63,7 @@ float LineSegment2D::getLength() const
 
 float LineSegment2D::getSlope() const
 {
-    Vec2D diff = end - start;
+    Vector2D diff = end - start;
     if ( fabs(diff.x) < 1e-6f )
     {
         diff.x = 1e-6f;
@@ -100,9 +100,9 @@ bool LineSegment2D::getIntersectionPoint(
     /**
      * source: https://www.codeproject.com/Tips/862988/Find-the-Intersection-Point-of-Two-Line-Segments
      */
-    Vec2D vec1 = end - start;
-    Vec2D vec2 = line_segment.end - line_segment.start;
-    Vec2D vec3 = line_segment.start - start;
+    Vector2D vec1 = end - start;
+    Vector2D vec2 = line_segment.end - line_segment.start;
+    Vector2D vec3 = line_segment.start - start;
     const float vec1_cross_vec2 = vec1.scalarCrossProduct(vec2);
 	const float vec3_cross_vec1 = vec3.scalarCrossProduct(vec1);
     const float vec3_cross_vec2 = vec3.scalarCrossProduct(vec2);

@@ -250,8 +250,8 @@ Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
         const Point2D& b = vertices[i]; // current pt
         const Point2D& c = vertices[(i+1) % N]; // next pt
 
-        const Vec2D vec_b_a = (a - b).getNormalised();
-        const Vec2D vec_b_c = (c - b).getNormalised();
+        const Vector2D vec_b_a = (a - b).getNormalised();
+        const Vector2D vec_b_c = (c - b).getNormalised();
 
         // calculate inflation dist based on the angle formed between a, b and c
         float theta = std::fabs(Utils::getAngleBetweenPoints(a, b, c));
@@ -269,7 +269,7 @@ Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
         Point2D intermediate_a = b + (vec_b_a * offset_dist);
         Point2D intermediate_c = b + (vec_b_c * offset_dist);
         Point2D mid_intermediate_pt = (intermediate_a + intermediate_c) * 0.5f;
-        Vec2D diff = (mid_intermediate_pt - b).getNormalised();
+        Vector2D diff = (mid_intermediate_pt - b).getNormalised();
 
         // calculate sign of inflation dist based on direction of normalised vec
         Point2D test_pt = b + (diff * offset_dist);

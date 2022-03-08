@@ -217,19 +217,19 @@ class Point2D
 };
 
 /**
- * @brief 
+ * @brief Mathematical two dimensional vector
  * 
  */
-using Vec2D = Point2D;
+using Vector2D = Point2D;
 
 /**
- * @brief 
+ * @brief Collection (std::vector) of Point2D objects
  * 
  */
 using PointVec2D = std::vector<Point2D>;
 
 /**
- * @brief 
+ * @brief
  * 
  */
 using PointCloud2D = std::vector<Point2D>;

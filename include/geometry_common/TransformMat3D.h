@@ -50,7 +50,7 @@ namespace kelo::geometry_common
 
 // Forward declaration 
 class Point3D;
-using Vec3D = Point3D;
+using Vector3D = Point3D;
 
 /**
  * @brief 
@@ -106,7 +106,7 @@ class TransformMat3D
 
         std::array<float, 9> getRotationMat() const;
 
-        Vec3D getTranslationVec() const;
+        Vector3D getTranslationVec() const;
 
         void setX(float x);
 

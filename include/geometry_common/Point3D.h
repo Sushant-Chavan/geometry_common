@@ -263,13 +263,13 @@ class Point3D
 };
 
 /**
- * @brief 
+ * @brief Mathematical three dimensional vector
  * 
  */
-using Vec3D = Point3D;
+using Vector3D = Point3D;
 
 /**
- * @brief 
+ * @brief Collection (std::vector) of Point3D objects
  * 
  */
 using PointVec3D = std::vector<Point3D>;

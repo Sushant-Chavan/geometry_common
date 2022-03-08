@@ -53,7 +53,7 @@ class Pose2D;
 class Point2D;
 class Polyline2D;
 class Polygon2D;
-using Vec2D = Point2D;
+using Vector2D = Point2D;
 
 /**
  * @brief 
@@ -124,7 +124,7 @@ class TransformMat2D
 
         std::array<float, 4> getRotationMat() const;
 
-        Vec2D getTranslationVec() const;
+        Vector2D getTranslationVec() const;
 
         Pose2D getPose2D() const;
 

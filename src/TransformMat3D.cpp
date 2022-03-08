@@ -176,9 +176,9 @@ std::array<float, 9> TransformMat3D::getRotationMat() const
     return rot_mat;
 }
 
-Vec3D TransformMat3D::getTranslationVec() const
+Vector3D TransformMat3D::getTranslationVec() const
 {
-    return Vec3D(mat_[3], mat_[7], mat_[11]);
+    return Vector3D(mat_[3], mat_[7], mat_[11]);
 }
 
 void TransformMat3D::setX(float x)

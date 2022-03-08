@@ -1158,8 +1158,8 @@ float Utils::getAngleBetweenPoints(
         const Point2D& b,
         const Point2D& c)
 {
-    Vec2D vec_b_a = a - b;
-    Vec2D vec_b_c = c - b;
+    Vector2D vec_b_a = a - b;
+    Vector2D vec_b_c = c - b;
     return Utils::clipAngle(std::atan2(vec_b_c.y, vec_b_c.x) -
                             std::atan2(vec_b_a.y, vec_b_a.x));
 }
