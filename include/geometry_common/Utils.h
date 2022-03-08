@@ -511,26 +511,18 @@ class Utils
                 float t);
 
         /**
-         * @brief 
+         * @brief Convert from PointCloud2D or PointCloud3D to
+         * sensor_msgs::PointCloud
          * 
-         * @param pc 
+         * @tparam T Point2D or Point3D
+         * @param pc PointCloud2D or PointCloud3D
          * @param frame 
          * @return sensor_msgs::PointCloud 
          */
-        static sensor_msgs::PointCloud convertToROSPointCloud(
-                const PointCloud3D& pc,
-                const std::string& frame);
-
-        /**
-         * @brief 
-         * 
-         * @param pc 
-         * @param frame 
-         * @return sensor_msgs::PointCloud 
-         */
-        static sensor_msgs::PointCloud convertToROSPointCloud(
-                const PointCloud2D& pc,
-                const std::string& frame);
+        template <typename T>
+        sensor_msgs::PointCloud convertToROSPointCloud(
+                const std::vector<T>& pc,
+                const std::string& frame = "base_link");
 
         /**
          * @brief 
@@ -559,12 +551,15 @@ class Utils
                 size_t col_sub_sample_factor = 1);
 
         /**
-         * @brief 
-         * 
-         * @param scan 
-         * @return PointCloud3D 
+         * @brief Convert from LaserScan msg to PointCloud
+         *
+         * @tparam T Point2D or Point3D
+         * @param scan laser scan message
+         *
+         * @return PointCloud2D or PointCloud3D
          */
-        static PointCloud3D convertToPointCloud3D(
+        template <typename T>
+        static std::vector<T> convertToPointCloud(
                 const sensor_msgs::LaserScan& scan);
 
         /**
@@ -703,41 +698,23 @@ class Utils
                 float line_width = 0.05f);
 
         /**
-         * @brief
-         * 
-         * @param cloud 
-         * @param frame 
-         * @param diameter 
-         * @param red 
-         * @param green 
-         * @param blue 
-         * @param alpha 
-         * @return visualization_msgs::Marker 
+         * @brief convert PointCloud2D or PointCloud3D to Marker
+         *
+         * @tparam T Point3D or Point3D
+         * @param cloud PointCloud2D or PointCloud3D
+         * @param frame
+         * @param diameter
+         * @param red
+         * @param green
+         * @param blue
+         * @param alpha
+         *
+         * @return 
          */
-        static visualization_msgs::Marker convertPointCloudToMarker(
-                const PointCloud2D& cloud,
-                const std::string& frame,
-                float diameter = 0.05f,
-                float red = 1.0f,
-                float green = 0.0f,
-                float blue = 0.0f,
-                float alpha = 1.0f);
-
-        /**
-         * @brief
-         * 
-         * @param cloud 
-         * @param frame 
-         * @param diameter 
-         * @param red 
-         * @param green 
-         * @param blue 
-         * @param alpha 
-         * @return visualization_msgs::Marker 
-         */
-        static visualization_msgs::Marker convertPointCloudToMarker(
-                const PointCloud3D& cloud,
-                const std::string& frame,
+        template <typename T>
+        visualization_msgs::Marker convertPointCloudToMarker(
+                const std::vector<T>& cloud,
+                const std::string& frame = "base_link",
                 float diameter = 0.05f,
                 float red = 1.0f,
                 float green = 0.0f,

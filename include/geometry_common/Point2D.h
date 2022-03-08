@@ -42,6 +42,9 @@
 #define KELO_GEOMETRY_COMMON_POINT_2D_H
 
 #include <visualization_msgs/Marker.h>
+#include <geometry_msgs/PointStamped.h>
+#include <geometry_msgs/Point32.h>
+#include <geometry_msgs/Point.h>
 
 #include <cmath>
 
@@ -86,6 +89,29 @@ class Point2D
          * 
          */
         virtual ~Point2D() {}
+
+        /**
+         * @brief
+         * 
+         * @return geometry_msgs::Point 
+         */
+        geometry_msgs::Point asPoint() const;
+
+        /**
+         * @brief
+         * 
+         * @return geometry_msgs::Point32 
+         */
+        geometry_msgs::Point32 asPoint32() const;
+
+        /**
+         * @brief
+         * 
+         * @param frame 
+         * @return geometry_msgs::PointStamped 
+         */
+        geometry_msgs::PointStamped asPointStamped(
+                const std::string& frame = "map") const;
 
         /**
          * @brief

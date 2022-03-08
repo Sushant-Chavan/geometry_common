@@ -993,35 +993,25 @@ float Utils::applyLinearInterpolation(
            ( t <= 0.0f ) ? src    : (src * (1.0f - t)) + (target * t);
 }
 
+template <typename T>
 sensor_msgs::PointCloud Utils::convertToROSPointCloud(
-        const PointCloud2D& pc,
+        const std::vector<T>& pc,
         const std::string& frame)
 {
     sensor_msgs::PointCloud cloud;
     // cloud.header.stamp = ros::Time::now();
     cloud.header.frame_id = frame;
     cloud.points.reserve(pc.size());
-    for ( Point3D pt : pc ) // also converts Point2D to Point3D
+    for ( const T& pt : pc )
     {
         cloud.points.push_back(pt.asPoint32());
     }
     return cloud;
 }
-
-sensor_msgs::PointCloud Utils::convertToROSPointCloud(
-        const PointCloud3D& pc,
-        const std::string& frame)
-{
-    sensor_msgs::PointCloud cloud;
-    // cloud.header.stamp = ros::Time::now();
-    cloud.header.frame_id = frame;
-    cloud.points.reserve(pc.size());
-    for ( const Point3D& pt : pc )
-    {
-        cloud.points.push_back(pt.asPoint32());
-    }
-    return cloud;
-}
+template sensor_msgs::PointCloud Utils::convertToROSPointCloud(
+        const PointCloud2D& pc, const std::string& frame);
+template sensor_msgs::PointCloud Utils::convertToROSPointCloud(
+        const PointCloud3D& pc, const std::string& frame);
 
 PointCloud3D Utils::convertToPointCloud3D(
         const sensor_msgs::PointCloud& pc)
@@ -1081,10 +1071,11 @@ PointCloud3D Utils::convertToPointCloud3D(
     return points;
 }
 
-PointCloud3D Utils::convertToPointCloud3D(
+template <typename T>
+std::vector<T> Utils::convertToPointCloud(
         const sensor_msgs::LaserScan& scan)
 {
-    PointCloud3D laser_pts;
+    std::vector<T> laser_pts;
     for ( size_t i = 0; i < scan.ranges.size(); i++ )
     {
         if ( std::isnan(scan.ranges[i]) ||
@@ -1095,12 +1086,15 @@ PointCloud3D Utils::convertToPointCloud3D(
             continue;
         }
         float angle = scan.angle_min + (i * scan.angle_increment);
-        laser_pts.push_back(Point3D(scan.ranges[i] * std::cos(angle),
-                                    scan.ranges[i] * std::sin(angle),
-                                    0.0f));
+        laser_pts.push_back(T(scan.ranges[i] * std::cos(angle),
+                              scan.ranges[i] * std::sin(angle)));
     }
     return laser_pts;
 }
+template PointCloud2D Utils::convertToPointCloud<Point2D>(
+        const sensor_msgs::LaserScan& scan);
+template PointCloud3D Utils::convertToPointCloud<Point3D>(
+        const sensor_msgs::LaserScan& scan);
 
 float Utils::calcPerpendicularAngle(
         float angle)
@@ -1224,7 +1218,6 @@ nav_msgs::Path Utils::convertToROSPath(
         const std::string& frame)
 {
     nav_msgs::Path path_msg;
-    // path_msg.header.stamp = ros::Time::now();
     path_msg.header.frame_id = frame;
     path_msg.poses.clear();
 
@@ -1246,7 +1239,6 @@ visualization_msgs::Marker Utils::convertGeometricPathToMarker(
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::LINE_STRIP;
-    // marker.header.stamp = ros::Time::now();
     marker.header.frame_id = frame;
     marker.color.r = red;
     marker.color.g = green;
@@ -1265,8 +1257,9 @@ visualization_msgs::Marker Utils::convertGeometricPathToMarker(
     return marker;
 }
 
+template <typename T>
 visualization_msgs::Marker Utils::convertPointCloudToMarker(
-        const PointCloud2D& cloud,
+        const std::vector<T>& cloud,
         const std::string& frame,
         float diameter,
         float red,
@@ -1284,42 +1277,19 @@ visualization_msgs::Marker Utils::convertPointCloudToMarker(
     cloud_marker.color.b = blue;
     cloud_marker.color.a = alpha;
     cloud_marker.header.frame_id = frame;
-    // cloud_marker.header.stamp = ros::Time::now();
     cloud_marker.points.reserve(cloud.size());
-    for ( Point3D pt : cloud ) // also converts Point2D to Point3D
+    for ( const T& pt : cloud )
     {
         cloud_marker.points.push_back(pt.asPoint());
     }
     return cloud_marker;
 }
-
-visualization_msgs::Marker Utils::convertPointCloudToMarker(
-        const PointCloud3D& cloud,
-        const std::string& frame,
-        float diameter,
-        float red,
-        float green,
-        float blue,
-        float alpha)
-{
-    visualization_msgs::Marker cloud_marker;
-    cloud_marker.type = visualization_msgs::Marker::POINTS;
-    cloud_marker.pose.orientation.w = 1.0f;
-    cloud_marker.scale.x = diameter;
-    cloud_marker.scale.y = diameter;
-    cloud_marker.color.r = red;
-    cloud_marker.color.g = green;
-    cloud_marker.color.b = blue;
-    cloud_marker.color.a = alpha;
-    cloud_marker.header.frame_id = frame;
-    // cloud_marker.header.stamp = ros::Time::now();
-    cloud_marker.points.reserve(cloud.size());
-    for ( const Point3D& pt : cloud )
-    {
-        cloud_marker.points.push_back(pt.asPoint());
-    }
-    return cloud_marker;
-}
+template visualization_msgs::Marker Utils::convertPointCloudToMarker(
+        const PointCloud2D& cloud, const std::string& frame,
+        float diameter, float red, float green, float blue, float alpha);
+template visualization_msgs::Marker Utils::convertPointCloudToMarker(
+        const PointCloud3D& cloud, const std::string& frame,
+        float diameter, float red, float green, float blue, float alpha);
 
 visualization_msgs::Marker Utils::convertStringToMarker(
         const std::string& string_label,

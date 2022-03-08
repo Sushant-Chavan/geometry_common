@@ -44,6 +44,32 @@
 namespace kelo::geometry_common
 {
 
+geometry_msgs::Point Point2D::asPoint() const
+{
+    geometry_msgs::Point point;
+    point.x = x;
+    point.y = y;
+    point.z = 0.0f;
+    return point;
+}
+
+geometry_msgs::Point32 Point2D::asPoint32() const
+{
+    geometry_msgs::Point32 point;
+    point.x = x;
+    point.y = y;
+    point.z = 0.0f;
+    return point;
+}
+
+geometry_msgs::PointStamped Point2D::asPointStamped(const std::string& frame) const
+{
+    geometry_msgs::PointStamped point;
+    point.header.frame_id = frame;
+    point.point = asPoint();
+    return point;
+}
+
 void Point2D::normalise()
 {
     float mag = magnitude();

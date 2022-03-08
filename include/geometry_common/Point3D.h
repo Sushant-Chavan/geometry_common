@@ -41,6 +41,7 @@
 #ifndef KELO_GEOMETRY_COMMON_POINT_3D_H
 #define KELO_GEOMETRY_COMMON_POINT_3D_H
 
+#include <visualization_msgs/Marker.h>
 #include <geometry_msgs/PointStamped.h>
 #include <geometry_msgs/Point32.h>
 #include <geometry_msgs/Point.h>
@@ -141,7 +142,8 @@ class Point3D
          * @param frame 
          * @return geometry_msgs::PointStamped 
          */
-        geometry_msgs::PointStamped asPointStamped(const std::string& frame = "map") const;
+        geometry_msgs::PointStamped asPointStamped(
+                const std::string& frame = "map") const;
 
         /**
          * @brief

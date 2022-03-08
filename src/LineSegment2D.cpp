@@ -156,7 +156,6 @@ visualization_msgs::Marker LineSegment2D::asMarker(const std::string& frame,
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::LINE_LIST;
-    // marker.header.stamp = ros::Time::now();
     marker.header.frame_id = frame;
     marker.color.r = red;
     marker.color.g = green;
@@ -164,8 +163,8 @@ visualization_msgs::Marker LineSegment2D::asMarker(const std::string& frame,
     marker.color.a = alpha;
     marker.scale.x = line_width;
     marker.pose.orientation.w = 1.0f;
-    marker.points.push_back(Point3D(start).asPoint());
-    marker.points.push_back(Point3D(end).asPoint());
+    marker.points.push_back(start.asPoint());
+    marker.points.push_back(end.asPoint());
     return marker;
 }
 

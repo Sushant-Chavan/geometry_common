@@ -137,8 +137,7 @@ class Polyline2D
                 float green = 0.0f,
                 float blue = 0.0f,
                 float alpha = 1.0f,
-                float line_width = 0.1f,
-                float z = 0.0f) const;
+                float line_width = 0.1f) const;
 
         /**
          * @brief Get the number of vertices representing the polyline

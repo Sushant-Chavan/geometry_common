@@ -83,12 +83,10 @@ bool Polyline2D::calcClosestIntersectionPointWith(
 }
 
 visualization_msgs::Marker Polyline2D::asMarker(const std::string& frame,
-        float red, float green, float blue, float alpha, float line_width,
-        float z) const
+        float red, float green, float blue, float alpha, float line_width) const
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::LINE_STRIP;
-    // marker.header.stamp = ros::Time::now();
     marker.header.frame_id = frame;
     marker.color.r = red;
     marker.color.g = green;
@@ -101,7 +99,7 @@ visualization_msgs::Marker Polyline2D::asMarker(const std::string& frame,
         marker.points.reserve(vertices.size());
         for ( const Point2D& vertex : vertices )
         {
-            marker.points.push_back(Point3D(vertex, z).asPoint());
+            marker.points.push_back(vertex.asPoint());
         }
     }
     return marker;

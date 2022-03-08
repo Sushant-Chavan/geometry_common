@@ -215,8 +215,7 @@ class Polygon2D : public Polyline2D
                 float green = 0.0f,
                 float blue = 0.0f,
                 float alpha = 1.0f,
-                float line_width = 0.1f,
-                float z = 0.0f) const override;
+                float line_width = 0.1f) const override;
 
         /**
          * @brief Append the polygon information as string to the input stream object
