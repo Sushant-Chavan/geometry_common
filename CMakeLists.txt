@@ -82,26 +82,24 @@ include_directories(
 # LIBRARIES
 # =========
 add_library(geometry_utils
-    SHARED
-        src/Utils.cpp
-        # data structures
-        src/Point2D.cpp
-        src/Point3D.cpp
-        src/Polygon2D.cpp
-        src/Polyline2D.cpp
-        src/Pose2D.cpp
-        src/XYTheta.cpp
-        src/Box.cpp
-        src/LineSegment2D.cpp
-        src/TransformMatrix2D.cpp
-        src/TransformMatrix3D.cpp
+    src/Utils.cpp
+    # data structures
+    src/Point2D.cpp
+    src/Point3D.cpp
+    src/Polygon2D.cpp
+    src/Polyline2D.cpp
+    src/Pose2D.cpp
+    src/XYTheta.cpp
+    src/Box.cpp
+    src/LineSegment2D.cpp
+    src/TransformMatrix2D.cpp
+    src/TransformMatrix3D.cpp
 )
 target_link_libraries(geometry_utils
 )
 
 add_library(pointcloud_projector
-    SHARED
-        src/PointCloudProjector.cpp
+    src/PointCloudProjector.cpp
 )
 target_link_libraries(pointcloud_projector
     geometry_utils
