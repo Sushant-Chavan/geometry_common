@@ -27,9 +27,22 @@ executables="`(echo "$cmakelists_file" | sed -n 's/^\s*catkin_add_gtest(\(\S*\)/
 # ==============================================================================
 
 # run all test executables one after another
+all_success=1
 for executable_name in $executables; do
     echo "Executing ""$executable_name"
     executable="`(catkin_find "$pkg_name" "$executable_name")`"
     $executable
+    executable_success=$?
+    if [[ $executable_success != 0 ]]; then
+        all_success=0
+    fi
     echo ""
 done
+
+echo "#######################################"
+if [[ $all_success == 1 ]]; then
+    echo "All tests succeeded"
+else
+    echo "Not all tests succeeded"
+fi
+echo "#######################################"
