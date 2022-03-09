@@ -49,19 +49,19 @@
 #include <cmath>
 
 #include <geometry_common/Point2D.h>
-#include <geometry_common/Attitude2D.h>
+#include <geometry_common/XYTheta.h>
 
 namespace kelo::geometry_common
 {
 
 // Forward declaration 
-class TransformMat2D;
+class TransformMatrix2D;
 
 /**
  * @brief 
  * 
  */
-class Pose2D : public Attitude2D
+class Pose2D : public XYTheta
 {
     public:
         using Ptr = std::shared_ptr<Pose2D>;
@@ -75,7 +75,7 @@ class Pose2D : public Attitude2D
          * @param _theta 
          */
         Pose2D(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
-            Attitude2D(_x, _y, _theta) {}
+            XYTheta(_x, _y, _theta) {}
 
         /**
          * @brief
@@ -83,15 +83,15 @@ class Pose2D : public Attitude2D
          * @param pose 
          */
         Pose2D(const Pose2D& pose):
-            Attitude2D(pose.x, pose.y, pose.theta) {}
+            XYTheta(pose.x, pose.y, pose.theta) {}
 
         /**
          * @brief 
          *
          * @param attitude):
          */
-        Pose2D(const Attitude2D& attitude):
-            Attitude2D(attitude) {}
+        Pose2D(const XYTheta& x_y_theta):
+            XYTheta(x_y_theta) {}
 
         /**
          * @brief
@@ -112,7 +112,7 @@ class Pose2D : public Attitude2D
          * 
          * @param mat 
          */
-        Pose2D(const TransformMat2D& mat);
+        Pose2D(const TransformMatrix2D& mat);
 
         /**
          * @brief
@@ -133,7 +133,7 @@ class Pose2D : public Attitude2D
          * @param frame 
          * @return geometry_msgs::PoseStamped 
          */
-        geometry_msgs::PoseStamped getPoseStamped(
+        geometry_msgs::PoseStamped asPoseStamped(
                 const std::string& frame = "map") const;
 
         /**
@@ -141,14 +141,14 @@ class Pose2D : public Attitude2D
          * 
          * @return geometry_msgs::Pose 
          */
-        geometry_msgs::Pose getPose() const;
+        geometry_msgs::Pose asPose() const;
 
         /**
          * @brief
          * 
-         * @return TransformMat2D
+         * @return TransformMatrix2D
          */
-        TransformMat2D getMat() const;
+        TransformMatrix2D asMat() const;
 
         /**
          * @brief
@@ -163,7 +163,7 @@ class Pose2D : public Attitude2D
          * @param size_z 
          * @return visualization_msgs::Marker 
          */
-        visualization_msgs::Marker getMarker(
+        visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,
@@ -179,9 +179,9 @@ class Pose2D : public Attitude2D
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Pose2D& p) const
+        inline float distTo(const Pose2D& p) const
         {
-            return std::sqrt(getCartDistSquared(p));
+            return std::sqrt(squaredDistTo(p));
         };
 
         /**
@@ -190,7 +190,7 @@ class Pose2D : public Attitude2D
          * @param p 
          * @return float 
          */
-        inline float getCartDistSquared(const Pose2D& p) const
+        inline float squaredDistTo(const Pose2D& p) const
         {
             return std::pow(x - p.x, 2) + std::pow(y - p.y, 2);
         };
@@ -201,7 +201,7 @@ class Pose2D : public Attitude2D
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Point2D& p) const
+        inline float distTo(const Point2D& p) const
         {
             return std::sqrt(std::pow(x - p.x, 2) + std::pow(y - p.y, 2));
         };
@@ -211,7 +211,7 @@ class Pose2D : public Attitude2D
          * 
          * @return std::string 
          */
-        std::string str() const;
+        std::string asString() const;
 
         /**
          * @brief 

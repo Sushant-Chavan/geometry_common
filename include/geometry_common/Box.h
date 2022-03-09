@@ -113,7 +113,7 @@ class Box
          * @param alpha 
          * @return visualization_msgs::Marker 
          */
-        visualization_msgs::Marker getMarker(
+        visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,
@@ -126,7 +126,7 @@ class Box
          * @param p 
          * @return bool 
          */
-        bool isPointInsideBox(const Point3D& p) const;
+        bool containsPoint(const Point3D& p) const;
 
         /**
          * @brief 

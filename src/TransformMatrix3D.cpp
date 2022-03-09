@@ -42,22 +42,24 @@
 
 #include <geometry_common/Utils.h>
 #include <geometry_common/Point3D.h>
-#include <geometry_common/TransformMat3D.h>
+#include <geometry_common/TransformMatrix3D.h>
 
 namespace kelo::geometry_common
 {
 
-TransformMat3D::TransformMat3D(float x, float y, float z, float roll, float pitch, float yaw)
+TransformMatrix3D::TransformMatrix3D(
+        float x, float y, float z, float roll, float pitch, float yaw)
 {
     update(x, y, z, roll, pitch, yaw);
 }
 
-TransformMat3D::TransformMat3D(float x, float y, float z, float qx, float qy, float qz, float qw)
+TransformMatrix3D::TransformMatrix3D(
+        float x, float y, float z, float qx, float qy, float qz, float qw)
 {
     update(x, y, z, qx, qy, qz, qw);
 }
 
-TransformMat3D::TransformMat3D(const tf::StampedTransform& stamped_transform)
+TransformMatrix3D::TransformMatrix3D(const tf::StampedTransform& stamped_transform)
 {
     float x = stamped_transform.getOrigin().x();
     float y = stamped_transform.getOrigin().y();
@@ -67,27 +69,30 @@ TransformMat3D::TransformMat3D(const tf::StampedTransform& stamped_transform)
     update(x, y, z, q.x(), q.y(), q.z(), q.w());
 }
 
-TransformMat3D::TransformMat3D(const TransformMat3D& tf_mat)
+TransformMatrix3D::TransformMatrix3D(const TransformMatrix3D& tf_mat)
 {
     update(tf_mat);
 }
 
-void TransformMat3D::update(float x, float y, float z, float roll, float pitch, float yaw)
+void TransformMatrix3D::update(
+        float x, float y, float z, float roll, float pitch, float yaw)
 {
-    setX(x);
-    setY(y);
-    setZ(z);
-    setRollPitchYaw(roll, pitch, yaw);
+    updateX(x);
+    updateY(y);
+    updateZ(z);
+    updateRollPitchYaw(roll, pitch, yaw);
 }
 
-void TransformMat3D::update(float x, float y, float z, float qx, float qy, float qz, float qw)
+void TransformMatrix3D::update(
+        float x, float y, float z, float qx, float qy, float qz, float qw)
 {
-    float roll, pitch, yaw;
-    Utils::getEulerFromQuaternion(qx, qy, qz, qw, roll, pitch, yaw);
-    update(x, y, z, roll, pitch, yaw);
+    updateX(x);
+    updateY(y);
+    updateZ(z);
+    updateQuaternion(qx, qy, qz, qw);
 }
 
-void TransformMat3D::update(const TransformMat3D& tf_mat)
+void TransformMatrix3D::update(const TransformMatrix3D& tf_mat)
 {
     for ( size_t i = 0; i < 12; i++ )
     {
@@ -95,14 +100,68 @@ void TransformMat3D::update(const TransformMat3D& tf_mat)
     }
 }
 
-TransformMat3D TransformMat3D::getInverse() const
+void TransformMatrix3D::updateX(float x)
 {
-    TransformMat3D inv_tf_mat(*this);
+    mat_[3] = x;
+}
+
+void TransformMatrix3D::updateY(float y)
+{
+    mat_[7] = y;
+}
+
+void TransformMatrix3D::updateZ(float z)
+{
+    mat_[11] = z;
+}
+
+void TransformMatrix3D::updateRoll(float roll)
+{
+    updateRollPitchYaw(roll, pitch(), yaw());
+}
+
+void TransformMatrix3D::updatePitch(float pitch)
+{
+    updateRollPitchYaw(roll(), pitch, yaw());
+}
+
+void TransformMatrix3D::updateYaw(float yaw)
+{
+    updateRollPitchYaw(roll(), pitch(), yaw);
+}
+
+void TransformMatrix3D::updateRollPitchYaw(float roll, float pitch, float yaw)
+{
+    mat_[0] = (std::cos(yaw) * std::cos(pitch));
+    mat_[1] = (std::cos(yaw) * std::sin(pitch) * std::sin(roll)) -
+              (std::sin(yaw) * std::cos(roll));
+    mat_[2] = (std::cos(yaw) * std::sin(pitch) * std::cos(roll)) +
+              (std::sin(yaw) * std::sin(roll));
+    mat_[4] = (std::sin(yaw) * std::cos(pitch));
+    mat_[5] = (std::sin(yaw) * std::sin(pitch) * std::sin(roll)) +
+              (std::cos(yaw) * std::cos(roll));
+    mat_[6] = (std::sin(yaw) * std::sin(pitch) * std::cos(roll)) -
+              (std::cos(yaw) * std::sin(roll));
+    mat_[8] = -std::sin(pitch);
+    mat_[9] = std::cos(pitch) * std::sin(roll);
+    mat_[10] = std::cos(pitch) * std::cos(roll);
+}
+
+void TransformMatrix3D::updateQuaternion(float qx, float qy, float qz, float qw)
+{
+    float roll, pitch, yaw;
+    Utils::convertQuaternionToEuler(qx, qy, qz, qw, roll, pitch, yaw);
+    updateRollPitchYaw(roll, pitch, yaw);
+}
+
+TransformMatrix3D TransformMatrix3D::calcInverse() const
+{
+    TransformMatrix3D inv_tf_mat(*this);
     inv_tf_mat.invert();
     return inv_tf_mat;
 }
 
-void TransformMat3D::invert()
+void TransformMatrix3D::invert()
 {
     // taking transpose of rotation matrix part since
     // inverse(M) == transpose(M) : where M is a orthonormal rotation matrix
@@ -125,45 +184,44 @@ void TransformMat3D::invert()
     mat_[11] = -((mat_[8] * x) + (mat_[9] * y) + (mat_[10] * z));
 }
 
-float TransformMat3D::getX() const
+float TransformMatrix3D::x() const
 {
     return mat_[3];
 }
 
-float TransformMat3D::getY() const
+float TransformMatrix3D::y() const
 {
     return mat_[7];
 }
 
-float TransformMat3D::getZ() const
+float TransformMatrix3D::z() const
 {
     return mat_[11];
 }
 
-float TransformMat3D::getRoll() const
+float TransformMatrix3D::roll() const
 {
     return std::atan2(mat_[9], mat_[10]);
 }
 
-float TransformMat3D::getPitch() const
+float TransformMatrix3D::pitch() const
 {
     return std::atan2(-mat_[8], std::sqrt(pow(mat_[9], 2) + pow(mat_[10], 2)));
 }
 
-float TransformMat3D::getYaw() const
+float TransformMatrix3D::yaw() const
 {
     return std::atan2(mat_[4], mat_[0]);
 }
 
-std::array<float, 4> TransformMat3D::getQuaternion() const
+std::array<float, 4> TransformMatrix3D::quaternion() const
 {
     std::array<float, 4> q;
-    Utils::getQuaternionFromEuler(getRoll(), getPitch(), getYaw(),
-                                  q[0], q[1], q[2], q[3]);
+    Utils::convertEulerToQuaternion(roll(), pitch(), yaw(), q[0], q[1], q[2], q[3]);
     return q;
 }
 
-std::array<float, 9> TransformMat3D::getRotationMat() const
+std::array<float, 9> TransformMatrix3D::rotationMatrix() const
 {
     std::array<float, 9> rot_mat;
     for ( size_t i = 0; i < 3; i++ )
@@ -176,66 +234,12 @@ std::array<float, 9> TransformMat3D::getRotationMat() const
     return rot_mat;
 }
 
-Vec3D TransformMat3D::getTranslationVec() const
+Vector3D TransformMatrix3D::translationVector() const
 {
-    return Vec3D(mat_[3], mat_[7], mat_[11]);
+    return Vector3D(mat_[3], mat_[7], mat_[11]);
 }
 
-void TransformMat3D::setX(float x)
-{
-    mat_[3] = x;
-}
-
-void TransformMat3D::setY(float y)
-{
-    mat_[7] = y;
-}
-
-void TransformMat3D::setZ(float z)
-{
-    mat_[11] = z;
-}
-
-void TransformMat3D::setRoll(float roll)
-{
-    setRollPitchYaw(roll, getPitch(), getYaw());
-}
-
-void TransformMat3D::setPitch(float pitch)
-{
-    setRollPitchYaw(getRoll(), pitch, getYaw());
-}
-
-void TransformMat3D::setYaw(float yaw)
-{
-    setRollPitchYaw(getRoll(), getPitch(), yaw);
-}
-
-void TransformMat3D::setRollPitchYaw(float roll, float pitch, float yaw)
-{
-    mat_[0] = (std::cos(yaw) * std::cos(pitch));
-    mat_[1] = (std::cos(yaw) * std::sin(pitch) * std::sin(roll)) -
-              (std::sin(yaw) * std::cos(roll));
-    mat_[2] = (std::cos(yaw) * std::sin(pitch) * std::cos(roll)) +
-              (std::sin(yaw) * std::sin(roll));
-    mat_[4] = (std::sin(yaw) * std::cos(pitch));
-    mat_[5] = (std::sin(yaw) * std::sin(pitch) * std::sin(roll)) +
-              (std::cos(yaw) * std::cos(roll));
-    mat_[6] = (std::sin(yaw) * std::sin(pitch) * std::cos(roll)) -
-              (std::cos(yaw) * std::sin(roll));
-    mat_[8] = -std::sin(pitch);
-    mat_[9] = std::cos(pitch) * std::sin(roll);
-    mat_[10] = std::cos(pitch) * std::cos(roll);
-}
-
-void TransformMat3D::setQuaternion(float qx, float qy, float qz, float qw)
-{
-    float roll, pitch, yaw;
-    Utils::getEulerFromQuaternion(qx, qy, qz, qw, roll, pitch, yaw);
-    setRollPitchYaw(roll, pitch, yaw);
-}
-
-void TransformMat3D::transform(Point3D& point) const
+void TransformMatrix3D::transform(Point3D& point) const
 {
     float temp_x = (mat_[0] * point.x) + (mat_[1] * point.y) +
                    (mat_[2] * point.z) + mat_[3];
@@ -248,14 +252,14 @@ void TransformMat3D::transform(Point3D& point) const
     point.z = temp_z;
 }
 
-TransformMat3D TransformMat3D::operator * (const TransformMat3D& tf_mat) const
+TransformMatrix3D TransformMatrix3D::operator * (const TransformMatrix3D& tf_mat) const
 {
-    TransformMat3D result_tf_mat(*this);
+    TransformMatrix3D result_tf_mat(*this);
     result_tf_mat *= tf_mat;
     return result_tf_mat;
 }
 
-TransformMat3D& TransformMat3D::operator *= (const TransformMat3D& tf_mat)
+TransformMatrix3D& TransformMatrix3D::operator *= (const TransformMatrix3D& tf_mat)
 {
     float arr[12]; // temporary array
 
@@ -284,19 +288,19 @@ TransformMat3D& TransformMat3D::operator *= (const TransformMat3D& tf_mat)
     return *this;
 }
 
-Point3D TransformMat3D::operator * (const Point3D& point) const
+Point3D TransformMatrix3D::operator * (const Point3D& point) const
 {
     Point3D transformed_point(point);
     transform(transformed_point);
     return transformed_point;
 }
 
-const float& TransformMat3D::operator [] (unsigned int index) const
+const float& TransformMatrix3D::operator [] (unsigned int index) const
 {
     return mat_[index];
 }
 
-std::ostream& operator << (std::ostream& out, const TransformMat3D& tf_mat)
+std::ostream& operator << (std::ostream& out, const TransformMatrix3D& tf_mat)
 {
     out << std::setprecision(3) << std::fixed;
     out << tf_mat.mat_[0] << "\t"

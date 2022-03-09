@@ -42,6 +42,9 @@
 #define KELO_GEOMETRY_COMMON_POINT_2D_H
 
 #include <visualization_msgs/Marker.h>
+#include <geometry_msgs/PointStamped.h>
+#include <geometry_msgs/Point32.h>
+#include <geometry_msgs/Point.h>
 
 #include <cmath>
 
@@ -90,12 +93,35 @@ class Point2D
         /**
          * @brief
          * 
+         * @return geometry_msgs::Point 
+         */
+        geometry_msgs::Point asPoint() const;
+
+        /**
+         * @brief
+         * 
+         * @return geometry_msgs::Point32 
+         */
+        geometry_msgs::Point32 asPoint32() const;
+
+        /**
+         * @brief
+         * 
+         * @param frame 
+         * @return geometry_msgs::PointStamped 
+         */
+        geometry_msgs::PointStamped asPointStamped(
+                const std::string& frame = "map") const;
+
+        /**
+         * @brief
+         * 
          * @param p 
          * @return float 
          */
-        inline float getCartDist(const Point2D& p) const
+        inline float distTo(const Point2D& p) const
         {
-            return std::sqrt(getCartDistSquared(p));
+            return std::sqrt(squaredDistTo(p));
         };
 
         /**
@@ -104,7 +130,7 @@ class Point2D
          * @param p 
          * @return float 
          */
-        inline float getCartDistSquared(const Point2D& p) const
+        inline float squaredDistTo(const Point2D& p) const
         {
             return std::pow(x - p.x, 2) + std::pow(y - p.y, 2);
         };
@@ -130,7 +156,7 @@ class Point2D
          *
          * @return: Point2D
          */
-        Point2D getNormalised() const;
+        Point2D asNormalised() const;
 
         /**
          * @brief 
@@ -161,7 +187,7 @@ class Point2D
          * @param z 
          * @return visualization_msgs::Marker 
          */
-        visualization_msgs::Marker getMarker(
+        visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,
@@ -217,19 +243,19 @@ class Point2D
 };
 
 /**
- * @brief 
+ * @brief Mathematical two dimensional vector
  * 
  */
-using Vec2D = Point2D;
+using Vector2D = Point2D;
 
 /**
- * @brief 
+ * @brief Collection (std::vector) of Point2D objects
  * 
  */
 using PointVec2D = std::vector<Point2D>;
 
 /**
- * @brief 
+ * @brief
  * 
  */
 using PointCloud2D = std::vector<Point2D>;

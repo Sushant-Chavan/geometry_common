@@ -50,59 +50,59 @@ LineSegment2D::~LineSegment2D()
 {
 }
 
-float LineSegment2D::getAngle() const
+float LineSegment2D::angle() const
 {
-    Vec2D diff = end - start;
+    Vector2D diff = end - start;
     return std::atan2(diff.y, diff.x);
 }
 
-float LineSegment2D::getLength() const
+float LineSegment2D::length() const
 {
-    return start.getCartDist(end);
+    return start.distTo(end);
 }
 
-float LineSegment2D::getSlope() const
+float LineSegment2D::slope() const
 {
-    Vec2D diff = end - start;
-    if ( fabs(diff.x) < 1e-6f )
+    Vector2D diff = end - start;
+    if ( std::fabs(diff.x) < 1e-6f )
     {
         diff.x = 1e-6f;
     }
     return diff.y/diff.x;
 }
 
-float LineSegment2D::getConstant() const
+float LineSegment2D::constant() const
 {
-    float m = getSlope();
+    float m = slope();
     return start.y - (m * start.x);
 }
 
-Point2D LineSegment2D::getCenter() const
+Point2D LineSegment2D::center() const
 {
     return (start + end) * 0.5f;
 }
 
-Point2D LineSegment2D::getUnitVector() const
+Point2D LineSegment2D::unitVector() const
 {
-    return (end - start) * (1.0f/getLength());
+    return (end - start) * (1.0f/length());
 }
 
-bool LineSegment2D::isIntersecting(const LineSegment2D& line_segment) const
+bool LineSegment2D::intersects(const LineSegment2D& line_segment) const
 {
     Point2D intersection_pt;
-    return getIntersectionPoint(line_segment, intersection_pt);
+    return calcIntersectionPointWith(line_segment, intersection_pt);
 }
 
-bool LineSegment2D::getIntersectionPoint(
+bool LineSegment2D::calcIntersectionPointWith(
         const LineSegment2D& line_segment,
         Point2D& intersection_point) const
 {
     /**
      * source: https://www.codeproject.com/Tips/862988/Find-the-Intersection-Point-of-Two-Line-Segments
      */
-    Vec2D vec1 = end - start;
-    Vec2D vec2 = line_segment.end - line_segment.start;
-    Vec2D vec3 = line_segment.start - start;
+    Vector2D vec1 = end - start;
+    Vector2D vec2 = line_segment.end - line_segment.start;
+    Vector2D vec3 = line_segment.start - start;
     const float vec1_cross_vec2 = vec1.scalarCrossProduct(vec2);
 	const float vec3_cross_vec1 = vec3.scalarCrossProduct(vec1);
     const float vec3_cross_vec2 = vec3.scalarCrossProduct(vec2);
@@ -129,29 +129,33 @@ bool LineSegment2D::getIntersectionPoint(
 	return false; // The two line segments are not parallel but do not intersect.
 }
 
-Point2D LineSegment2D::getClosestPointFrom(const Point2D& point) const
+Point2D LineSegment2D::closestPointTo(const Point2D& point) const
 {
-    return Utils::getProjectedPointOnLine(start, end, point, true);
+    return Utils::calcProjectedPointOnLine(start, end, point, true);
 }
 
-float LineSegment2D::getMinDistFrom(const Point2D& point) const
+float LineSegment2D::minDistTo(const Point2D& point) const
 {
-    return point.getCartDist(getClosestPointFrom(point));
+    return point.distTo(closestPointTo(point));
+}
+
+float LineSegment2D::squaredMinDistTo(const Point2D& p) const
+{
+    return Utils::calcSquaredDistToLine(start, end, p, true);
 }
 
 bool LineSegment2D::containsPoint(
         const Point2D& point,
         float dist_threshold) const
 {
-    return ( getMinDistFrom(point) < dist_threshold );
+    return ( minDistTo(point) < dist_threshold );
 }
 
-visualization_msgs::Marker LineSegment2D::getMarker(const std::string& frame,
+visualization_msgs::Marker LineSegment2D::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float line_width) const
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::LINE_LIST;
-    // marker.header.stamp = ros::Time::now();
     marker.header.frame_id = frame;
     marker.color.r = red;
     marker.color.g = green;
@@ -159,8 +163,8 @@ visualization_msgs::Marker LineSegment2D::getMarker(const std::string& frame,
     marker.color.a = alpha;
     marker.scale.x = line_width;
     marker.pose.orientation.w = 1.0f;
-    marker.points.push_back(Point3D(start).getPoint());
-    marker.points.push_back(Point3D(end).getPoint());
+    marker.points.push_back(start.asPoint());
+    marker.points.push_back(end.asPoint());
     return marker;
 }
 

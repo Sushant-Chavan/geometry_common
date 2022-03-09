@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
-#define KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
+#ifndef KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_3D_H
+#define KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_3D_H
 
 #include <array>
 
@@ -50,33 +50,33 @@ namespace kelo::geometry_common
 
 // Forward declaration 
 class Point3D;
-using Vec3D = Point3D;
+using Vector3D = Point3D;
 
 /**
  * @brief 
  * 
  */
-class TransformMat3D
+class TransformMatrix3D
 {
     public:
 
-        using Ptr = std::shared_ptr<TransformMat3D>;
-        using ConstPtr = std::shared_ptr<const TransformMat3D>;
+        using Ptr = std::shared_ptr<TransformMatrix3D>;
+        using ConstPtr = std::shared_ptr<const TransformMatrix3D>;
 
-        TransformMat3D():
-            TransformMat3D(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) {}
+        TransformMatrix3D():
+            TransformMatrix3D(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) {}
 
-        TransformMat3D(float x, float y, float z,
+        TransformMatrix3D(float x, float y, float z,
                        float roll, float pitch, float yaw);
 
-        TransformMat3D(float x, float y, float z,
+        TransformMatrix3D(float x, float y, float z,
                        float qx, float qy, float qz, float qw);
 
-        TransformMat3D(const tf::StampedTransform& stamped_transform);
+        TransformMatrix3D(const tf::StampedTransform& stamped_transform);
 
-        TransformMat3D(const TransformMat3D& tf_mat);
+        TransformMatrix3D(const TransformMatrix3D& tf_mat);
 
-        virtual ~TransformMat3D() {};
+        virtual ~TransformMatrix3D() {};
 
         void update(float x, float y, float z,
                     float roll, float pitch, float yaw);
@@ -84,51 +84,51 @@ class TransformMat3D
         void update(float x, float y, float z,
                     float qx, float qy, float qz, float qw);
 
-        void update(const TransformMat3D& tf_mat);
+        void update(const TransformMatrix3D& tf_mat);
 
-        TransformMat3D getInverse() const;
+        void updateX(float x);
+
+        void updateY(float y);
+
+        void updateZ(float z);
+
+        void updateRoll(float roll);
+
+        void updatePitch(float pitch);
+
+        void updateYaw(float yaw);
+
+        void updateRollPitchYaw(float roll, float pitch, float yaw);
+
+        void updateQuaternion(float qx, float qy, float qz, float qw);
+
+        TransformMatrix3D calcInverse() const;
 
         void invert();
 
-        float getX() const;
+        float x() const;
 
-        float getY() const;
+        float y() const;
 
-        float getZ() const;
+        float z() const;
 
-        float getRoll() const;
+        float roll() const;
 
-        float getPitch() const;
+        float pitch() const;
 
-        float getYaw() const;
+        float yaw() const;
 
-        std::array<float, 4> getQuaternion() const;
+        std::array<float, 4> quaternion() const;
 
-        std::array<float, 9> getRotationMat() const;
+        std::array<float, 9> rotationMatrix() const;
 
-        Vec3D getTranslationVec() const;
-
-        void setX(float x);
-
-        void setY(float y);
-
-        void setZ(float z);
-
-        void setRoll(float roll);
-
-        void setPitch(float pitch);
-
-        void setYaw(float yaw);
-
-        void setRollPitchYaw(float roll, float pitch, float yaw);
-
-        void setQuaternion(float qx, float qy, float qz, float qw);
+        Vector3D translationVector() const;
 
         void transform(Point3D& point) const;
 
-        TransformMat3D operator * (const TransformMat3D& tf_mat) const;
+        TransformMatrix3D operator * (const TransformMatrix3D& tf_mat) const;
 
-        TransformMat3D& operator *= (const TransformMat3D& tf_mat);
+        TransformMatrix3D& operator *= (const TransformMatrix3D& tf_mat);
 
         Point3D operator * (const Point3D& point) const;
 
@@ -143,7 +143,7 @@ class TransformMat3D
          */
         friend std::ostream& operator << (
                 std::ostream& out,
-                const TransformMat3D& tf_mat);
+                const TransformMatrix3D& tf_mat);
 
     protected:
         std::array<float, 12> mat_;
@@ -151,4 +151,4 @@ class TransformMat3D
 };
 
 }; // namespace kelo::geometry_common
-#endif // KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
+#endif // KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_3D_H

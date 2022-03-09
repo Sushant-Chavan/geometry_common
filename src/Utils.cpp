@@ -46,7 +46,7 @@
 #include <list>
 #include <deque>
 #include <sensor_msgs/point_cloud2_iterator.h>
-#include <geometry_common/TransformMat2D.h>
+#include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/Utils.h>
 
 namespace kelo::geometry_common
@@ -61,7 +61,7 @@ float Utils::roundFloat(
 }
 
 template <typename T>
-T Utils::getMeanPoint(
+T Utils::calcMeanPoint(
         const std::vector<T>& points,
         unsigned start_index,
         unsigned end_index)
@@ -73,26 +73,26 @@ T Utils::getMeanPoint(
     }
     return sum_pt * (1.0f/(end_index-start_index+1));
 }
-template Point2D Utils::getMeanPoint(
+template Point2D Utils::calcMeanPoint(
         const std::vector<Point2D>& points,
         unsigned start_index,
         unsigned end_index);
-template Point3D Utils::getMeanPoint(
+template Point3D Utils::calcMeanPoint(
         const std::vector<Point3D>& points,
         unsigned start_index,
         unsigned end_index);
 
 template <typename T>
-T Utils::getMeanPoint(
+T Utils::calcMeanPoint(
         const std::vector<T>& points)
 {
-    return Utils::getMeanPoint(points, 0, points.size()-1);
+    return Utils::calcMeanPoint(points, 0, points.size()-1);
 }
-template Point2D Utils::getMeanPoint(const std::vector<Point2D>& points);
-template Point3D Utils::getMeanPoint(const std::vector<Point3D>& points);
+template Point2D Utils::calcMeanPoint(const std::vector<Point2D>& points);
+template Point3D Utils::calcMeanPoint(const std::vector<Point3D>& points);
 
 template <typename T>
-Pose2D Utils::getMeanPose(
+Pose2D Utils::calcMeanPose(
         const T& poses)
 {
     Pose2D mean_cart_pose;
@@ -115,12 +115,12 @@ Pose2D Utils::getMeanPose(
                                       cos_theta_sum/poses.size());
     return mean_cart_pose;
 }
-template Pose2D Utils::getMeanPose(const std::vector<Pose2D>& poses);
-template Pose2D Utils::getMeanPose(const std::deque<Pose2D>& poses);
-template Pose2D Utils::getMeanPose(const std::list<Pose2D>& poses);
+template Pose2D Utils::calcMeanPose(const std::vector<Pose2D>& poses);
+template Pose2D Utils::calcMeanPose(const std::deque<Pose2D>& poses);
+template Pose2D Utils::calcMeanPose(const std::list<Pose2D>& poses);
 
 template <typename T>
-T Utils::getClosestPoint(
+T Utils::calcClosestPoint(
         const std::vector<T>& points,
         const T& pt)
 {
@@ -128,7 +128,7 @@ T Utils::getClosestPoint(
     float min_dist_sq = std::numeric_limits<float>::max();
     for ( size_t i = 0; i < points.size(); i++ )
     {
-        float dist_sq = points[i].getCartDistSquared(pt);
+        float dist_sq = points[i].squaredDistTo(pt);
         if ( dist_sq < min_dist_sq )
         {
             min_pt_index = i;
@@ -137,9 +137,12 @@ T Utils::getClosestPoint(
     }
     return points[min_pt_index];
 }
-template Point2D Utils::getClosestPoint(const std::vector<Point2D>& points, const Point2D& pt);
-template Point3D Utils::getClosestPoint(const std::vector<Point3D>& points, const Point3D& pt);
-
+template Point2D Utils::calcClosestPoint(
+        const std::vector<Point2D>& points,
+        const Point2D& pt);
+template Point3D Utils::calcClosestPoint(
+        const std::vector<Point3D>& points,
+        const Point3D& pt);
 
 std::vector<PointCloud2D> Utils::clusterPoints(
         const PointCloud2D& points,
@@ -176,7 +179,7 @@ std::vector<PointCloud2D> Utils::clusterPoints(
             auto pt = remaining_points.begin();
             while ( pt != remaining_points.end() )
             {
-                if ( point.getCartDistSquared(*pt) < threshold_dist_sq )
+                if ( point.squaredDistTo(*pt) < threshold_dist_sq )
                 {
                     fringe.push_back(*pt);
                     pt = remaining_points.erase(pt);
@@ -219,7 +222,7 @@ std::vector<PointCloud2D> Utils::clusterOrderedPoints(
         auto pt = remaining_points.begin();
         while ( pt != remaining_points.end() )
         {
-            if ( cluster.back().getCartDistSquared(*pt) < threshold_dist_sq )
+            if ( cluster.back().squaredDistTo(*pt) < threshold_dist_sq )
             {
                 cluster.push_back(*pt);
                 pt = remaining_points.erase(pt);
@@ -235,7 +238,7 @@ std::vector<PointCloud2D> Utils::clusterOrderedPoints(
 
     /* for 360 degree laser points */
     if ( clusters.size() > 1 &&
-         clusters.front().front().getCartDistSquared(clusters.back().back()) < threshold_dist_sq )
+         clusters.front().front().squaredDistTo(clusters.back().back()) < threshold_dist_sq )
     {
         clusters.front().reserve(clusters.front().size() + clusters.back().size());
         clusters.front().insert(clusters.front().begin(), clusters.back().begin(),
@@ -245,7 +248,7 @@ std::vector<PointCloud2D> Utils::clusterOrderedPoints(
     return clusters;
 }
 
-std::vector<Pose2D> Utils::getTrajectory(
+std::vector<Pose2D> Utils::calcTrajectory(
         const Velocity2D& vel,
         size_t num_of_poses,
         float future_time)
@@ -256,8 +259,8 @@ std::vector<Pose2D> Utils::getTrajectory(
     float delta_t = future_time/num_of_poses;
 
     // d = v * t
-    TransformMat2D vel_tf_mat = Pose2D(vel * delta_t).getMat();
-    TransformMat2D pos_mat; // identity mat
+    TransformMatrix2D vel_tf_mat = Pose2D(vel * delta_t).asMat();
+    TransformMatrix2D pos_mat; // identity mat
 
     /* add current pose (for extra safety) */
     traj.push_back(Pose2D());
@@ -265,12 +268,12 @@ std::vector<Pose2D> Utils::getTrajectory(
     for ( size_t i = 0; i < num_of_poses; i++ )
     {
         pos_mat *= vel_tf_mat;
-        traj.push_back(pos_mat.getPose2D());
+        traj.push_back(pos_mat.asPose2D());
     }
     return traj;
 }
 
-float Utils::getShortestAngle(
+float Utils::calcShortestAngle(
         float angle1,
         float angle2)
 {
@@ -288,16 +291,16 @@ void Utils::findPerpendicularLineAt(
     perpendicular_c = p.y - (perpendicular_m * p.x);
 }
 
-float Utils::distToLineSquared(
+float Utils::calcSquaredDistToLine(
         float m,
         float c,
         const Point2D& p)
 {
-    Point2D proj_pt = Utils::getProjectedPointOnLine(m, c, p);
-    return p.getCartDistSquared(proj_pt);
+    Point2D proj_pt = Utils::calcProjectedPointOnLine(m, c, p);
+    return p.squaredDistTo(proj_pt);
 }
 
-Point2D Utils::getProjectedPointOnLine(
+Point2D Utils::calcProjectedPointOnLine(
         float m,
         float c,
         const Point2D& p)
@@ -310,14 +313,14 @@ Point2D Utils::getProjectedPointOnLine(
     return proj_pt;
 }
 
-Point2D Utils::getProjectedPointOnLine(
+Point2D Utils::calcProjectedPointOnLine(
         const Point2D& line_start,
         const Point2D& line_end,
         const Point2D& p,
         bool is_segment)
 {
     Point2D proj_pt;
-    float length_sq = line_start.getCartDistSquared(line_end);
+    float length_sq = line_start.squaredDistTo(line_end);
     if ( length_sq < 1e-10f ) // check == 0
     {
         proj_pt = Point2D(line_start);
@@ -334,7 +337,7 @@ Point2D Utils::getProjectedPointOnLine(
     return proj_pt;
 }
 
-Point2D Utils::getProjectedPointOnMajorAxis(
+Point2D Utils::calcProjectedPointOnMajorAxis(
         float m,
         float c,
         const Point2D& p)
@@ -354,20 +357,13 @@ Point2D Utils::getProjectedPointOnMajorAxis(
     return proj_pt;
 }
 
-float Utils::distToLineSquared(
+float Utils::calcSquaredDistToLine(
         const Point2D& a,
         const Point2D& b,
         const Point2D& p,
         bool is_segment)
 {
-    return p.getCartDistSquared(Utils::getProjectedPointOnLine(a, b, p, is_segment));
-}
-
-float Utils::distToLineSegmentSquared(
-        const LineSegment2D& line_segment,
-        const Point2D& p)
-{
-    return Utils::distToLineSquared(line_segment.start, line_segment.end, p, true);
+    return p.squaredDistTo(Utils::calcProjectedPointOnLine(a, b, p, is_segment));
 }
 
 float Utils::fitLineRANSAC(
@@ -398,7 +394,8 @@ float Utils::fitLineRANSAC(
         unsigned score = 0;
         for ( size_t i = start_index; i <= end_index; i++ )
         {
-            if ( Utils::distToLineSquared(pts[ind_1], pts[ind_2], pts[i]) < delta_sq )
+            if ( Utils::calcSquaredDistToLine(
+                        pts[ind_1], pts[ind_2], pts[i]) < delta_sq )
             {
                 score ++;
             }
@@ -449,28 +446,28 @@ float Utils::fitLineSegmentRANSAC(
     bool major_axis_x = ( std::fabs(m) < 1.0f );
     for ( size_t i = start_index; i <= end_index; i++ )
     {
-        if ( Utils::distToLineSquared(m, c, pts[i]) < delta_sq )
+        if ( Utils::calcSquaredDistToLine(m, c, pts[i]) < delta_sq )
         {
             if ( major_axis_x )
             {
                 if ( pts[i].x < line_segment.start.x )
                 {
-                    line_segment.start = Utils::getProjectedPointOnMajorAxis(m, c, pts[i]);
+                    line_segment.start = Utils::calcProjectedPointOnMajorAxis(m, c, pts[i]);
                 }
                 if ( pts[i].x > line_segment.end.x )
                 {
-                    line_segment.end = Utils::getProjectedPointOnMajorAxis(m, c, pts[i]);
+                    line_segment.end = Utils::calcProjectedPointOnMajorAxis(m, c, pts[i]);
                 }
             }
             else
             {
                 if ( pts[i].y < line_segment.start.y )
                 {
-                    line_segment.start = Utils::getProjectedPointOnMajorAxis(m, c, pts[i]);
+                    line_segment.start = Utils::calcProjectedPointOnMajorAxis(m, c, pts[i]);
                 }
                 if ( pts[i].y > line_segment.end.y )
                 {
-                    line_segment.end = Utils::getProjectedPointOnMajorAxis(m, c, pts[i]);
+                    line_segment.end = Utils::calcProjectedPointOnMajorAxis(m, c, pts[i]);
                 }
             }
         }
@@ -556,9 +553,10 @@ std::vector<LineSegment2D> Utils::fitLineSegmentsRANSAC(
         for ( size_t j = segments[i].start_index+1; j+1 <= segments[i].end_index; j++ )
         {
             // float dist = Utils::distToLineSegmentSquared(segments[i].line_segment, pts[j]);
-            float dist = Utils::distToLineSquared(pts[segments[i].start_index],
-                                                  pts[segments[i].end_index],
-                                                  pts[j], true);
+            float dist = Utils::calcSquaredDistToLine(
+                    pts[segments[i].start_index],
+                    pts[segments[i].end_index],
+                    pts[j], true);
             // std::cout << j << " " << dist << std::endl;
             if ( dist > max_dist )
             {
@@ -584,6 +582,7 @@ std::vector<LineSegment2D> Utils::fitLineSegmentsRANSAC(
     }
 
     line_segments.clear();
+    line_segments.reserve(segments.size());
     /* create line_segments from regression line segments */
     for ( RegressionLineSegment rls : segments )
     {
@@ -605,7 +604,7 @@ float Utils::fitLineRegression(
         line_segment = LineSegment2D();
         return 0.0f;
     }
-    Point2D mean_pt = Utils::getMeanPoint(pts, start_index, end_index);
+    Point2D mean_pt = Utils::calcMeanPoint(pts, start_index, end_index);
 
     float dx = pts[end_index].x - pts[start_index].x;
     float dy = pts[end_index].y - pts[start_index].y;
@@ -651,7 +650,7 @@ float Utils::fitLineRegression(
     float error = 0.0f;
     for ( size_t i = start_index; i <= end_index; i++ )
     {
-        error += Utils::distToLineSegmentSquared(line_segment, pts[i]);
+        error += line_segment.squaredMinDistTo(pts[i]);
     }
     return error;
 }
@@ -663,7 +662,7 @@ float Utils::fitLineRegression(
     return Utils::fitLineRegression(pts, 0, pts.size()-1, line_segment);
 }
 
-std::vector<LineSegment2D> Utils::piecewiseRegression(
+std::vector<LineSegment2D> Utils::applyPiecewiseRegression(
         const PointCloud2D& pts,
         float error_threshold)
 {
@@ -749,7 +748,7 @@ std::vector<LineSegment2D> Utils::piecewiseRegression(
     return line_segments;
 }
 
-std::vector<LineSegment2D> Utils::piecewiseRegressionSplit(
+std::vector<LineSegment2D> Utils::applyPiecewiseRegressionSplit(
         const PointCloud2D& pts,
         float error_threshold)
 {
@@ -816,9 +815,9 @@ std::vector<LineSegment2D> Utils::piecewiseRegressionSplit(
         {
             // float dist = Utils::distToLineSegmentSquared(segments[i].line_segment,
             //                                              pts[j]);
-            float dist = Utils::distToLineSquared(pts[segments[i].start_index],
-                                                  pts[segments[i].end_index],
-                                                  pts[j], true);
+            float dist = Utils::calcSquaredDistToLine(pts[segments[i].start_index],
+                                                      pts[segments[i].end_index],
+                                                      pts[j], true);
             if ( dist > max_dist )
             {
                 max_dist = dist;
@@ -832,10 +831,12 @@ std::vector<LineSegment2D> Utils::piecewiseRegressionSplit(
         segments.insert(segments.begin() + i, new_segment);
         errors.insert(errors.begin() + i, 0.0f);
 
-        errors[i] = Utils::fitLineRegression(pts, segments[i].start_index,
-                                               segments[i].end_index, segments[i].line_segment);
-        errors[i+1] = Utils::fitLineRegression(pts, segments[i+1].start_index,
-                                               segments[i+1].end_index, segments[i+1].line_segment);
+        errors[i] = Utils::fitLineRegression(
+                pts, segments[i].start_index, segments[i].end_index,
+                segments[i].line_segment);
+        errors[i+1] = Utils::fitLineRegression(
+                pts, segments[i+1].start_index, segments[i+1].end_index,
+                segments[i+1].line_segment);
     }
 
     /* create line_segments from regression line segments */
@@ -860,9 +861,9 @@ void Utils::mergeCloseLines(
 
     while ( i < line_segments.size()-1 )
     {
-        float linear_dist = line_segments[i].end.getCartDist(line_segments[i+1].start);
-        float angular_dist = Utils::getShortestAngle(line_segments[i].getAngle(),
-                                                     line_segments[i+1].getAngle());
+        float linear_dist = line_segments[i].end.distTo(line_segments[i+1].start);
+        float angular_dist = Utils::calcShortestAngle(line_segments[i].angle(),
+                                                      line_segments[i+1].angle());
         if ( linear_dist < distance_threshold &&
              std::fabs(angular_dist) < angle_threshold )
         {
@@ -891,9 +892,10 @@ void Utils::mergeCloseLinesBF(
         size_t i = 0;
         while ( i+skip_index < line_segments.size() )
         {
-            float linear_dist = line_segments[i].end.getCartDist(line_segments[i+skip_index].start);
-            float angular_dist = Utils::getShortestAngle(line_segments[i].getAngle(),
-                                                         line_segments[i+skip_index].getAngle());
+            float linear_dist = line_segments[i].end.distTo(
+                    line_segments[i+skip_index].start);
+            float angular_dist = Utils::calcShortestAngle(
+                    line_segments[i].angle(), line_segments[i+skip_index].angle());
             if ( linear_dist < distance_threshold &&
                  std::fabs(angular_dist) < angle_threshold )
             {
@@ -913,7 +915,8 @@ std::vector<LineSegment2D> Utils::fitLineSegments(
         float distance_threshold,
         float angle_threshold)
 {
-    std::vector<LineSegment2D> lines = Utils::piecewiseRegression(pts, regression_error_threshold);
+    std::vector<LineSegment2D> lines = Utils::applyPiecewiseRegression(
+            pts, regression_error_threshold);
     Utils::mergeCloseLines(lines, distance_threshold, angle_threshold);
     return lines;
 }
@@ -926,13 +929,12 @@ float Utils::clip(
     return std::max(std::min(value, max_limit), min_limit);
 }
 
-float Utils::signedClip(
+float Utils::clipSigned(
         float value,
         float max_limit,
         float min_limit)
 {
-    int sign = ( value < 0.0f ) ? -1 : 1;
-    return sign * Utils::clip(std::fabs(value), max_limit, min_limit);
+    return std::copysign(Utils::clip(std::fabs(value), max_limit, min_limit), value);
 }
 
 float Utils::clipAngle(
@@ -982,7 +984,7 @@ Velocity2D Utils::applyAccLimits(
     return vel;
 }
 
-float Utils::linearInterpolate(
+float Utils::applyLinearInterpolation(
         float src,
         float target,
         float t)
@@ -991,37 +993,27 @@ float Utils::linearInterpolate(
            ( t <= 0.0f ) ? src    : (src * (1.0f - t)) + (target * t);
 }
 
-sensor_msgs::PointCloud Utils::convertToROSPC(
-        const PointCloud2D& pc,
+template <typename T>
+sensor_msgs::PointCloud Utils::convertToROSPointCloud(
+        const std::vector<T>& pc,
         const std::string& frame)
 {
     sensor_msgs::PointCloud cloud;
     // cloud.header.stamp = ros::Time::now();
     cloud.header.frame_id = frame;
     cloud.points.reserve(pc.size());
-    for ( Point3D pt : pc ) // also converts Point2D to Point3D
+    for ( const T& pt : pc )
     {
-        cloud.points.push_back(pt.getPoint32());
+        cloud.points.push_back(pt.asPoint32());
     }
     return cloud;
 }
+template sensor_msgs::PointCloud Utils::convertToROSPointCloud(
+        const PointCloud2D& pc, const std::string& frame);
+template sensor_msgs::PointCloud Utils::convertToROSPointCloud(
+        const PointCloud3D& pc, const std::string& frame);
 
-sensor_msgs::PointCloud Utils::convertToROSPC(
-        const PointCloud3D& pc,
-        const std::string& frame)
-{
-    sensor_msgs::PointCloud cloud;
-    // cloud.header.stamp = ros::Time::now();
-    cloud.header.frame_id = frame;
-    cloud.points.reserve(pc.size());
-    for ( const Point3D& pt : pc )
-    {
-        cloud.points.push_back(pt.getPoint32());
-    }
-    return cloud;
-}
-
-PointCloud3D Utils::convertFromROSPC(
+PointCloud3D Utils::convertToPointCloud3D(
         const sensor_msgs::PointCloud& pc)
 {
     std::vector<Point3D> points;
@@ -1033,7 +1025,7 @@ PointCloud3D Utils::convertFromROSPC(
     return points;
 }
 
-PointCloud3D Utils::convertFromROSPC(
+PointCloud3D Utils::convertToPointCloud3D(
         const sensor_msgs::PointCloud2& cloud_msg,
         size_t row_sub_sample_factor,
         size_t col_sub_sample_factor)
@@ -1079,10 +1071,11 @@ PointCloud3D Utils::convertFromROSPC(
     return points;
 }
 
-PointCloud3D Utils::convertFromROSScan(
+template <typename T>
+std::vector<T> Utils::convertToPointCloud(
         const sensor_msgs::LaserScan& scan)
 {
-    PointCloud3D laser_pts;
+    std::vector<T> laser_pts;
     for ( size_t i = 0; i < scan.ranges.size(); i++ )
     {
         if ( std::isnan(scan.ranges[i]) ||
@@ -1093,14 +1086,17 @@ PointCloud3D Utils::convertFromROSScan(
             continue;
         }
         float angle = scan.angle_min + (i * scan.angle_increment);
-        laser_pts.push_back(Point3D(scan.ranges[i] * std::cos(angle),
-                                  scan.ranges[i] * std::sin(angle),
-                                  0.0f));
+        laser_pts.push_back(T(scan.ranges[i] * std::cos(angle),
+                              scan.ranges[i] * std::sin(angle)));
     }
     return laser_pts;
 }
+template PointCloud2D Utils::convertToPointCloud<Point2D>(
+        const sensor_msgs::LaserScan& scan);
+template PointCloud3D Utils::convertToPointCloud<Point3D>(
+        const sensor_msgs::LaserScan& scan);
 
-float Utils::getPerpendicularAngle(
+float Utils::calcPerpendicularAngle(
         float angle)
 {
     float perpendicular_angle = angle + M_PI/2;
@@ -1111,7 +1107,7 @@ float Utils::getPerpendicularAngle(
     return perpendicular_angle;
 }
 
-float Utils::getReverseAngle(
+float Utils::calcReverseAngle(
         float angle)
 {
     float reverse_angle = angle + M_PI;
@@ -1132,17 +1128,15 @@ bool Utils::isAngleWithinBounds(
            : ( angle <= min_angle && angle >= max_angle );
 }
 
-std::vector<Point2D> Utils::generatePerpendicularPoints(
-        const Pose2D& start,
-        const Pose2D& end,
-        const Point2D& pt,
+std::vector<Point2D> Utils::generatePerpendicularPointsAt(
+        const Pose2D& pose,
         float max_perp_dist,
         float step_size)
 {
-    float theta = std::atan2(end.y - start.y, end.x - start.x);
-    float perpendicular_angle = Utils::getPerpendicularAngle(theta);
+    float perpendicular_angle = Utils::calcPerpendicularAngle(pose.theta);
 
-    Point2D unit_vec(std::cos(perpendicular_angle), std::sin(perpendicular_angle)); 
+    Vector2D unit_vec(std::cos(perpendicular_angle), std::sin(perpendicular_angle)); 
+    Point2D pt(pose.x, pose.y);
     std::vector<Point2D> pts;
     for ( float perp_dist = step_size; perp_dist < max_perp_dist; perp_dist += step_size )
     {
@@ -1153,18 +1147,18 @@ std::vector<Point2D> Utils::generatePerpendicularPoints(
     return pts;
 }
 
-float Utils::getAngleBetweenPoints(
+float Utils::calcAngleBetweenPoints(
         const Point2D& a,
         const Point2D& b,
         const Point2D& c)
 {
-    Vec2D vec_b_a = a - b;
-    Vec2D vec_b_c = c - b;
+    Vector2D vec_b_a = a - b;
+    Vector2D vec_b_c = c - b;
     return Utils::clipAngle(std::atan2(vec_b_c.y, vec_b_c.x) -
                             std::atan2(vec_b_a.y, vec_b_a.x));
 }
 
-void Utils::getEulerFromQuaternion(
+void Utils::convertQuaternionToEuler(
         float qx,
         float qy,
         float qz,
@@ -1194,7 +1188,7 @@ void Utils::getEulerFromQuaternion(
     yaw = std::atan2(sinyaw_cospitch, cosyaw_cospitch);
 }
 
-void Utils::getQuaternionFromEuler(
+void Utils::convertEulerToQuaternion(
         float roll,
         float pitch,
         float yaw,
@@ -1219,23 +1213,22 @@ void Utils::getQuaternionFromEuler(
     qz = (cr * cp * sy) - (sr * sp * cy);
 }
 
-nav_msgs::Path Utils::getPathMsgFromTrajectory(
+nav_msgs::Path Utils::convertToROSPath(
         const std::vector<Pose2D>& trajectory,
         const std::string& frame)
 {
     nav_msgs::Path path_msg;
-    // path_msg.header.stamp = ros::Time::now();
     path_msg.header.frame_id = frame;
     path_msg.poses.clear();
 
     for ( Pose2D pose : trajectory )
     {
-        path_msg.poses.push_back(pose.getPoseStamped(frame));
+        path_msg.poses.push_back(pose.asPoseStamped(frame));
     }
     return path_msg;
 }
 
-visualization_msgs::Marker Utils::getGeometricPathAsMarker(
+visualization_msgs::Marker Utils::convertGeometricPathToMarker(
         const std::vector<Pose2D>& geometric_path,
         const std::string& frame,
         float red,
@@ -1246,7 +1239,6 @@ visualization_msgs::Marker Utils::getGeometricPathAsMarker(
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::LINE_STRIP;
-    // marker.header.stamp = ros::Time::now();
     marker.header.frame_id = frame;
     marker.color.r = red;
     marker.color.g = green;
@@ -1265,8 +1257,9 @@ visualization_msgs::Marker Utils::getGeometricPathAsMarker(
     return marker;
 }
 
-visualization_msgs::Marker Utils::getPointcloudAsMarker(
-        const PointCloud2D& cloud,
+template <typename T>
+visualization_msgs::Marker Utils::convertPointCloudToMarker(
+        const std::vector<T>& cloud,
         const std::string& frame,
         float diameter,
         float red,
@@ -1284,44 +1277,21 @@ visualization_msgs::Marker Utils::getPointcloudAsMarker(
     cloud_marker.color.b = blue;
     cloud_marker.color.a = alpha;
     cloud_marker.header.frame_id = frame;
-    // cloud_marker.header.stamp = ros::Time::now();
     cloud_marker.points.reserve(cloud.size());
-    for ( Point3D pt : cloud ) // also converts Point2D to Point3D
+    for ( const T& pt : cloud )
     {
-        cloud_marker.points.push_back(pt.getPoint());
+        cloud_marker.points.push_back(pt.asPoint());
     }
     return cloud_marker;
 }
+template visualization_msgs::Marker Utils::convertPointCloudToMarker(
+        const PointCloud2D& cloud, const std::string& frame,
+        float diameter, float red, float green, float blue, float alpha);
+template visualization_msgs::Marker Utils::convertPointCloudToMarker(
+        const PointCloud3D& cloud, const std::string& frame,
+        float diameter, float red, float green, float blue, float alpha);
 
-visualization_msgs::Marker Utils::getPointcloudAsMarker(
-        const PointCloud3D& cloud,
-        const std::string& frame,
-        float diameter,
-        float red,
-        float green,
-        float blue,
-        float alpha)
-{
-    visualization_msgs::Marker cloud_marker;
-    cloud_marker.type = visualization_msgs::Marker::POINTS;
-    cloud_marker.pose.orientation.w = 1.0f;
-    cloud_marker.scale.x = diameter;
-    cloud_marker.scale.y = diameter;
-    cloud_marker.color.r = red;
-    cloud_marker.color.g = green;
-    cloud_marker.color.b = blue;
-    cloud_marker.color.a = alpha;
-    cloud_marker.header.frame_id = frame;
-    // cloud_marker.header.stamp = ros::Time::now();
-    cloud_marker.points.reserve(cloud.size());
-    for ( const Point3D& pt : cloud )
-    {
-        cloud_marker.points.push_back(pt.getPoint());
-    }
-    return cloud_marker;
-}
-
-visualization_msgs::Marker Utils::getStringAsMarker(
+visualization_msgs::Marker Utils::convertStringToMarker(
         const std::string& string_label,
         const std::string& frame,
         float red,

@@ -7,7 +7,7 @@
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Polygon2D;
 
-TEST(Polygon2DTest, isPolygonConvex)
+TEST(Polygon2DTest, isConvex)
 {
     Polygon2D convex_polygon(
     {
@@ -67,7 +67,7 @@ TEST(Polygon2DTest, calcConvexHullOfPolygons)
     EXPECT_EQ(convex_hull[5], polygon_a[3]);
 }
 
-TEST(Polygon2DTest, getInflatedPolygon)
+TEST(Polygon2DTest, calcInflatedPolygon)
 {
     Polygon2D polygon(
     {
@@ -76,7 +76,7 @@ TEST(Polygon2DTest, getInflatedPolygon)
         Point2D(5.0f, 5.0f),
         Point2D(0.0f, 5.0f)
     });
-    Polygon2D inflated_polygon = polygon.getInflatedPolygon(0.1f);
+    Polygon2D inflated_polygon = polygon.calcInflatedPolygon(0.1f);
 
     EXPECT_EQ(inflated_polygon.size(), 4u);
     EXPECT_EQ(inflated_polygon[0], Point2D(-0.1f, -0.1f));
@@ -91,7 +91,7 @@ TEST(Polygon2DTest, getInflatedPolygon)
         Point2D(4.0f, 4.0f),
         Point2D(0.0f, 3.0f)
     });
-    Polygon2D inflated_polygon2 = polygon2.getInflatedPolygon(0.1f);
+    Polygon2D inflated_polygon2 = polygon2.calcInflatedPolygon(0.1f);
 
     EXPECT_EQ(inflated_polygon2.size(), 4u);
     EXPECT_EQ(inflated_polygon2[0], Point2D(-0.1f, -0.1f));

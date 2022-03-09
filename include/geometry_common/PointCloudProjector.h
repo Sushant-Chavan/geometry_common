@@ -49,7 +49,7 @@
 
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Point3D.h>
-#include <geometry_common/TransformMat3D.h>
+#include <geometry_common/TransformMatrix3D.h>
 
 namespace kelo
 {
@@ -156,33 +156,11 @@ class PointCloudProjector
          * @brief 
          * 
          * @param cloud_in 
-         * @return kelo::geometry_common::PointCloud3D 
-         */
-        kelo::geometry_common::PointCloud3D transformAndFilterPointCloud(
-                const kelo::geometry_common::PointCloud3D& cloud_in) const;
-
-        /**
-         * @brief 
-         * 
-         * @param cloud_in 
          * @param angle_min 
          * @param angle_max 
          * @return std::vector<float> 
          */
-        std::vector<float> pointCloudToScan(
-                const kelo::geometry_common::PointCloud3D& cloud_in,
-                float angle_min,
-                float angle_max) const;
-
-        /**
-         * @brief 
-         * 
-         * @param cloud_in 
-         * @param angle_min 
-         * @param angle_max 
-         * @return std::vector<float> 
-         */
-        std::vector<float> pointCloudToProjectedScan(
+        std::vector<float> projectToScan(
                 const kelo::geometry_common::PointCloud3D& cloud_in,
                 float angle_min,
                 float angle_max) const;
@@ -196,7 +174,7 @@ class PointCloudProjector
          * @param angle_max 
          * @return std::vector<float> 
          */
-        std::vector<float> pointCloudToProjectedScan(
+        std::vector<float> projectToScan(
                 const kelo::geometry_common::PointCloud3D& cloud_in,
                 kelo::geometry_common::PointCloud3D& filtered_cloud,
                 float angle_min,
@@ -208,7 +186,7 @@ class PointCloudProjector
          * @param cloud_in 
          * @return std::vector<float> 
          */
-        std::vector<float> pointCloudToProjectedScan(
+        std::vector<float> projectToScan(
                 const kelo::geometry_common::PointCloud3D& cloud_in) const;
 
         /**
@@ -218,7 +196,7 @@ class PointCloudProjector
          * @param filtered_cloud 
          * @return std::vector<float> 
          */
-        std::vector<float> pointCloudToProjectedScan(
+        std::vector<float> projectToScan(
                 const kelo::geometry_common::PointCloud3D& cloud_in,
                 kelo::geometry_common::PointCloud3D& filtered_cloud) const;
 
@@ -228,7 +206,7 @@ class PointCloudProjector
          * @param cloud_in 
          * @return kelo::geometry_common::PointCloud2D 
          */
-        kelo::geometry_common::PointCloud2D pointCloudToProjectedPointCloud(
+        kelo::geometry_common::PointCloud2D projectToPointCloud2D(
                 const kelo::geometry_common::PointCloud3D& cloud_in) const;
 
         /**
@@ -238,7 +216,7 @@ class PointCloudProjector
          * @param filtered_cloud 
          * @return kelo::geometry_common::PointCloud2D 
          */
-        kelo::geometry_common::PointCloud2D pointCloudToProjectedPointCloud(
+        kelo::geometry_common::PointCloud2D projectToPointCloud2D(
                 const kelo::geometry_common::PointCloud3D& cloud_in,
                 kelo::geometry_common::PointCloud3D& filtered_cloud) const;
 
@@ -288,13 +266,13 @@ class PointCloudProjector
          * @param angle_increment 
          * @return size_t 
          */
-        static size_t calculateNumOfScanPts(
+        static size_t calcNumOfScanPts(
                 float angle_min,
                 float angle_max,
                 float angle_increment);
 
-    private:
-        kelo::geometry_common::TransformMat3D camera_to_target_tf_mat_;
+    protected:
+        kelo::geometry_common::TransformMatrix3D camera_to_target_tf_mat_;
         float passthrough_min_z_{0.0f};
         float passthrough_max_z_{2.0f};
         float radial_dist_min_{0.1f};
@@ -318,6 +296,29 @@ class PointCloudProjector
          */
         bool isPointValid(
                 const kelo::geometry_common::Point3D& pt) const;
+
+        /**
+         * @brief 
+         * 
+         * @param cloud_in 
+         * @param angle_min 
+         * @param angle_max 
+         * @return std::vector<float> 
+         */
+        std::vector<float> projectedPointCloudToScan(
+                const kelo::geometry_common::PointCloud3D& cloud_in,
+                float angle_min,
+                float angle_max) const;
+
+        /**
+         * @brief 
+         * 
+         * @param cloud_in 
+         * @return kelo::geometry_common::PointCloud3D 
+         */
+        kelo::geometry_common::PointCloud3D transformAndFilterPointCloud(
+                const kelo::geometry_common::PointCloud3D& cloud_in) const;
+
 
 };
 

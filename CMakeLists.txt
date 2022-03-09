@@ -1,7 +1,19 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(geometry_common)
 
-add_compile_options(-std=c++11 -Wall -O3)
+add_compile_options(-std=c++11)
+
+# All warning enabled build option set to ON by default
+option(ENABLE_ALL_WARNINGS "Build with all warnings enabled" ON)
+if(ENABLE_ALL_WARNINGS)
+    add_compile_options(-Wall)
+endif(ENABLE_ALL_WARNINGS)
+
+# Optimisation flag (O3) build option set to ON by default
+option(BUILD_WITH_MAX_OPTIMISATION "Build with -O3 compile option" ON)
+if(BUILD_WITH_MAX_OPTIMISATION)
+    add_compile_options(-O3)
+endif(BUILD_WITH_MAX_OPTIMISATION)
 
 if (WIN32)
     find_package(yaml-cpp REQUIRED)
@@ -70,26 +82,24 @@ include_directories(
 # LIBRARIES
 # =========
 add_library(geometry_utils
-    SHARED
-        src/Utils.cpp
-        # data structures
-        src/Point2D.cpp
-        src/Point3D.cpp
-        src/Polygon2D.cpp
-        src/Polyline2D.cpp
-        src/Pose2D.cpp
-        src/Attitude2D.cpp
-        src/Box.cpp
-        src/LineSegment2D.cpp
-        src/TransformMat2D.cpp
-        src/TransformMat3D.cpp
+    src/Utils.cpp
+    # data structures
+    src/Point2D.cpp
+    src/Point3D.cpp
+    src/Polygon2D.cpp
+    src/Polyline2D.cpp
+    src/Pose2D.cpp
+    src/XYTheta.cpp
+    src/Box.cpp
+    src/LineSegment2D.cpp
+    src/TransformMatrix2D.cpp
+    src/TransformMatrix3D.cpp
 )
 target_link_libraries(geometry_utils
 )
 
 add_library(pointcloud_projector
-    SHARED
-        src/PointCloudProjector.cpp
+    src/PointCloudProjector.cpp
 )
 target_link_libraries(pointcloud_projector
     geometry_utils

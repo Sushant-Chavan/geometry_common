@@ -92,7 +92,7 @@ bool PointCloudProjector::configure(
     angle_increment_ = angle_increment;
     angle_increment_inv_ = 1.0f/angle_increment_;
 
-    num_of_scan_pts_ = PointCloudProjector::calculateNumOfScanPts(
+    num_of_scan_pts_ = PointCloudProjector::calcNumOfScanPts(
             angle_min_, angle_max_, angle_increment_);
     return true;
 }
@@ -189,12 +189,12 @@ PointCloud3D PointCloudProjector::transformAndFilterPointCloud(
     return cloud_out;
 }
 
-std::vector<float> PointCloudProjector::pointCloudToScan(
+std::vector<float> PointCloudProjector::projectedPointCloudToScan(
         const PointCloud3D& cloud_in,
         float angle_min,
         float angle_max) const
 {
-    size_t num_of_scan_pts = PointCloudProjector::calculateNumOfScanPts(
+    size_t num_of_scan_pts = PointCloudProjector::calcNumOfScanPts(
             angle_min, angle_max, angle_increment_);
     bool is_angle_flipped = ( angle_min > angle_max );
 
@@ -217,53 +217,54 @@ std::vector<float> PointCloudProjector::pointCloudToScan(
     return scan;
 }
 
-std::vector<float> PointCloudProjector::pointCloudToProjectedScan(
+std::vector<float> PointCloudProjector::projectToScan(
         const PointCloud3D& cloud_in,
         float angle_min,
         float angle_max) const
 {
     PointCloud3D filtered_cloud;
-    return pointCloudToProjectedScan(cloud_in, filtered_cloud, angle_min, angle_max);
+    return projectToScan(cloud_in, filtered_cloud, angle_min, angle_max);
 }
 
-std::vector<float> PointCloudProjector::pointCloudToProjectedScan(
+std::vector<float> PointCloudProjector::projectToScan(
         const PointCloud3D& cloud_in,
         PointCloud3D& filtered_cloud,
         float angle_min,
         float angle_max) const
 {
     filtered_cloud = transformAndFilterPointCloud(cloud_in);
-    return pointCloudToScan(filtered_cloud, angle_min, angle_max);
+    return projectedPointCloudToScan(filtered_cloud, angle_min, angle_max);
 }
 
-std::vector<float> PointCloudProjector::pointCloudToProjectedScan(
+std::vector<float> PointCloudProjector::projectToScan(
         const PointCloud3D& cloud_in) const
 {
     PointCloud3D filtered_cloud;
-    return pointCloudToProjectedScan(cloud_in, filtered_cloud);
+    return projectToScan(cloud_in, filtered_cloud);
 }
 
-std::vector<float> PointCloudProjector::pointCloudToProjectedScan(
+std::vector<float> PointCloudProjector::projectToScan(
         const PointCloud3D& cloud_in,
         PointCloud3D& filtered_cloud) const
 {
     filtered_cloud = transformAndFilterPointCloud(cloud_in);
-    return pointCloudToScan(filtered_cloud, angle_min_, angle_max_);
+    return projectedPointCloudToScan(filtered_cloud, angle_min_, angle_max_);
 }
 
-PointCloud2D PointCloudProjector::pointCloudToProjectedPointCloud(
+PointCloud2D PointCloudProjector::projectToPointCloud2D(
         const PointCloud3D& cloud_in) const
 {
     PointCloud3D filtered_cloud;
-    return pointCloudToProjectedPointCloud(cloud_in, filtered_cloud);
+    return projectToPointCloud2D(cloud_in, filtered_cloud);
 }
 
-PointCloud2D PointCloudProjector::pointCloudToProjectedPointCloud(
+PointCloud2D PointCloudProjector::projectToPointCloud2D(
         const PointCloud3D& cloud_in,
         PointCloud3D& filtered_cloud) const
 {
     filtered_cloud = transformAndFilterPointCloud(cloud_in);
-    std::vector<float> scan = pointCloudToScan(filtered_cloud, angle_min_, angle_max_);
+    std::vector<float> scan = projectedPointCloudToScan(
+            filtered_cloud, angle_min_, angle_max_);
 
     /* convert from scan to flat pointcloud */
     PointCloud2D flat_cloud;
@@ -349,7 +350,7 @@ void PointCloudProjector::setPassthroughMaxZ(
     passthrough_max_z_ = passthrough_max_z;
 }
 
-size_t PointCloudProjector::calculateNumOfScanPts(
+size_t PointCloudProjector::calcNumOfScanPts(
         float angle_min,
         float angle_max,
         float angle_increment)

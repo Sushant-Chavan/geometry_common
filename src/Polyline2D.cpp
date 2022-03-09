@@ -45,12 +45,12 @@
 namespace kelo::geometry_common
 {
 
-bool Polyline2D::isIntersecting(const LineSegment2D& line_segment) const
+bool Polyline2D::intersects(const LineSegment2D& line_segment) const
 {
     // Conditions also ensures that there are atleast 2 vertices
-    for ( unsigned int start = 0, end = start + 1; end < vertices.size(); start = end++ )
+    for ( size_t start = 0, end = start + 1; end < vertices.size(); start = end++ )
     {
-        if ( LineSegment2D(vertices[start], vertices[end]).isIntersecting(line_segment) )
+        if ( LineSegment2D(vertices[start], vertices[end]).intersects(line_segment) )
         {
             return true;
         }
@@ -58,7 +58,7 @@ bool Polyline2D::isIntersecting(const LineSegment2D& line_segment) const
     return false;
 }
 
-bool Polyline2D::getClosestIntersectionPoint(
+bool Polyline2D::calcClosestIntersectionPointWith(
         const LineSegment2D& line_segment,
         Point2D& intersection_pt)
 {
@@ -67,9 +67,10 @@ bool Polyline2D::getClosestIntersectionPoint(
     for ( unsigned int start = 0, end = start + 1; end < vertices.size(); start = end++ )
     {
         Point2D pt;
-        if ( line_segment.getIntersectionPoint(LineSegment2D(vertices[start], vertices[end]), pt) )
+        if ( line_segment.calcIntersectionPointWith(
+                    LineSegment2D(vertices[start], vertices[end]), pt) )
         {
-            double dist = line_segment.start.getCartDist(pt);
+            double dist = line_segment.start.distTo(pt);
             if (dist < minDist)
             {
                 minDist = dist;
@@ -81,13 +82,11 @@ bool Polyline2D::getClosestIntersectionPoint(
     return intersects;
 }
 
-visualization_msgs::Marker Polyline2D::getMarker(const std::string& frame,
-        float red, float green, float blue, float alpha, float line_width,
-        float z) const
+visualization_msgs::Marker Polyline2D::asMarker(const std::string& frame,
+        float red, float green, float blue, float alpha, float line_width) const
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::LINE_STRIP;
-    // marker.header.stamp = ros::Time::now();
     marker.header.frame_id = frame;
     marker.color.r = red;
     marker.color.g = green;
@@ -100,7 +99,7 @@ visualization_msgs::Marker Polyline2D::getMarker(const std::string& frame,
         marker.points.reserve(vertices.size());
         for ( const Point2D& vertex : vertices )
         {
-            marker.points.push_back(Point3D(vertex, z).getPoint());
+            marker.points.push_back(vertex.asPoint());
         }
     }
     return marker;

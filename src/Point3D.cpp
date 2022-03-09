@@ -44,7 +44,7 @@
 namespace kelo::geometry_common
 {
 
-geometry_msgs::Point Point3D::getPoint() const
+geometry_msgs::Point Point3D::asPoint() const
 {
     geometry_msgs::Point point;
     point.x = x;
@@ -53,7 +53,7 @@ geometry_msgs::Point Point3D::getPoint() const
     return point;
 }
 
-geometry_msgs::Point32 Point3D::getPoint32() const
+geometry_msgs::Point32 Point3D::asPoint32() const
 {
     geometry_msgs::Point32 point;
     point.x = x;
@@ -62,12 +62,12 @@ geometry_msgs::Point32 Point3D::getPoint32() const
     return point;
 }
 
-geometry_msgs::PointStamped Point3D::getPointStamped(const std::string& frame) const
+geometry_msgs::PointStamped Point3D::asPointStamped(const std::string& frame) const
 {
     geometry_msgs::PointStamped point;
     // point.header.stamp = ros::Time::now();
     point.header.frame_id = frame;
-    point.point = getPoint();
+    point.point = asPoint();
     return point;
 }
 
@@ -82,7 +82,7 @@ void Point3D::normalise()
     }
 }
 
-Point3D Point3D::getNormalised() const
+Point3D Point3D::asNormalised() const
 {
     Point3D normalised_pt(*this);
     normalised_pt.normalise();
@@ -94,7 +94,7 @@ float Point3D::dotProduct(const Point3D& point) const
     return (x * point.x) + (y * point.y) + (z * point.z);
 }
 
-visualization_msgs::Marker Point3D::getMarker(const std::string& frame,
+visualization_msgs::Marker Point3D::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float diameter) const
 {
     visualization_msgs::Marker marker;
@@ -149,7 +149,7 @@ std::ostream& operator << (std::ostream& out, const Point3D& point)
 
 bool Point3D::operator == (const Point3D& p) const
 {
-    return ( getCartDist(p) < 1e-3f );
+    return ( distTo(p) < 1e-3f );
 }
 
 } // namespace kelo::geometry_common

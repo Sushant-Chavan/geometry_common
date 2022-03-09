@@ -45,11 +45,11 @@
 namespace kelo::geometry_common
 {
 
-bool Polygon2D::isIntersecting(const LineSegment2D& line_segment) const
+bool Polygon2D::intersects(const LineSegment2D& line_segment) const
 {
-    for ( unsigned int start = vertices.size() - 1, end = 0; end < vertices.size(); start = end++ )
+    for ( size_t start = vertices.size() - 1, end = 0; end < vertices.size(); start = end++ )
     {
-        if ( LineSegment2D(vertices[start], vertices[end]).isIntersecting(line_segment) )
+        if ( LineSegment2D(vertices[start], vertices[end]).intersects(line_segment) )
         {
             return true;
         }
@@ -57,7 +57,7 @@ bool Polygon2D::isIntersecting(const LineSegment2D& line_segment) const
     return false;
 }
 
-bool Polygon2D::getClosestIntersectionPoint(
+bool Polygon2D::calcClosestIntersectionPointWith(
         const LineSegment2D& line_segment,
         Point2D& intersection_pt)
 {
@@ -66,9 +66,10 @@ bool Polygon2D::getClosestIntersectionPoint(
     for ( unsigned int start = vertices.size() - 1, end = 0; end < vertices.size(); start = end++ )
     {
         Point2D pt;
-        if ( line_segment.getIntersectionPoint(LineSegment2D(vertices[start], vertices[end]), pt) )
+        if ( line_segment.calcIntersectionPointWith(
+                    LineSegment2D(vertices[start], vertices[end]), pt) )
         {
-            double dist = line_segment.start.getCartDist(pt);
+            double dist = line_segment.start.distTo(pt);
             if (dist < minDist)
             {
                 minDist = dist;
@@ -111,7 +112,7 @@ bool Polygon2D::containsAnyPoint(const PointVec2D& points) const
     return false; 
 }
 
-Point2D Polygon2D::getMeanPoint() const
+Point2D Polygon2D::meanPoint() const
 {
     Point2D mean;
     if (!vertices.empty())
@@ -125,7 +126,7 @@ Point2D Polygon2D::getMeanPoint() const
     return mean;
 }
 
-float Polygon2D::getArea() const
+float Polygon2D::area() const
 {
     float area = 0.0f;
     size_t i, j;
@@ -144,7 +145,7 @@ bool Polygon2D::isConvex() const
         return true;
     }
 
-    Point2D meanPt = getMeanPoint();
+    Point2D meanPt = meanPoint();
     if ( !containsPoint(meanPt) )
     {
         return false;
@@ -210,7 +211,7 @@ Polygon2D Polygon2D::calcConvexHullOfPolygons(
         while ( convex_hull.size() > 1 )
         {
             PointVec2D::const_iterator it = convex_hull.end();
-            float angle = Utils::getAngleBetweenPoints(p, *(it-1), *(it-2));
+            float angle = Utils::calcAngleBetweenPoints(p, *(it-1), *(it-2));
             if ( angle > 0 ) // counter clockwise turn is allowed
             {
                 break;
@@ -222,7 +223,7 @@ Polygon2D Polygon2D::calcConvexHullOfPolygons(
     return Polygon2D(convex_hull);
 }
 
-Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
+Polygon2D Polygon2D::calcInflatedPolygon(float inflation_dist)
 {
     Polygon2D inflated_polygon(*this);
     size_t N = vertices.size();
@@ -235,7 +236,7 @@ Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
     float shortest_side_len = 1e6f;
     for ( size_t i = 0; i < N; i++ )
     {
-        float side_len = vertices[i].getCartDist(vertices[(i+1)%N]);
+        float side_len = vertices[i].distTo(vertices[(i+1)%N]);
         if ( side_len < shortest_side_len )
         {
             shortest_side_len = side_len;
@@ -250,11 +251,11 @@ Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
         const Point2D& b = vertices[i]; // current pt
         const Point2D& c = vertices[(i+1) % N]; // next pt
 
-        const Vec2D vec_b_a = (a - b).getNormalised();
-        const Vec2D vec_b_c = (c - b).getNormalised();
+        const Vector2D vec_b_a = (a - b).asNormalised();
+        const Vector2D vec_b_c = (c - b).asNormalised();
 
         // calculate inflation dist based on the angle formed between a, b and c
-        float theta = std::fabs(Utils::getAngleBetweenPoints(a, b, c));
+        float theta = std::fabs(Utils::calcAngleBetweenPoints(a, b, c));
         float rhombus_side_length = inflation_dist / std::sin(theta);
         float diag_1_length = 2 * rhombus_side_length * std::cos(theta/2);
         float diag_2_length = 2 * rhombus_side_length * std::sin(theta/2);
@@ -269,7 +270,7 @@ Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
         Point2D intermediate_a = b + (vec_b_a * offset_dist);
         Point2D intermediate_c = b + (vec_b_c * offset_dist);
         Point2D mid_intermediate_pt = (intermediate_a + intermediate_c) * 0.5f;
-        Vec2D diff = (mid_intermediate_pt - b).getNormalised();
+        Vector2D diff = (mid_intermediate_pt - b).asNormalised();
 
         // calculate sign of inflation dist based on direction of normalised vec
         Point2D test_pt = b + (diff * offset_dist);
@@ -281,13 +282,11 @@ Polygon2D Polygon2D::getInflatedPolygon(float inflation_dist)
     return inflated_polygon;
 }
 
-visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
-        float red, float green, float blue, float alpha, float line_width,
-        float z) const
+visualization_msgs::Marker Polygon2D::asMarker(const std::string& frame,
+        float red, float green, float blue, float alpha, float line_width) const
 {
     visualization_msgs::Marker marker;
     marker.type = visualization_msgs::Marker::LINE_STRIP;
-    // marker.header.stamp = ros::Time::now();
     marker.header.frame_id = frame;
     marker.color.r = red;
     marker.color.g = green;
@@ -300,10 +299,10 @@ visualization_msgs::Marker Polygon2D::getMarker(const std::string& frame,
         marker.points.reserve(vertices.size());
         for ( const Point2D& vertex : vertices )
         {
-            marker.points.push_back(Point3D(vertex, z).getPoint());
+            marker.points.push_back(vertex.asPoint());
         }
         // Repeat first point again to close the polygon loop
-        marker.points.push_back(Point3D(vertices[0], z).getPoint());
+        marker.points.push_back(vertices[0].asPoint());
     }
     return marker;
 }
