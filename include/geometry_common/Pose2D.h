@@ -96,6 +96,15 @@ class Pose2D : public XYTheta
         /**
          * @brief
          * 
+         * @param position 
+         * @param theta 
+         */
+        Pose2D(const Point2D& position, float theta):
+            XYTheta(position.x, position.y, theta) {}
+
+        /**
+         * @brief
+         * 
          * @param pose 
          */
         Pose2D(const geometry_msgs::PoseStamped& pose);
@@ -126,6 +135,13 @@ class Pose2D : public XYTheta
          * 
          */
         virtual ~Pose2D() {}
+
+        /**
+         * @brief 
+         * 
+         * @return Point2D 
+         */
+        inline Point2D position() const { return Point2D(x, y); }
 
         /**
          * @brief
