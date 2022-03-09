@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
-#define KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
+#ifndef KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_3D_H
+#define KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_3D_H
 
 #include <array>
 
@@ -151,4 +151,4 @@ class TransformMatrix3D
 };
 
 }; // namespace kelo::geometry_common
-#endif // KELO_GEOMETRY_COMMON_TRANSFORM_MAT_3D_H
+#endif // KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_3D_H
