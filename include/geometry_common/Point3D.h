@@ -223,6 +223,14 @@ class Point3D
         /**
          * @brief 
          * 
+         * @param other 
+         * @return Point3D& 
+         */
+        Point3D& operator = (const Point3D& other);
+
+        /**
+         * @brief 
+         * 
          * @param p1 
          * @param p2 
          * @return Point3D 

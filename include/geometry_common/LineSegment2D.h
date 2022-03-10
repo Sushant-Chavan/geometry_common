@@ -218,6 +218,14 @@ class LineSegment2D
 
         /**
          * @brief 
+         * 
+         * @param other 
+         * @return LineSegment2D& 
+         */
+        LineSegment2D& operator = (const LineSegment2D& other);
+
+        /**
+         * @brief 
          *
          * @param line_segment
          * @return 

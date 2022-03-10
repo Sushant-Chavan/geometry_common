@@ -117,6 +117,12 @@ visualization_msgs::Marker Polyline2D::asMarker(const std::string& frame,
     return marker;
 }
 
+Polyline2D& Polyline2D::operator = (const Polyline2D& other)
+{
+    vertices = other.vertices;
+    return *this;
+}
+
 Point2D& Polyline2D::operator [] (unsigned int index)
 {
     return vertices[index];

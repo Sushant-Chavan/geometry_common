@@ -227,6 +227,14 @@ class Polygon2D : public Polyline2D
                 float line_width = 0.1f) const override;
 
         /**
+         * @brief 
+         * 
+         * @param other 
+         * @return Polygon2D& 
+         */
+        Polygon2D& operator = (const Polygon2D& other);
+
+        /**
          * @brief Append the polygon information as string to the input stream object
          * 
          * @param out The stream object to which the polygon information should be appended

@@ -144,6 +144,14 @@ class TransformMatrix2D
 
         void transform(Polyline2D& polyline) const;
 
+        /**
+         * @brief 
+         * 
+         * @param other 
+         * @return TransformMatrix2D& 
+         */
+        TransformMatrix2D& operator = (const TransformMatrix2D& other);
+
         TransformMatrix2D operator * (const TransformMatrix2D& tf_mat) const;
 
         TransformMatrix2D& operator *= (const TransformMatrix2D& tf_mat);

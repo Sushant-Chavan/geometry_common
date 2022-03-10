@@ -98,6 +98,17 @@ bool Box::containsPoint(const Point3D& p) const
              p.z >= min_z && p.z <= max_z );
 }
 
+Box& Box::operator = (const Box& other)
+{
+    min_x = other.min_x;
+    max_x = other.max_x;
+    min_y = other.min_y;
+    max_y = other.max_y;
+    min_z = other.min_z;
+    max_z = other.max_z;
+    return *this;
+}
+
 bool Box::operator == (const Box& box) const
 {
     return ( std::fabs(min_x - box.min_x) < 1e-3f &&

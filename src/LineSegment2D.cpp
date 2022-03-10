@@ -170,6 +170,13 @@ visualization_msgs::Marker LineSegment2D::asMarker(const std::string& frame,
     return marker;
 }
 
+LineSegment2D& LineSegment2D::operator = (const LineSegment2D& other)
+{
+    start = other.start;
+    end = other.end;
+    return *this;
+}
+
 bool LineSegment2D::operator == (const LineSegment2D& line_segment) const
 {
     return ( start == line_segment.start && end == line_segment.end );
