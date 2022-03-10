@@ -130,6 +130,14 @@ class Box
 
         /**
          * @brief 
+         *
+         * @param box
+         * @return bool
+         */
+        bool operator == (const Box& box) const;
+
+        /**
+         * @brief 
          * 
          * @param out 
          * @param box 
