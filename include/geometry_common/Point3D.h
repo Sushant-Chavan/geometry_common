@@ -48,7 +48,9 @@
 
 #include <geometry_common/Point2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 /**
@@ -282,5 +284,6 @@ using PointVec3D = std::vector<Point3D>;
  */
 using PointCloud3D = std::vector<Point3D>;
 
-}; // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_POINT_3D_H

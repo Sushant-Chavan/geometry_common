@@ -48,7 +48,9 @@
 
 #include <cmath>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 // Forward declaration 
@@ -268,5 +270,6 @@ using PointVec2D = std::vector<Point2D>;
  */
 using PointCloud2D = std::vector<Point2D>;
 
-}; // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_POINT_H

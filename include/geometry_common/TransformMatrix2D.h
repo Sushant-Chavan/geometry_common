@@ -45,7 +45,9 @@
 
 #include <tf/transform_datatypes.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 // Forward declaration 
@@ -180,5 +182,6 @@ class TransformMatrix2D
 
 };
 
-}; // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_TRANSFORM_MATRIX_2D_H

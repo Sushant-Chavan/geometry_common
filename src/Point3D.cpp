@@ -41,7 +41,9 @@
 #include <geometry_common/Utils.h>
 #include <geometry_common/Point3D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 geometry_msgs::Point Point3D::asPoint() const
@@ -152,4 +154,5 @@ bool Point3D::operator == (const Point3D& p) const
     return ( distTo(p) < 1e-3f );
 }
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

@@ -42,7 +42,9 @@
 #include <geometry_common/Point3D.h>
 #include <geometry_common/Polyline2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 float Polyline2D::length() const
@@ -152,4 +154,5 @@ std::ostream& operator<<(std::ostream& out, const Polyline2D& polyline)
     return out;
 }
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

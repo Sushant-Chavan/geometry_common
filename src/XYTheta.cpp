@@ -42,7 +42,9 @@
 #include <geometry_common/Utils.h>
 #include <geometry_common/XYTheta.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 XYTheta& XYTheta::operator = (const XYTheta& other)
@@ -95,4 +97,5 @@ std::ostream& operator << (std::ostream& out, const XYTheta& x_y_theta)
     return out;
 }
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

@@ -44,7 +44,9 @@
 #include <geometry_common/Point3D.h>
 #include <geometry_common/TransformMatrix3D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 TransformMatrix3D::TransformMatrix3D(
@@ -331,4 +333,5 @@ std::ostream& operator << (std::ostream& out, const TransformMatrix3D& tf_mat)
     return out;
 }
 
-}; // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

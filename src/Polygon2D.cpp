@@ -42,7 +42,9 @@
 #include <geometry_common/Utils.h>
 #include <geometry_common/Polygon2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 float Polygon2D::length() const
@@ -326,4 +328,5 @@ std::ostream& operator<<(std::ostream& out, const Polygon2D& polygon)
     return out;
 }
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

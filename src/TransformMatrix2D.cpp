@@ -47,7 +47,9 @@
 #include <geometry_common/Polygon2D.h>
 #include <geometry_common/TransformMatrix2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 TransformMatrix2D::TransformMatrix2D(float x, float y, float theta)
@@ -301,4 +303,5 @@ std::ostream& operator << (std::ostream& out, const TransformMatrix2D& tf_mat)
     return out;
 }
 
-}; // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

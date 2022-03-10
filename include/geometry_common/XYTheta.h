@@ -44,7 +44,9 @@
 #include <iostream>
 #include <memory>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 /**
@@ -138,6 +140,6 @@ class XYTheta
 using Velocity2D = XYTheta;
 using Acceleration2D = XYTheta;
 
-} // namespace kelo::geometry_common
-
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_X_Y_THETA_H

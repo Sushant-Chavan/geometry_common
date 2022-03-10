@@ -43,7 +43,9 @@
 #include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/Pose2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 Pose2D::Pose2D(float _x, float _y, float _theta)
@@ -182,4 +184,5 @@ std::ostream& operator << (std::ostream& out, const Pose2D& pose)
     return out;
 }
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

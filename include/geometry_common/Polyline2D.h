@@ -45,7 +45,9 @@
 
 #include <geometry_common/Point2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 // Forward declaration
@@ -195,5 +197,6 @@ class Polyline2D
                 const Polyline2D& polyline);
 };
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_POLYLINE_2D_H

@@ -45,7 +45,9 @@
 #include <string>
 #include <iostream>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 /**
@@ -89,5 +91,6 @@ inline WindingOrder asWindingOrder(const std::string& winding_order_string)
     return winding_order;
 };
 
-}; // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_ENUMS_H

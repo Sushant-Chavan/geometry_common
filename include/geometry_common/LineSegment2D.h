@@ -48,7 +48,9 @@
 
 #include <geometry_common/Point2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 /**
@@ -234,5 +236,6 @@ class LineSegment2D
                 const LineSegment2D& line_segment);
 };
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_LINE_SEGMENT_2D_H

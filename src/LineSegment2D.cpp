@@ -43,7 +43,9 @@
 #include <geometry_common/Point3D.h>
 #include <geometry_common/LineSegment2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 LineSegment2D::~LineSegment2D()
@@ -180,4 +182,5 @@ std::ostream& operator << (std::ostream& out, const LineSegment2D& line_segment)
     return out;
 }
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

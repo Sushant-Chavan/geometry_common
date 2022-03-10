@@ -45,7 +45,9 @@
 
 #include <geometry_common/Polyline2D.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 /**
@@ -237,5 +239,6 @@ class Polygon2D : public Polyline2D
                 const Polygon2D& polygon);
 };
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_POLYGON_2D_H

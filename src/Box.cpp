@@ -40,7 +40,9 @@
 
 #include <geometry_common/Box.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 bool Box::initialiseBoxFromYAML(const YAML::Node& yaml_box_params, Box& box)
@@ -118,4 +120,5 @@ std::ostream& operator << (std::ostream& out, const Box& box)
     return out;
 }
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo

@@ -55,7 +55,9 @@
 #include <geometry_common/LineSegment2D.h>
 #include <geometry_common/Enums.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 /**
@@ -762,6 +764,6 @@ class Utils
                 float size = 0.2f);
 };
 
-} // namespace kelo::geometry_common
-
+} // namespace geometry_common
+} // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_UTILS_H

@@ -49,7 +49,9 @@
 #include <geometry_common/TransformMatrix2D.h>
 #include <geometry_common/Utils.h>
 
-namespace kelo::geometry_common
+namespace kelo
+{
+namespace geometry_common
 {
 
 float Utils::roundFloat(
@@ -1328,4 +1330,5 @@ visualization_msgs::Marker Utils::convertStringToMarker(
     return marker;
 }
 
-} // namespace kelo::geometry_common
+} // namespace geometry_common
+} // namespace kelo
