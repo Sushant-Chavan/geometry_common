@@ -940,14 +940,17 @@ float Utils::clipSigned(
 float Utils::clipAngle(
         float raw_angle)
 {
-    float angle = raw_angle;
+    float two_pi = 2.0f * M_PI;
+    float angle = ( std::fabs(raw_angle) > two_pi )
+                  ? raw_angle - (std::floor(raw_angle/two_pi) * two_pi)
+                  : raw_angle;
     if ( angle > M_PI )
     {
-        angle -= 2*M_PI;
+        angle -= two_pi;
     }
     else if ( angle < -M_PI )
     {
-        angle += 2*M_PI;
+        angle += two_pi;
     }
     return angle;
 }

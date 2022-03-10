@@ -448,12 +448,17 @@ class Utils
                 float min_limit);
 
         /**
-         * @brief 
+         * @brief clip `value` to be between `min_limit` and `max_limit` while
+         * maintaining sign.\n
+         * If `value` is positive, it clips in the range [min_limit, max_limit]
+         * If `value` is negative, it clips in the range [-max_limit, -min_limit]
+         *
+         * @note: Both min_limit and max_limit needs to be positive values
          * 
-         * @param value 
-         * @param max_limit 
-         * @param min_limit 
-         * @return float 
+         * @param value number to be clipped
+         * @param max_limit positive maximum limit
+         * @param min_limit positive minimum limit
+         * @return float
          */
         static float clipSigned(
                 float value,
@@ -461,10 +466,10 @@ class Utils
                 float min_limit);
 
         /**
-         * @brief 
+         * @brief convert any angle value to be between -pi and pi
          * 
-         * @param raw_angle 
-         * @return float 
+         * @param raw_angle an angular value in radians
+         * @return float angular value in radians in range [-pi, pi]
          */
         static float clipAngle(
                 float raw_angle);

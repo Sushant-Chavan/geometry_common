@@ -7,6 +7,31 @@
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Utils;
 
+TEST(UtilsTest, clipAngle)
+{
+    EXPECT_NEAR(Utils::clipAngle(0.0f), 0.0f, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(M_PI/4), M_PI/4, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-M_PI/4), -M_PI/4, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(M_PI/2), M_PI/2, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-M_PI/2), -M_PI/2, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(3.0f), 3.0f, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-3.0f), -3.0f, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(1.5f*M_PI), -M_PI/2, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-1.5f*M_PI), M_PI/2, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(2.0f*M_PI), 0.0f, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-2.0f*M_PI), 0.0f, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(3.1f*M_PI), -0.9f*M_PI, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-3.1f*M_PI), 0.9f*M_PI, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(4.2f*M_PI), 0.2f*M_PI, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-4.2f*M_PI), -0.2f*M_PI, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(5.3f*M_PI), -0.7f*M_PI, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-5.3f*M_PI), 0.7f*M_PI, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(7.75f*M_PI), -M_PI/4, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-7.75f*M_PI), M_PI/4, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(10.0f*M_PI), 0.0f, 1e-3f);
+    EXPECT_NEAR(Utils::clipAngle(-10.0f*M_PI), 0.0f, 1e-3f);
+}
+
 TEST(UtilsTest, calcAngleBetweenPoints)
 {
     Point2D a(0.0f, 0.0f);
