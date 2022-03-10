@@ -106,6 +106,13 @@ class Polygon2D : public Polyline2D
         virtual ~Polygon2D() {}
 
         /**
+         * @brief Returns the perimeter of the polygon
+         * 
+         * @return float The perimeter in meters
+         */
+        float length() const override;
+
+        /**
          * @brief Checks if the 2D polygon and a 2D line segment intersect at
          * atleast one point
          * 
