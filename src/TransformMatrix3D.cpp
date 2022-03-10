@@ -300,6 +300,18 @@ const float& TransformMatrix3D::operator [] (unsigned int index) const
     return mat_[index];
 }
 
+bool TransformMatrix3D::operator == (const TransformMatrix3D& tf_mat) const
+{
+    for ( size_t i = 0; i < mat_.size(); i++ )
+    {
+        if ( std::fabs(mat_[i] - tf_mat[i]) > 1e-3f )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 std::ostream& operator << (std::ostream& out, const TransformMatrix3D& tf_mat)
 {
     out << std::setprecision(3) << std::fixed;

@@ -168,6 +168,14 @@ class Polyline2D
         const Point2D& operator [] (unsigned int index) const;
 
         /**
+         * @brief 
+         *
+         * @param polyline
+         * @return 
+         */
+        bool operator == (const Polyline2D& polyline) const;
+
+        /**
          * @brief Append the Polyline information as string to the input stream object
          * 
          * @param out The stream object to which the polyline information should be appended

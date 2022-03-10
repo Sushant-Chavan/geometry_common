@@ -216,6 +216,14 @@ class LineSegment2D
 
         /**
          * @brief 
+         *
+         * @param line_segment
+         * @return 
+         */
+        bool operator == (const LineSegment2D& line_segment) const;
+
+        /**
+         * @brief 
          * 
          * @param out 
          * @param line_segment 

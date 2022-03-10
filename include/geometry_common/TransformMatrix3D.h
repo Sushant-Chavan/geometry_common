@@ -136,6 +136,14 @@ class TransformMatrix3D
 
         /**
          * @brief 
+         *
+         * @param tf_mat
+         * @return 
+         */
+        bool operator == (const TransformMatrix3D& tf_mat) const;
+
+        /**
+         * @brief 
          * 
          * @param out 
          * @param tf_mat 

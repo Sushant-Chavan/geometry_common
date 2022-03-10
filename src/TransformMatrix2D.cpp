@@ -276,6 +276,18 @@ const float& TransformMatrix2D::operator [] (unsigned int index) const
     return mat_[index];
 }
 
+bool TransformMatrix2D::operator == (const TransformMatrix2D& tf_mat) const
+{
+    for ( size_t i = 0; i < mat_.size(); i++ )
+    {
+        if ( std::fabs(mat_[i] - tf_mat[i]) > 1e-3f )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 std::ostream& operator << (std::ostream& out, const TransformMatrix2D& tf_mat)
 {
     out << std::setprecision(3) << std::fixed;

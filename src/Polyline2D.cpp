@@ -115,6 +115,23 @@ const Point2D& Polyline2D::operator [] (unsigned int index) const
     return vertices[index];
 }
 
+bool Polyline2D::operator == (const Polyline2D& polyline) const
+{
+    if ( vertices.size() != polyline.size() )
+    {
+        return false;
+    }
+
+    for ( size_t i = 0; i < vertices.size(); i++ )
+    {
+        if ( !(vertices[i] == polyline[i]) )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 std::ostream& operator<<(std::ostream& out, const Polyline2D& polyline)
 {
     out << "Polyline vertices:" << std::endl;

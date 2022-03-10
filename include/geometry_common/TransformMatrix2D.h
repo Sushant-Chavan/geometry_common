@@ -158,6 +158,14 @@ class TransformMatrix2D
 
         /**
          * @brief 
+         *
+         * @param tf_mat
+         * @return 
+         */
+        bool operator == (const TransformMatrix2D& tf_mat) const;
+
+        /**
+         * @brief 
          * 
          * @param out 
          * @param tf_mat 
