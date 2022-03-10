@@ -74,8 +74,7 @@ class Pose2D : public XYTheta
          * @param _y 
          * @param _theta 
          */
-        Pose2D(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f):
-            XYTheta(_x, _y, _theta) {}
+        Pose2D(float _x = 0.0f, float _y = 0.0f, float _theta = 0.0f);
 
         /**
          * @brief
@@ -83,7 +82,7 @@ class Pose2D : public XYTheta
          * @param pose 
          */
         Pose2D(const Pose2D& pose):
-            XYTheta(pose.x, pose.y, pose.theta) {}
+            Pose2D(pose.x, pose.y, pose.theta) {}
 
         /**
          * @brief 
@@ -91,7 +90,7 @@ class Pose2D : public XYTheta
          * @param attitude):
          */
         Pose2D(const XYTheta& x_y_theta):
-            XYTheta(x_y_theta) {}
+            Pose2D(x_y_theta.x, x_y_theta.y, x_y_theta.theta) {}
 
         /**
          * @brief
@@ -100,7 +99,7 @@ class Pose2D : public XYTheta
          * @param theta 
          */
         Pose2D(const Point2D& position, float theta):
-            XYTheta(position.x, position.y, theta) {}
+            Pose2D(position.x, position.y, theta) {}
 
         /**
          * @brief

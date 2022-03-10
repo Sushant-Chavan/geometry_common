@@ -46,6 +46,13 @@
 namespace kelo::geometry_common
 {
 
+Pose2D::Pose2D(float _x, float _y, float _theta)
+{
+    x = _x;
+    y = _y;
+    theta = Utils::clipAngle(_theta);
+}
+
 Pose2D::Pose2D(const geometry_msgs::PoseStamped& pose)
 {
     x = pose.pose.position.x;
