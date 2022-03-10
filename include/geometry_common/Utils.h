@@ -53,6 +53,7 @@
 #include <geometry_common/Pose2D.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/LineSegment2D.h>
+#include <geometry_common/Enums.h>
 
 namespace kelo::geometry_common
 {
@@ -626,6 +627,19 @@ class Utils
          * @return float 
          */
         static float calcAngleBetweenPoints(
+                const Point2D& a,
+                const Point2D& b,
+                const Point2D& c);
+
+        /**
+         * @brief 
+         * 
+         * @param a 
+         * @param b 
+         * @param c 
+         * @return WindingOrder 
+         */
+        static WindingOrder calcWindingOrder(
                 const Point2D& a,
                 const Point2D& b,
                 const Point2D& c);

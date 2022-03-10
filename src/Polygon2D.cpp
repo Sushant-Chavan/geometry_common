@@ -45,6 +45,15 @@
 namespace kelo::geometry_common
 {
 
+float Polygon2D::length() const
+{
+    size_t nVertices = vertices.size();
+    if ( nVertices < 2 )
+        return 0.0f;
+
+    return Polyline2D::length() + vertices[0].distTo(vertices[nVertices - 1]);
+}
+
 bool Polygon2D::intersects(const LineSegment2D& line_segment) const
 {
     for ( size_t start = vertices.size() - 1, end = 0; end < vertices.size(); start = end++ )

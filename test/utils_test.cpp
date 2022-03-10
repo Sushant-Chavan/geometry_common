@@ -6,6 +6,7 @@
 
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::Utils;
+using kelo::geometry_common::WindingOrder;
 
 TEST(UtilsTest, clipAngle)
 {
@@ -39,12 +40,23 @@ TEST(UtilsTest, calcAngleBetweenPoints)
     Point2D c(2.0f, 1.0f);
     Point2D d(0.0f, 1.0f);
     Point2D e(2.0f, -1.0f);
-    EXPECT_FLOAT_EQ(Utils::calcAngleBetweenPoints(a, b, c), -3*M_PI/4)
-        << "Angle should be -3pi/4.";
-    EXPECT_FLOAT_EQ(Utils::calcAngleBetweenPoints(d, b, a), M_PI/4)
-        << "Angle should be pi/4.";
-    EXPECT_FLOAT_EQ(Utils::calcAngleBetweenPoints(e, b, a), -3*M_PI/4)
-        << "Angle should be -3pi/4.";
+    EXPECT_NEAR(Utils::calcAngleBetweenPoints(a, b, c), -3*M_PI/4, 1e-3f);
+    EXPECT_NEAR(Utils::calcAngleBetweenPoints(c, b, a), 3*M_PI/4, 1e-3f);
+    EXPECT_NEAR(Utils::calcAngleBetweenPoints(d, b, a), M_PI/4, 1e-3f);
+    EXPECT_NEAR(Utils::calcAngleBetweenPoints(e, b, a), -3*M_PI/4, 1e-3f);
+}
+
+TEST(UtilsTest, calcWindingOrder)
+{
+    Point2D a(0.0f, 0.0f);
+    Point2D b(1.0f, 0.0f);
+    Point2D c(2.0f, 1.0f);
+    Point2D d(2.0f, 0.0f);
+    EXPECT_EQ(Utils::calcWindingOrder(a, b, c), WindingOrder::COUNTER_CLOCKWISE);
+    EXPECT_EQ(Utils::calcWindingOrder(c, b, a), WindingOrder::CLOCKWISE);
+    EXPECT_EQ(Utils::calcWindingOrder(a, b, d), WindingOrder::COLLINEAR);
+    EXPECT_EQ(Utils::calcWindingOrder(d, b, a), WindingOrder::COLLINEAR);
+    EXPECT_EQ(Utils::calcWindingOrder(a, d, b), WindingOrder::COLLINEAR);
 }
 
 TEST(UtilsTest, convertQuaternionToEuler)

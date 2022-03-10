@@ -93,6 +93,13 @@ class Polyline2D
         virtual ~Polyline2D() {}
 
         /**
+         * @brief Returns the length of the complete polyline
+         * 
+         * @return float The length in meters
+         */
+        virtual float length() const;
+
+        /**
          * @brief Checks if the 2D polyline and a 2D line segment intersect at
          * atleast one point
          * 

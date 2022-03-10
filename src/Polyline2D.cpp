@@ -45,6 +45,16 @@
 namespace kelo::geometry_common
 {
 
+float Polyline2D::length() const
+{
+    float len = 0.0f;
+    for ( unsigned int start = 0, end = start + 1; end < vertices.size(); start = end++ )
+    {
+        len += vertices[start].distTo(vertices[end]);
+    }
+    return len;
+}
+
 bool Polyline2D::intersects(const LineSegment2D& line_segment) const
 {
     // Conditions also ensures that there are atleast 2 vertices
