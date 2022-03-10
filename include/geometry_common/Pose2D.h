@@ -231,6 +231,14 @@ class Pose2D : public XYTheta
         /**
          * @brief 
          * 
+         * @param other 
+         * @return Pose2D& 
+         */
+        Pose2D& operator = (const Pose2D& other);
+
+        /**
+         * @brief 
+         * 
          * @param p1 
          * @param p2 
          * @return Pose2D 

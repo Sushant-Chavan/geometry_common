@@ -150,6 +150,14 @@ std::string Pose2D::asString() const
     return ss.str();
 }
 
+Pose2D& Pose2D::operator = (const Pose2D& other)
+{
+    x = other.x;
+    y = other.y;
+    theta = other.theta;
+    return *this;
+}
+
 Pose2D Pose2D::operator - (const Pose2D& pose) const
 {
     Pose2D diff;

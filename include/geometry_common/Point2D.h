@@ -199,6 +199,14 @@ class Point2D
         /**
          * @brief 
          * 
+         * @param other 
+         * @return Point2D& 
+         */
+        Point2D& operator = (const Point2D& other);
+
+        /**
+         * @brief 
+         * 
          * @param p1 
          * @param p2 
          * @return Point2D 

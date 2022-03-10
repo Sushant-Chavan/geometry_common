@@ -54,7 +54,7 @@ namespace kelo::geometry_common
 class XYTheta
 {
     public:
-        float x, y, theta;
+        float x{0.0f}, y{0.0f}, theta{0.0f};
 
         using Ptr = std::shared_ptr<XYTheta>;
         using ConstPtr = std::shared_ptr<const XYTheta>;
@@ -82,6 +82,14 @@ class XYTheta
          * 
          */
         virtual ~XYTheta() {}
+
+        /**
+         * @brief 
+         * 
+         * @param other 
+         * @return XYTheta& 
+         */
+        XYTheta& operator = (const XYTheta& other);
 
         /**
          * @brief 

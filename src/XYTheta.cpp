@@ -45,6 +45,14 @@
 namespace kelo::geometry_common
 {
 
+XYTheta& XYTheta::operator = (const XYTheta& other)
+{
+    x = other.x;
+    y = other.y;
+    theta = other.theta;
+    return *this;
+}
+
 XYTheta XYTheta::operator + (const XYTheta& x_y_theta) const
 {
     XYTheta sum;
