@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# ======================================================================
+
+# Define few colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 # ==============================================================================
 
 # Build all test scripts
@@ -39,10 +46,11 @@ for executable_name in $executables; do
     echo ""
 done
 
+
 echo "#######################################"
 if [[ $all_success == 1 ]]; then
-    echo "All tests succeeded"
+    printf "${GREEN}ALL TESTS SUCCEEDED${NC}\n"
 else
-    echo "Not all tests succeeded"
+    printf "${RED}NOT ALL TESTS SUCCEEDED${NC}\n"
 fi
 echo "#######################################"
