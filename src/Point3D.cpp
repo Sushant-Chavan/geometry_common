@@ -116,6 +116,14 @@ visualization_msgs::Marker Point3D::asMarker(const std::string& frame,
     return marker;
 }
 
+Point3D& Point3D::operator = (const Point3D& other)
+{
+    x = other.x;
+    y = other.y;
+    z = other.z;
+    return *this;
+}
+
 Point3D Point3D::operator - (const Point3D& p) const
 {
     Point3D diff;

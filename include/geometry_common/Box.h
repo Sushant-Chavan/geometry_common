@@ -132,6 +132,14 @@ class Box
 
         /**
          * @brief 
+         * 
+         * @param other 
+         * @return Box& 
+         */
+        Box& operator = (const Box& other);
+
+        /**
+         * @brief 
          *
          * @param box
          * @return bool

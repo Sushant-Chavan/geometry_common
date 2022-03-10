@@ -318,6 +318,12 @@ visualization_msgs::Marker Polygon2D::asMarker(const std::string& frame,
     return marker;
 }
 
+Polygon2D& Polygon2D::operator = (const Polygon2D& other)
+{
+    vertices = other.vertices;
+    return *this;
+}
+
 std::ostream& operator<<(std::ostream& out, const Polygon2D& polygon)
 {
     out << "Polygon vertices:" << std::endl;

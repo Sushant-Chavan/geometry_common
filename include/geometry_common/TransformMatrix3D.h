@@ -128,6 +128,14 @@ class TransformMatrix3D
 
         void transform(Point3D& point) const;
 
+        /**
+         * @brief 
+         * 
+         * @param other 
+         * @return TransformMatrix3D& 
+         */
+        TransformMatrix3D& operator = (const TransformMatrix3D& other);
+
         TransformMatrix3D operator * (const TransformMatrix3D& tf_mat) const;
 
         TransformMatrix3D& operator *= (const TransformMatrix3D& tf_mat);

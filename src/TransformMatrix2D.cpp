@@ -223,6 +223,12 @@ void TransformMatrix2D::transform(Polyline2D& polyline) const
     }
 }
 
+TransformMatrix2D& TransformMatrix2D::operator = (const TransformMatrix2D& other)
+{
+    mat_ = other.mat_;
+    return *this;
+}
+
 TransformMatrix2D TransformMatrix2D::operator * (const TransformMatrix2D& tf_mat) const
 {
     TransformMatrix2D result_tf_mat(*this);

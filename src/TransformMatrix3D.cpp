@@ -254,6 +254,12 @@ void TransformMatrix3D::transform(Point3D& point) const
     point.z = temp_z;
 }
 
+TransformMatrix3D& TransformMatrix3D::operator = (const TransformMatrix3D& other)
+{
+    mat_ = other.mat_;
+    return *this;
+}
+
 TransformMatrix3D TransformMatrix3D::operator * (const TransformMatrix3D& tf_mat) const
 {
     TransformMatrix3D result_tf_mat(*this);

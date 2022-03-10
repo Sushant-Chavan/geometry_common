@@ -159,6 +159,14 @@ class Polyline2D
         }
 
         /**
+         * @brief 
+         * 
+         * @param other 
+         * @return Polyline2D& 
+         */
+        Polyline2D& operator = (const Polyline2D& other);
+
+        /**
          * @brief Indexing operator to access each individual vertex by its index.
          * This method can be used to update the vertex data.
          * 
