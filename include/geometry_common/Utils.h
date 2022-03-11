@@ -529,7 +529,7 @@ class Utils
          * @return sensor_msgs::PointCloud 
          */
         template <typename T>
-        sensor_msgs::PointCloud convertToROSPointCloud(
+        static sensor_msgs::PointCloud convertToROSPointCloud(
                 const std::vector<T>& pc,
                 const std::string& frame = "base_link");
 
@@ -732,7 +732,7 @@ class Utils
          * @return 
          */
         template <typename T>
-        visualization_msgs::Marker convertPointCloudToMarker(
+        static visualization_msgs::Marker convertPointCloudToMarker(
                 const std::vector<T>& cloud,
                 const std::string& frame = "base_link",
                 float diameter = 0.05f,
