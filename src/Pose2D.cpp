@@ -160,28 +160,19 @@ Pose2D& Pose2D::operator = (const Pose2D& other)
     return *this;
 }
 
-Pose2D Pose2D::operator - (const Pose2D& pose) const
+Pose2D Pose2D::operator - (const Pose2D& other) const
 {
     Pose2D diff;
-    diff.x = x - pose.x;
-    diff.y = y - pose.y;
-    diff.theta = Utils::calcShortestAngle(theta, pose.theta);
+    diff.x = x - other.x;
+    diff.y = y - other.y;
+    diff.theta = Utils::calcShortestAngle(theta, other.theta);
     return diff;
 }
 
-bool Pose2D::operator == (const Pose2D& pose) const
+bool Pose2D::operator == (const Pose2D& other) const
 {
-    return ( distTo(pose) < 1e-3f &&
-             Utils::calcShortestAngle(theta, pose.theta) < 1e-2f );
-}
-
-std::ostream& operator << (std::ostream& out, const Pose2D& pose)
-{
-    out << "<x: " << pose.x
-        << ", y: " << pose.y
-        << ", theta: " << pose.theta
-        << ">";
-    return out;
+    return ( distTo(other) < 1e-3f &&
+             Utils::calcShortestAngle(theta, other.theta) < 1e-2f );
 }
 
 } // namespace geometry_common

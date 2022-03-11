@@ -55,7 +55,7 @@ class Point3D;
 using Vector3D = Point3D;
 
 /**
- * @brief 
+ * @brief Transformation matrix for three dimensional space
  * 
  */
 class TransformMatrix3D

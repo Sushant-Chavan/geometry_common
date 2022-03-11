@@ -136,8 +136,6 @@ class Polyline2D
          * @param alpha The transparency of the generated line marker
          * in the range [0.0, 1.0]
          * @param line_width The width of the line marker
-         * @param z The Z-coordinate to be appended to all vertices of the line
-         * string to represent the 2D point in a 3D space. (Default: 0.0)
          * @return visualization_msgs::Marker A marker object representing the polyline
          */
         virtual visualization_msgs::Marker asMarker(
@@ -187,10 +185,10 @@ class Polyline2D
         /**
          * @brief 
          *
-         * @param polyline
+         * @param other
          * @return 
          */
-        bool operator == (const Polyline2D& polyline) const;
+        bool operator == (const Polyline2D& other) const;
 
         /**
          * @brief Append the Polyline information as string to the input stream object

@@ -52,7 +52,7 @@ namespace geometry_common
 {
 
 /**
- * @brief 
+ * @brief Axis aligned cuboid
  * 
  */
 class Box

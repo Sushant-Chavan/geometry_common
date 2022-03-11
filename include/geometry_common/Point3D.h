@@ -54,7 +54,7 @@ namespace geometry_common
 {
 
 /**
- * @brief 
+ * @brief Point for three dimensional space
  * 
  */
 class Point3D
@@ -231,29 +231,34 @@ class Point3D
         /**
          * @brief 
          * 
-         * @param p1 
-         * @param p2 
+         * @param other 
          * @return Point3D 
          */
-        Point3D operator - (const Point3D& p) const;
+        Point3D operator - (const Point3D& other) const;
 
         /**
          * @brief 
          * 
-         * @param p1 
-         * @param p2 
+         * @param other
          * @return Point3D 
          */
-        Point3D operator + (const Point3D& p) const;
+        Point3D operator + (const Point3D& other) const;
 
         /**
-         * @brief 
+         * @brief Scale point with a constant scalar number
          * 
-         * @param p1 
-         * @param scalar 
+         * @param scalar number the point will be scaled with
          * @return Point3D 
          */
         Point3D operator * (float scalar) const;
+
+        /**
+         * @brief 
+         * 
+         * @param other 
+         * @return bool 
+         */
+        bool operator == (const Point3D& other) const;
 
         /**
          * @brief 
@@ -264,14 +269,6 @@ class Point3D
          */
         friend std::ostream& operator << (std::ostream& out, const Point3D& point);
 
-        /**
-         * @brief 
-         * 
-         * @param p1 
-         * @param p2 
-         * @return bool 
-         */
-        bool operator == (const Point3D& p) const;
 };
 
 /**

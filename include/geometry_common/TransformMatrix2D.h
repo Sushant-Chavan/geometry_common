@@ -58,7 +58,7 @@ class Polygon2D;
 using Vector2D = Point2D;
 
 /**
- * @brief 
+ * @brief Transformation matrix for two dimensional space
  * 
  */
 class TransformMatrix2D

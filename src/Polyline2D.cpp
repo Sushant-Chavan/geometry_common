@@ -133,16 +133,16 @@ const Point2D& Polyline2D::operator [] (unsigned int index) const
     return vertices[index];
 }
 
-bool Polyline2D::operator == (const Polyline2D& polyline) const
+bool Polyline2D::operator == (const Polyline2D& other) const
 {
-    if ( vertices.size() != polyline.size() )
+    if ( vertices.size() != other.size() )
     {
         return false;
     }
 
     for ( size_t i = 0; i < vertices.size(); i++ )
     {
-        if ( !(vertices[i] == polyline[i]) )
+        if ( !(vertices[i] == other[i]) )
         {
             return false;
         }

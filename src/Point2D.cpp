@@ -127,19 +127,19 @@ Point2D& Point2D::operator = (const Point2D& other)
     return *this;
 }
 
-Point2D Point2D::operator - (const Point2D& p) const
+Point2D Point2D::operator - (const Point2D& other) const
 {
     Point2D diff;
-    diff.x = x - p.x;
-    diff.y = y - p.y;
+    diff.x = x - other.x;
+    diff.y = y - other.y;
     return diff;
 }
 
-Point2D Point2D::operator + (const Point2D& p) const
+Point2D Point2D::operator + (const Point2D& other) const
 {
     Point2D sum;
-    sum.x = x + p.x;
-    sum.y = y + p.y;
+    sum.x = x + other.x;
+    sum.y = y + other.y;
     return sum;
 }
 
@@ -151,15 +151,15 @@ Point2D Point2D::operator * (float scalar) const
     return scaled;
 }
 
+bool Point2D::operator == (const Point2D& other) const
+{
+    return ( distTo(other) < 1e-3f );
+}
+
 std::ostream& operator << (std::ostream& out, const Point2D& point)
 {
     out << "<x: " << point.x << ", y: " << point.y << ">";
     return out;
-}
-
-bool Point2D::operator == (const Point2D& p) const
-{
-    return ( distTo(p) < 1e-3f );
 }
 
 } // namespace geometry_common

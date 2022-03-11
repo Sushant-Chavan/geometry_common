@@ -124,21 +124,21 @@ Point3D& Point3D::operator = (const Point3D& other)
     return *this;
 }
 
-Point3D Point3D::operator - (const Point3D& p) const
+Point3D Point3D::operator - (const Point3D& other) const
 {
     Point3D diff;
-    diff.x = x - p.x;
-    diff.y = y - p.y;
-    diff.z = z - p.z;
+    diff.x = x - other.x;
+    diff.y = y - other.y;
+    diff.z = z - other.z;
     return diff;
 }
 
-Point3D Point3D::operator + (const Point3D& p) const
+Point3D Point3D::operator + (const Point3D& other) const
 {
     Point3D sum;
-    sum.x = x + p.x;
-    sum.y = y + p.y;
-    sum.z = z + p.z;
+    sum.x = x + other.x;
+    sum.y = y + other.y;
+    sum.z = z + other.z;
     return sum;
 }
 
@@ -151,15 +151,15 @@ Point3D Point3D::operator * (float scalar) const
     return scaled;
 }
 
+bool Point3D::operator == (const Point3D& other) const
+{
+    return ( distTo(other) < 1e-3f );
+}
+
 std::ostream& operator << (std::ostream& out, const Point3D& point)
 {
     out << "<x: " << point.x << ", y: " << point.y << ", z: " << point.z << ">";
     return out;
-}
-
-bool Point3D::operator == (const Point3D& p) const
-{
-    return ( distTo(p) < 1e-3f );
 }
 
 } // namespace geometry_common

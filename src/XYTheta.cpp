@@ -55,21 +55,21 @@ XYTheta& XYTheta::operator = (const XYTheta& other)
     return *this;
 }
 
-XYTheta XYTheta::operator + (const XYTheta& x_y_theta) const
+XYTheta XYTheta::operator + (const XYTheta& other) const
 {
     XYTheta sum;
-    sum.x = x + x_y_theta.x;
-    sum.y = y + x_y_theta.y;
-    sum.theta = theta + x_y_theta.theta;
+    sum.x = x + other.x;
+    sum.y = y + other.y;
+    sum.theta = theta + other.theta;
     return sum;
 }
 
-XYTheta XYTheta::operator - (const XYTheta& x_y_theta) const
+XYTheta XYTheta::operator - (const XYTheta& other) const
 {
     XYTheta diff;
-    diff.x = x - x_y_theta.x;
-    diff.y = y - x_y_theta.y;
-    diff.theta = theta - x_y_theta.theta;
+    diff.x = x - other.x;
+    diff.y = y - other.y;
+    diff.theta = theta - other.theta;
     return diff;
 }
 
@@ -82,9 +82,9 @@ XYTheta XYTheta::operator * (float scalar) const
     return scaled;
 }
 
-bool XYTheta::operator == (const XYTheta& x_y_theta) const
+bool XYTheta::operator == (const XYTheta& other) const
 {
-    XYTheta diff = *this - x_y_theta;
+    XYTheta diff = *this - other;
     return ( pow(diff.x, 2) + pow(diff.y, 2) + pow(diff.theta, 2) < 1e-6f );
 }
 

@@ -1133,7 +1133,7 @@ bool Utils::isAngleWithinBounds(
            : ( angle <= min_angle && angle >= max_angle );
 }
 
-std::vector<Point2D> Utils::generatePerpendicularPointsAt(
+PointVec2D Utils::generatePerpendicularPointsAt(
         const Pose2D& pose,
         float max_perp_dist,
         float step_size)
@@ -1142,7 +1142,7 @@ std::vector<Point2D> Utils::generatePerpendicularPointsAt(
 
     Vector2D unit_vec(std::cos(perpendicular_angle), std::sin(perpendicular_angle)); 
     Point2D pt(pose.x, pose.y);
-    std::vector<Point2D> pts;
+    PointVec2D pts;
     for ( float perp_dist = step_size; perp_dist < max_perp_dist; perp_dist += step_size )
     {
         Point2D offset = unit_vec * perp_dist;

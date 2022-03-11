@@ -54,7 +54,7 @@ namespace geometry_common
 {
 
 /**
- * @brief 
+ * @brief Line segment for two dimensional space represented with two end points
  * 
  */
 class LineSegment2D
@@ -180,7 +180,6 @@ class LineSegment2D
         /**
          * @brief 
          * 
-         * @param line_segment 
          * @param p 
          * @return float 
          */
@@ -198,15 +197,20 @@ class LineSegment2D
                 float dist_threshold = 1e-3f) const;
 
         /**
-         * @brief
+         * @brief Get an RViz visualization marker for the LineSegment2D object
          * 
-         * @param frame 
-         * @param red 
-         * @param green 
-         * @param blue 
-         * @param alpha 
-         * @param line_width 
-         * @return visualization_msgs::Marker 
+         * @param frame The frame in which the line segment's points are specified
+         * @param red The red color-component to be used in the line marker
+         * color in the range [0.0, 1.0]
+         * @param green The green color-component to be used in the line marker
+         * color in the range [0.0, 1.0]
+         * @param blue The blue color-component to be used in the line marker
+         * color in the range [0.0, 1.0]
+         * @param alpha The transparency of the generated line marker
+         * in the range [0.0, 1.0]
+         * @param line_width The width of the line marker
+         * @return visualization_msgs::Marker A marker object representing the
+         * LineSegment2D object
          */
         visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",

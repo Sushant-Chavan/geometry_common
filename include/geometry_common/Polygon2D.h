@@ -214,8 +214,6 @@ class Polygon2D : public Polyline2D
          * @param alpha The transparency of the generated line marker
          * in the range [0.0, 1.0]
          * @param line_width The width of the line marker
-         * @param z The Z-coordinate to be appended to all vertices of the polygon
-         * to represent the 2D point in a 3D space. (Default: 0.0)
          * @return visualization_msgs::Marker A marker object representing the polygon
          */
         visualization_msgs::Marker asMarker(

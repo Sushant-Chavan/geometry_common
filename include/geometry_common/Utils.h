@@ -61,7 +61,8 @@ namespace geometry_common
 {
 
 /**
- * @brief 
+ * @brief A utility class containing `static` functions useful for dealing with
+ * geometry related data.
  * 
  */
 class Utils
@@ -608,14 +609,12 @@ class Utils
         /**
          * @brief 
          * 
-         * @param start 
-         * @param end 
-         * @param pt 
+         * @param pose 
          * @param max_perp_dist 
          * @param step_size 
-         * @return std::vector<Point2D> 
+         * @return PointVec2D
          */
-        static std::vector<Point2D> generatePerpendicularPointsAt(
+        static PointVec2D generatePerpendicularPointsAt(
                 const Pose2D& pose,
                 float max_perp_dist = 3.0f,
                 float step_size = 0.1f);

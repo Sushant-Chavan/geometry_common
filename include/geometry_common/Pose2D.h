@@ -60,7 +60,7 @@ namespace geometry_common
 class TransformMatrix2D;
 
 /**
- * @brief 
+ * @brief Pose in two dimensional space.
  * 
  */
 class Pose2D : public XYTheta
@@ -89,7 +89,7 @@ class Pose2D : public XYTheta
         /**
          * @brief 
          *
-         * @param attitude):
+         * @param x_y_theta
          */
         Pose2D(const XYTheta& x_y_theta):
             Pose2D(x_y_theta.x, x_y_theta.y, x_y_theta.theta) {}
@@ -100,7 +100,7 @@ class Pose2D : public XYTheta
          * @param position 
          * @param theta 
          */
-        Pose2D(const Point2D& position, float theta):
+        Pose2D(const Point2D& position, float theta = 0.0f):
             Pose2D(position.x, position.y, theta) {}
 
         /**
@@ -241,20 +241,18 @@ class Pose2D : public XYTheta
         /**
          * @brief 
          * 
-         * @param p1 
-         * @param p2 
+         * @param other 
          * @return Pose2D 
          */
-        Pose2D operator - (const Pose2D& p) const;
+        Pose2D operator - (const Pose2D& other) const;
 
         /**
          * @brief 
          * 
-         * @param p1 
-         * @param p2 
+         * @param other 
          * @return bool 
          */
-        bool operator == (const Pose2D& p) const;
+        bool operator == (const Pose2D& other) const;
 
 };
 

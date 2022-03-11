@@ -50,7 +50,8 @@ namespace geometry_common
 {
 
 /**
- * @brief 
+ * @brief A simple data structure containing 3 components namely `x`, `y` and
+ * `theta`.
  * 
  */
 class XYTheta
@@ -74,7 +75,7 @@ class XYTheta
         /**
          * @brief
          * 
-         * @param pose 
+         * @param x_y_theta 
          */
         XYTheta(const XYTheta& x_y_theta):
             x(x_y_theta.x), y(x_y_theta.y), theta(x_y_theta.theta) {}
@@ -96,18 +97,18 @@ class XYTheta
         /**
          * @brief 
          *
-         * @param x_y_theta
+         * @param other
          * @return 
          */
-        XYTheta operator + (const XYTheta& x_y_theta) const;
+        XYTheta operator + (const XYTheta& other) const;
 
         /**
          * @brief 
          * 
-         * @param x_y_theta 
+         * @param other 
          * @return XYTheta 
          */
-        XYTheta operator - (const XYTheta& x_y_theta) const;
+        XYTheta operator - (const XYTheta& other) const;
 
         /**
          * @brief 
@@ -120,10 +121,10 @@ class XYTheta
         /**
          * @brief 
          * 
-         * @param x_y_theta 
+         * @param other 
          * @return bool 
          */
-        bool operator == (const XYTheta& x_y_theta) const;
+        bool operator == (const XYTheta& other) const;
 
         /**
          * @brief 

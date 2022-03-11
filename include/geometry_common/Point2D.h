@@ -57,7 +57,7 @@ namespace geometry_common
 class Pose2D;
 
 /**
- * @brief 
+ * @brief Point for two dimensional space
  * 
  */
 class Point2D
@@ -209,29 +209,34 @@ class Point2D
         /**
          * @brief 
          * 
-         * @param p1 
-         * @param p2 
+         * @param other 
          * @return Point2D 
          */
-        Point2D operator - (const Point2D& p2) const;
+        Point2D operator - (const Point2D& other) const;
 
         /**
          * @brief 
          * 
-         * @param p1 
-         * @param p2 
+         * @param other 
          * @return Point2D 
          */
-        Point2D operator + (const Point2D& p2) const;
+        Point2D operator + (const Point2D& other) const;
 
         /**
-         * @brief 
+         * @brief Scale point with a constant scalar number
          * 
-         * @param p1 
-         * @param scalar 
+         * @param scalar number the point will be scaled with
          * @return Point2D 
          */
         Point2D operator * (float scalar) const;
+
+        /**
+         * @brief 
+         * 
+         * @param other 
+         * @return bool 
+         */
+        bool operator == (const Point2D& other) const;
 
         /**
          * @brief 
@@ -242,14 +247,6 @@ class Point2D
          */
         friend std::ostream& operator << (std::ostream& out, const Point2D& point);
 
-        /**
-         * @brief 
-         * 
-         * @param p1 
-         * @param p2 
-         * @return bool 
-         */
-        bool operator == (const Point2D& p2) const;
 };
 
 /**
