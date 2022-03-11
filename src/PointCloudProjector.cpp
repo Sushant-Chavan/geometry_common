@@ -49,6 +49,7 @@ using geometry_common::Point2D;
 using geometry_common::Point3D;
 using geometry_common::PointCloud2D;
 using geometry_common::PointCloud3D;
+using geometry_common::TransformMatrix3D;
 using geometry_common::Utils;
 
 void PointCloudProjector::configureTransform(
@@ -348,6 +349,12 @@ void PointCloudProjector::setPassthroughMaxZ(
         float passthrough_max_z)
 {
     passthrough_max_z_ = passthrough_max_z;
+}
+
+void PointCloudProjector::setTransform(
+        const TransformMatrix3D& tf_mat)
+{
+    camera_to_target_tf_mat_ = tf_mat;
 }
 
 size_t PointCloudProjector::calcNumOfScanPts(
