@@ -15,12 +15,6 @@ if(BUILD_WITH_MAX_OPTIMISATION)
     add_compile_options(-O3)
 endif(BUILD_WITH_MAX_OPTIMISATION)
 
-if (WIN32)
-    find_package(yaml-cpp REQUIRED)
-else (WIN32)
-    set(YAML_CPP_LIBRARIES yaml-cpp)
-endif (WIN32)
-
 find_package(catkin REQUIRED COMPONENTS
     tf
     std_msgs
@@ -75,7 +69,6 @@ endif(BUILD_DOC)
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
-    ${YAML_CPP_INCLUDE_DIRS}
 )
 
 # =========
@@ -114,7 +107,6 @@ if (CATKIN_ENABLE_TESTING)
     )
     target_link_libraries(point_3d_test
         geometry_utils
-        ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
     catkin_add_gtest(pose_2d_test
@@ -122,7 +114,6 @@ if (CATKIN_ENABLE_TESTING)
     )
     target_link_libraries(pose_2d_test
         geometry_utils
-        ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
     catkin_add_gtest(utils_test
@@ -130,7 +121,6 @@ if (CATKIN_ENABLE_TESTING)
     )
     target_link_libraries(utils_test
         geometry_utils
-        ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
     catkin_add_gtest(line_segment_2d_test
@@ -138,7 +128,6 @@ if (CATKIN_ENABLE_TESTING)
     )
     target_link_libraries(line_segment_2d_test
         geometry_utils
-        ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
     catkin_add_gtest(polygon_2d_test
@@ -146,7 +135,6 @@ if (CATKIN_ENABLE_TESTING)
     )
     target_link_libraries(polygon_2d_test
         geometry_utils
-        ${YAML_CPP_LIBRARIES}
         ${catkin_LIBRARIES}
     )
 endif ()

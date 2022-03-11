@@ -65,113 +65,25 @@ void PointCloudProjector::configureTransform(
 }
 
 bool PointCloudProjector::configure(
-        float cam_x,
-        float cam_y,
-        float cam_z,
-        float cam_roll,
-        float cam_pitch,
-        float cam_yaw,
-        float passthrough_min_z,
-        float passthrough_max_z,
-        float radial_dist_min,
-        float radial_dist_max,
-        float angle_min,
-        float angle_max,
-        float angle_increment)
+        const PointCloudProjectorConfig& config)
 {
-    configureTransform(cam_x, cam_y, cam_z, cam_roll, cam_pitch, cam_yaw);
+    setTransform(config.tf_mat);
 
-    passthrough_min_z_ = passthrough_min_z;
-    passthrough_max_z_ = passthrough_max_z;
-    radial_dist_min_ = radial_dist_min;
+    passthrough_min_z_ = config.passthrough_min_z;
+    passthrough_max_z_ = config.passthrough_max_z;
+    radial_dist_min_ = config.radial_dist_min;
     radial_dist_min_sq_ = std::pow(radial_dist_min_, 2);
-    radial_dist_max_ = radial_dist_max;
+    radial_dist_max_ = config.radial_dist_max;
     radial_dist_max_sq_ = std::pow(radial_dist_max_sq_, 2);
-    angle_min_ = angle_min;
-    angle_max_ = angle_max;
+    angle_min_ = config.angle_min;
+    angle_max_ = config.angle_max;
     is_angle_flipped_ = ( angle_min_ > angle_max_ );
-    angle_increment_ = angle_increment;
+    angle_increment_ = config.angle_increment;
     angle_increment_inv_ = 1.0f/angle_increment_;
 
     num_of_scan_pts_ = PointCloudProjector::calcNumOfScanPts(
             angle_min_, angle_max_, angle_increment_);
     return true;
-}
-
-bool PointCloudProjector::configure(
-        const YAML::Node& config_params_yaml)
-{
-    if ( !config_params_yaml.IsMap() )
-    {
-        std::cout << std::endl << std::endl;
-        std::cerr << "Config file does not have a correct format." << std::endl;
-        std::cout << std::endl << std::endl;
-        return false;
-    }
-
-    float x = 0.0f, y = 0.0f, z = 0.0f, roll = 0.0f, pitch = 0.0f, yaw = 0.0f;
-    if ( config_params_yaml["transform"] )
-    {
-        const YAML::Node& transform_yaml = config_params_yaml["transform"];
-        if ( !transform_yaml.IsMap() )
-        {
-            std::cout << std::endl << std::endl;
-            std::cerr << "Transform in config file does not have a correct format." << std::endl;
-            std::cout << std::endl << std::endl;
-            return false;
-        }
-
-        x     = ( transform_yaml["x"] )     ? transform_yaml["x"].as<float>()     : 0.0f;
-        y     = ( transform_yaml["y"] )     ? transform_yaml["y"].as<float>()     : 0.0f;
-        z     = ( transform_yaml["z"] )     ? transform_yaml["z"].as<float>()     : 0.0f;
-        roll  = ( transform_yaml["roll"] )  ? transform_yaml["roll"].as<float>()  : 0.0f;
-        pitch = ( transform_yaml["pitch"] ) ? transform_yaml["pitch"].as<float>() : 0.0f;
-        yaw   = ( transform_yaml["yaw"] )   ? transform_yaml["yaw"].as<float>()   : 0.0f;
-    }
-
-    float passthrough_min_z = ( config_params_yaml["passthrough_min_z"] )
-                              ? config_params_yaml["passthrough_min_z"].as<float>()
-                              : passthrough_min_z_;
-    float passthrough_max_z = ( config_params_yaml["passthrough_max_z"] )
-                              ? config_params_yaml["passthrough_max_z"].as<float>()
-                              : passthrough_max_z_;
-    float radial_dist_min = ( config_params_yaml["radial_dist_min"] )
-                            ? config_params_yaml["radial_dist_min"].as<float>()
-                            : radial_dist_min_;
-    float radial_dist_max = ( config_params_yaml["radial_dist_max"] )
-                            ? config_params_yaml["radial_dist_max"].as<float>()
-                            : radial_dist_max_;
-    float angle_min = ( config_params_yaml["angle_min"] )
-                      ? config_params_yaml["angle_min"].as<float>()
-                      : angle_min_;
-    float angle_max = ( config_params_yaml["angle_max"] )
-                      ? config_params_yaml["angle_max"].as<float>()
-                      : angle_max_;
-    float angle_increment = ( config_params_yaml["angle_increment"] )
-                            ? config_params_yaml["angle_increment"].as<float>()
-                            : angle_increment_;
-
-    return configure(x, y, z, roll, pitch, yaw, passthrough_min_z, passthrough_max_z,
-                     radial_dist_min, radial_dist_max, angle_min, angle_max, angle_increment);
-}
-
-bool PointCloudProjector::configure(
-        const std::string& config_file)
-{
-    YAML::Node config_params_yaml;
-    try
-    {
-        config_params_yaml = YAML::LoadFile(config_file);
-    }
-    catch(YAML::BadFile&)
-    {
-        std::cout << std::endl << std::endl;
-        std::cerr << "YAML threw BadFile exception. Does the file exist?" << std::endl;
-        std::cout << config_file << std::endl;
-        std::cout << std::endl << std::endl;
-        return false;
-    }
-    return configure(config_params_yaml);
 }
 
 PointCloud3D PointCloudProjector::transformAndFilterPointCloud(

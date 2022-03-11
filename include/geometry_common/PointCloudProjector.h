@@ -45,8 +45,6 @@
 #include <string>
 #include <functional>
 
-#include <yaml-cpp/yaml.h>
-
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Point3D.h>
 #include <geometry_common/TransformMatrix3D.h>
@@ -55,11 +53,27 @@ namespace kelo
 {
 
 /**
- * @brief 
+ * @brief Structure containing all the configuration parameter required to
+ * configure PointCloudProjector
+ */
+struct PointCloudProjectorConfig
+{
+    geometry_common::TransformMatrix3D tf_mat;
+    float passthrough_min_z{0.0f};
+    float passthrough_max_z{2.0f};
+    float radial_dist_min{0.1f};
+    float radial_dist_max{1e3f};
+    float angle_min{-3.14f};
+    float angle_max{3.14f};
+    float angle_increment{0.01f};
+};
+
+/**
+ * @brief Function pointer type definition for checking validity of a point for
+ * filtering.
  * 
  */
-typedef std::function<bool (const geometry_common::Point3D& )>
-    ValidityFunction;
+typedef std::function<bool (const geometry_common::Point3D& )> ValidityFunction;
 
 /**
  * @brief 
@@ -102,55 +116,16 @@ class PointCloudProjector
                 float cam_yaw = 0.0f);
 
         /**
-         * @brief 
-         * 
-         * @param cam_x 
-         * @param cam_y 
-         * @param cam_z 
-         * @param cam_roll 
-         * @param cam_pitch 
-         * @param cam_yaw 
-         * @param passthrough_min_z 
-         * @param passthrough_max_z 
-         * @param radial_dist_min 
-         * @param radial_dist_max 
-         * @param angle_min 
-         * @param angle_max 
-         * @param angle_increment 
-         * @return bool 
+         * @brief Configure PointCloudProjector
+         *
+         * @note: This should be called before calling any `projectTo...`
+         * functions.
+         *
+         * @param config All the configuration parameter wrapped in a struct
+         * @return success
          */
         bool configure(
-                float cam_x = 0.0f,
-                float cam_y = 0.0f,
-                float cam_z = 0.0f,
-                float cam_roll = 0.0f,
-                float cam_pitch = 0.0f,
-                float cam_yaw = 0.0f,
-                float passthrough_min_z = 0.0f,
-                float passthrough_max_z = 2.0f,
-                float radial_dist_min = 0.1f,
-                float radial_dist_max = 1000.0f,
-                float angle_min = -3.14f,
-                float angle_max = 3.14f,
-                float angle_increment = 0.01f);
-
-        /**
-         * @brief 
-         * 
-         * @param config_params_yaml 
-         * @return bool 
-         */
-        bool configure(
-                const YAML::Node& config_params_yaml);
-
-        /**
-         * @brief 
-         * 
-         * @param config_file 
-         * @return bool 
-         */
-        bool configure(
-                const std::string& config_file);
+                const PointCloudProjectorConfig& config);
 
         /**
          * @brief 

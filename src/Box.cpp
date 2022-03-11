@@ -45,32 +45,6 @@ namespace kelo
 namespace geometry_common
 {
 
-bool Box::initialiseBoxFromYAML(const YAML::Node& yaml_box_params, Box& box)
-{
-    if ( !yaml_box_params["min_x"] || !yaml_box_params["max_x"] ||
-         !yaml_box_params["min_y"] || !yaml_box_params["max_y"] ||
-         !yaml_box_params["min_z"] || !yaml_box_params["max_z"] )
-    {
-        std::cout << std::endl << std::endl;
-        std::cerr << "Box params should contain the following:" << std::endl;
-        std::cerr << "\t- min_x" << std::endl;
-        std::cerr << "\t- max_x" << std::endl;
-        std::cerr << "\t- min_y" << std::endl;
-        std::cerr << "\t- max_y" << std::endl;
-        std::cerr << "\t- min_z" << std::endl;
-        std::cerr << "\t- max_z" << std::endl;
-        std::cout << std::endl << std::endl;
-        return false;
-    }
-    box.min_x = yaml_box_params["min_x"].as<float>();
-    box.max_x = yaml_box_params["max_x"].as<float>();
-    box.min_y = yaml_box_params["min_y"].as<float>();
-    box.max_y = yaml_box_params["max_y"].as<float>();
-    box.min_z = yaml_box_params["min_z"].as<float>();
-    box.max_z = yaml_box_params["max_z"].as<float>();
-    return true;
-}
-
 visualization_msgs::Marker Box::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha) const
 {

@@ -97,15 +97,6 @@ class Box
         virtual ~Box() {};
 
         /**
-         * @brief 
-         * 
-         * @param yaml_box_params 
-         * @param box 
-         * @return bool 
-         */
-        static bool initialiseBoxFromYAML(const YAML::Node& yaml_box_params, Box& box);
-
-        /**
          * @brief
          * 
          * @param frame 
