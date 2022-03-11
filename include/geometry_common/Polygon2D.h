@@ -41,6 +41,7 @@
 #ifndef KELO_GEOMETRY_COMMON_POLYGON_2D_H
 #define KELO_GEOMETRY_COMMON_POLYGON_2D_H
 
+#include <geometry_msgs/PolygonStamped.h>
 #include <visualization_msgs/Marker.h>
 
 #include <geometry_common/Polyline2D.h>
@@ -223,6 +224,16 @@ class Polygon2D : public Polyline2D
                 float blue = 0.0f,
                 float alpha = 1.0f,
                 float line_width = 0.1f) const override;
+
+        /**
+         * @brief Get a PolygonStamped message object from Polygon2D object
+         *
+         * @param frame The frame in which the polygon stamped message needs to
+         * be published
+         * @return geometry_msgs::PolygonStamped message object
+         */
+        geometry_msgs::PolygonStamped asPolygonStamped(
+                const std::string& frame = "base_link") const;
 
         /**
          * @brief 

@@ -318,6 +318,19 @@ visualization_msgs::Marker Polygon2D::asMarker(const std::string& frame,
     return marker;
 }
 
+geometry_msgs::PolygonStamped Polygon2D::asPolygonStamped(
+        const std::string& frame) const
+{
+    geometry_msgs::PolygonStamped polygon_msg;
+    polygon_msg.header.frame_id = frame;
+    polygon_msg.polygon.points.reserve(vertices.size());
+    for ( const Point2D& pt : vertices )
+    {
+        polygon_msg.polygon.points.push_back(pt.asPoint32());
+    }
+    return polygon_msg;
+}
+
 Polygon2D& Polygon2D::operator = (const Polygon2D& other)
 {
     vertices = other.vertices;
