@@ -63,12 +63,7 @@ TransformMatrix3D::TransformMatrix3D(
 
 TransformMatrix3D::TransformMatrix3D(const tf::StampedTransform& stamped_transform)
 {
-    float x = stamped_transform.getOrigin().x();
-    float y = stamped_transform.getOrigin().y();
-    float z = stamped_transform.getOrigin().z();
-
-    tf::Quaternion q = stamped_transform.getRotation();
-    update(x, y, z, q.x(), q.y(), q.z(), q.w());
+    update(stamped_transform);
 }
 
 TransformMatrix3D::TransformMatrix3D(const TransformMatrix3D& tf_mat)
@@ -92,6 +87,16 @@ void TransformMatrix3D::update(
     updateY(y);
     updateZ(z);
     updateQuaternion(qx, qy, qz, qw);
+}
+
+void TransformMatrix3D::update(const tf::StampedTransform& stamped_transform)
+{
+    float x = stamped_transform.getOrigin().x();
+    float y = stamped_transform.getOrigin().y();
+    float z = stamped_transform.getOrigin().z();
+
+    tf::Quaternion q = stamped_transform.getRotation();
+    update(x, y, z, q.x(), q.y(), q.z(), q.w());
 }
 
 void TransformMatrix3D::update(const TransformMatrix3D& tf_mat)

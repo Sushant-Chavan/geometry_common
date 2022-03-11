@@ -108,6 +108,8 @@ class TransformMatrix2D
 
         void update(float x, float y, float qx, float qy, float qz, float qw);
 
+        void update(const tf::StampedTransform& stamped_transform);
+
         void update(const Pose2D& pose);
 
         void update(const TransformMatrix2D& tf_mat);

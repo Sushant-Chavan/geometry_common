@@ -86,6 +86,8 @@ class TransformMatrix3D
         void update(float x, float y, float z,
                     float qx, float qy, float qz, float qw);
 
+        void update(const tf::StampedTransform& stamped_transform);
+
         void update(const TransformMatrix3D& tf_mat);
 
         void updateX(float x);
