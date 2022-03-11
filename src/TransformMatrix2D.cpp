@@ -228,6 +228,14 @@ void TransformMatrix2D::transform(Polyline2D& polyline) const
     }
 }
 
+void TransformMatrix2D::transform(PointCloud2D& cloud) const
+{
+    for ( Point2D& pt : cloud )
+    {
+        transform(pt);
+    }
+}
+
 TransformMatrix2D& TransformMatrix2D::operator = (const TransformMatrix2D& other)
 {
     mat_ = other.mat_;

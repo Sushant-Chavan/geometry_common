@@ -52,6 +52,7 @@ namespace geometry_common
 
 // Forward declaration 
 class Point3D;
+using PointCloud3D = std::vector<Point3D>;
 using Vector3D = Point3D;
 
 /**
@@ -129,6 +130,8 @@ class TransformMatrix3D
         Vector3D translationVector() const;
 
         void transform(Point3D& point) const;
+
+        void transform(PointCloud3D& cloud) const;
 
         /**
          * @brief 

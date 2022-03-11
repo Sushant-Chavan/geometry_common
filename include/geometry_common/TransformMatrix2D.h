@@ -55,6 +55,7 @@ class Pose2D;
 class Point2D;
 class Polyline2D;
 class Polygon2D;
+using PointCloud2D = std::vector<Point2D>;
 using Vector2D = Point2D;
 
 /**
@@ -145,6 +146,8 @@ class TransformMatrix2D
         void transform(Pose2D& pose) const;
 
         void transform(Polyline2D& polyline) const;
+
+        void transform(PointCloud2D& cloud) const;
 
         /**
          * @brief 

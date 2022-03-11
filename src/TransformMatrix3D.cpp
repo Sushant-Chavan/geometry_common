@@ -259,6 +259,14 @@ void TransformMatrix3D::transform(Point3D& point) const
     point.z = temp_z;
 }
 
+void TransformMatrix3D::transform(PointCloud3D& cloud) const
+{
+    for ( Point3D& pt : cloud )
+    {
+        transform(pt);
+    }
+}
+
 TransformMatrix3D& TransformMatrix3D::operator = (const TransformMatrix3D& other)
 {
     mat_ = other.mat_;
