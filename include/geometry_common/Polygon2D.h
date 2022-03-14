@@ -135,7 +135,7 @@ class Polygon2D : public Polyline2D
          */
         bool calcClosestIntersectionPointWith(
                 const LineSegment2D& line_segment,
-                Point2D& intersection_pt) override;
+                Point2D& intersection_pt) const override;
 
         /**
          * @brief Check if a 2D point lies within the polygon.

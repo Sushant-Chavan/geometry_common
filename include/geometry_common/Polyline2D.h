@@ -121,7 +121,7 @@ class Polyline2D
          */
         virtual bool calcClosestIntersectionPointWith(
                 const LineSegment2D& line_segment,
-                Point2D& intersection_pt);
+                Point2D& intersection_pt) const;
 
         /**
          * @brief Get an RViz visualization marker for the polyline object

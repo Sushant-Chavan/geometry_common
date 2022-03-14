@@ -72,7 +72,7 @@ bool Polyline2D::intersects(const LineSegment2D& line_segment) const
 
 bool Polyline2D::calcClosestIntersectionPointWith(
         const LineSegment2D& line_segment,
-        Point2D& intersection_pt)
+        Point2D& intersection_pt) const
 {
     bool intersects = false;
     double minDist = std::numeric_limits<double>::max();
