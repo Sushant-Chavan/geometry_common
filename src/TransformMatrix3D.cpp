@@ -156,9 +156,18 @@ void TransformMatrix3D::updateRollPitchYaw(float roll, float pitch, float yaw)
 
 void TransformMatrix3D::updateQuaternion(float qx, float qy, float qz, float qw)
 {
-    float roll, pitch, yaw;
-    Utils::convertQuaternionToEuler(qx, qy, qz, qw, roll, pitch, yaw);
-    updateRollPitchYaw(roll, pitch, yaw);
+    /**
+     * source: https://automaticaddison.com/how-to-convert-a-quaternion-to-a-rotation-matrix/
+     */
+	mat_[0] = 2 * (qw * qw + qx * qx) - 1;
+    mat_[1] = 2 * (qx * qy - qw * qz);
+    mat_[2] = 2 * (qx * qz + qw * qy);
+    mat_[4] = 2 * (qx * qy + qw * qz);
+    mat_[5] = 2 * (qw * qw + qy * qy) - 1;
+    mat_[6] = 2 * (qy * qz - qw * qx);
+    mat_[8] = 2 * (qx * qz - qw * qy);
+    mat_[9] = 2 * (qy * qz + qw * qx);
+    mat_[10] = 2 * (qw * qw + qz * qz) - 1;
 }
 
 TransformMatrix3D TransformMatrix3D::calcInverse() const
