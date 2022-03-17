@@ -266,7 +266,7 @@ void PointCloudProjector::setPassthroughMaxZ(
 void PointCloudProjector::setTransform(
         const TransformMatrix3D& tf_mat)
 {
-    camera_to_target_tf_mat_ = tf_mat;
+    camera_to_target_tf_mat_.update(tf_mat);
 }
 
 size_t PointCloudProjector::calcNumOfScanPts(
