@@ -194,6 +194,11 @@ bool Polygon2D::isApproximatelyConvex(float tolerance) const
         const Point2D& p1 = vertices[i];
         const Point2D& p2 = vertices[(i+1)%n_vertices];
         const Point2D& p3 = vertices[(i+2)%n_vertices];
+
+        // Ignore repeated points
+        if (p2 == p3)
+            continue;
+
         meanPt = (p1 + p3) * 0.5f;
         // If the mean point is not contained inside the polygon, check if the
         // three consecutive points are collinear within the tolerance. If they

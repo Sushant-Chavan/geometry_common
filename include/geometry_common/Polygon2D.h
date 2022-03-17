@@ -180,7 +180,8 @@ class Polygon2D : public Polyline2D
         bool isConvex() const;
 
         /**
-         * @brief Check if the polygon is convex within certain tolerance
+         * @brief Check if the polygon is convex within certain tolerance.
+         * Also ignores any repeated consecutive points in the polygon
          * 
          * @param tolerance The tolerance in radians to ignore minor angular 
          * fluctuations along a straight polygon edge composed of multiple line
