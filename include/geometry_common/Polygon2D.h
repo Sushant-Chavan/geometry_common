@@ -180,6 +180,17 @@ class Polygon2D : public Polyline2D
         bool isConvex() const;
 
         /**
+         * @brief Check if the polygon is convex within certain tolerance.
+         * Also ignores any repeated consecutive points in the polygon
+         * 
+         * @param tolerance The tolerance in radians to ignore minor angular 
+         * fluctuations along a straight polygon edge composed of multiple line
+         * segments. (Default: 1 degree)
+         * @return bool True if polygon is convex, false otherwise
+         */
+        bool isApproximatelyConvex(float tolerance = 0.017453293) const;
+
+        /**
          * @brief Find convex hull from the union of 2 polygons.
          * 
          * @param polygon_a First polygon that will be part of the union
