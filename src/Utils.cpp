@@ -1185,24 +1185,27 @@ void Utils::convertQuaternionToEuler(
         float& yaw)
 {
     /**
-     * source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
+     * source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/
      */
-    // roll (x-axis rotation)
-    float sinroll_cospitch = 2 * (qw * qx + qy * qz);
-    float cosroll_cospitch = 1 - 2 * (qx * qx + qy * qy);
-    roll = std::atan2(sinroll_cospitch, cosroll_cospitch);
-
-    // pitch (y-axis rotation)
     float sinpitch = 2 * (qw * qy - qz * qx);
-    if (std::abs(sinpitch) >= 1)
-        pitch = std::copysign(M_PI/2, sinpitch); // use 90 degrees if out of range
+    if ( sinpitch >= 1.0f ) // singularity at north pole
+    {
+        roll = 0.0f;
+        pitch = M_PI/2;
+        yaw = 2 * std::atan2(qx, qw);
+    }
+    else if ( sinpitch <= -1.0f ) // singularity at south pole
+    {
+        roll = 0.0f;
+        pitch = -M_PI/2;
+        yaw = -2 * std::atan2(qx, qw);
+    }
     else
+    {
+        roll = std::atan2(2 * (qx*qw + qy*qz), 1 - (2 * (qx*qx + qy*qy)));
         pitch = std::asin(sinpitch);
-
-    // yaw (z-axis rotation)
-    float sinyaw_cospitch = 2 * (qw * qz + qx * qy);
-    float cosyaw_cospitch = 1 - 2 * (qy * qy + qz * qz);
-    yaw = std::atan2(sinyaw_cospitch, cosyaw_cospitch);
+        yaw = std::atan2(2 * (qz*qw + qx*qy), 1 - (2 * (qy*qy + qz*qz)));
+    }
 }
 
 void Utils::convertEulerToQuaternion(

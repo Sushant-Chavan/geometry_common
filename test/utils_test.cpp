@@ -98,6 +98,26 @@ TEST(UtilsTest, convertQuaternionToEuler)
     EXPECT_NEAR(roll, 1.0f, 1e-3f);
     EXPECT_NEAR(pitch, 1.0f, 1e-3f);
     EXPECT_NEAR(yaw, 1.0f, 1e-3f);
+
+    q.x = 0.0706f;
+    q.y = 0.7036f;
+    q.z = -0.0706;
+    q.w = 0.7036f;
+    Utils::convertQuaternionToEuler(q.x, q.y, q.z, q.w, roll, pitch, yaw);
+    EXPECT_NEAR(roll, 0.0f, 1e-3f);
+    EXPECT_NEAR(pitch, M_PI/2, 1e-3f);
+    EXPECT_NEAR(yaw, 0.2f, 1e-3f);
+    // actual rpy was 0.2, pi/2 and 0.4 but it is also equivalent to 0, pi/2 and 0.2
+
+    q.x = -0.197671f;
+    q.y =  0.975170f;
+    q.z = -0.097843f;
+    q.w =  0.019833f;
+    Utils::convertQuaternionToEuler(q.x, q.y, q.z, q.w, roll, pitch, yaw);
+    EXPECT_NEAR(roll, -2.9416, 1e-3f);
+    EXPECT_NEAR(pitch, 0.0f, 1e-3f);
+    EXPECT_NEAR(yaw, -2.7416f, 1e-3f);
+    // actual rpy was 0.2, pi and 0.4 but it is also equivalent to (-pi+0.2), 0 and (-pi+0.4)
 }
 
 TEST(UtilsTest, convertEulerToQuaternion)
