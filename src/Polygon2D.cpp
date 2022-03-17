@@ -177,7 +177,8 @@ bool Polygon2D::isConvex() const
 
 bool Polygon2D::isApproximatelyConvex(float tolerance) const
 {
-    if ( vertices.size() <= 2 )
+    size_t n_vertices = vertices.size();
+    if ( n_vertices <= 2 )
     {
         return true;
     }
@@ -188,13 +189,17 @@ bool Polygon2D::isApproximatelyConvex(float tolerance) const
         return false;
     }
 
-    for ( size_t i = 0; i < vertices.size(); i++ )
+    for ( size_t i = 0; i < n_vertices; i++ )
     {
-        Point2D p1(vertices[i]);
-        Point2D p2(vertices[(i+2)%vertices.size()]);
-        meanPt = (p1 + p2) * 0.5f;
+        const Point2D& p1 = vertices[i];
+        const Point2D& p2 = vertices[(i+1)%n_vertices];
+        const Point2D& p3 = vertices[(i+2)%n_vertices];
+        meanPt = (p1 + p3) * 0.5f;
+        // If the mean point is not contained inside the polygon, check if the
+        // three consecutive points are collinear within the tolerance. If they
+        // not collinear, the polygon is not convex
         if ( !containsPoint(meanPt) &&
-             Utils::calcWindingOrder(p1, p2, meanPt, tolerance) != WindingOrder::COLLINEAR )
+             Utils::calcWindingOrder(p1, p2, p3, tolerance) != WindingOrder::COLLINEAR )
         {
             return false;
         }
