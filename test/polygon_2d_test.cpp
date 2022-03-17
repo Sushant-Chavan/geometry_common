@@ -41,6 +41,40 @@ TEST(Polygon2DTest, isConvex)
         << "Star polygon is not found to be concave.";
 }
 
+TEST(Polygon2DTest, isApproximatelyConvex)
+{
+    Polygon2D convex_polygon(
+    {
+        Point2D(0.0f, 0.0f),
+        Point2D(5.0f, 0.0f),
+        Point2D(4.0f, 4.0f),
+        Point2D(0.0f, 3.0f)
+    });
+    EXPECT_EQ(convex_polygon.isConvex(), true);
+
+    Polygon2D approximately_convex_polygon(
+    {
+        Point2D(0.0f, 0.0f),
+        Point2D(3.0f, 0.01f),
+        Point2D(5.0f, 0.0f),
+        Point2D(4.0f, 4.0f),
+        Point2D(0.0f, 3.0f)
+    });
+    EXPECT_EQ(approximately_convex_polygon.isConvex(), false);
+    EXPECT_EQ(approximately_convex_polygon.isApproximatelyConvex(), true);
+
+    Polygon2D concave_polygon(
+    {
+        Point2D(0.0f, 0.0f),
+        Point2D(3.0f, 0.05f),
+        Point2D(5.0f, 0.0f),
+        Point2D(4.0f, 4.0f),
+        Point2D(0.0f, 3.0f)
+    });
+    EXPECT_EQ(concave_polygon.isConvex(), false);
+    EXPECT_EQ(concave_polygon.isApproximatelyConvex(), false);
+}
+
 TEST(Polygon2DTest, calcConvexHullOfPolygons)
 {
     Polygon2D polygon_a(
