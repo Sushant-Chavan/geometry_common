@@ -145,6 +145,13 @@ class Pose2D : public XYTheta
         inline Point2D position() const { return Point2D(x, y); }
 
         /**
+         * @brief Update x and y attribute of pose from input point
+         *
+         * @param pt Point whose x and y will be used for update
+         */
+        void updatePosition(const Point2D& pt);
+
+        /**
          * @brief
          * 
          * @param frame 

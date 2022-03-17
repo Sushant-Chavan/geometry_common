@@ -92,6 +92,12 @@ Pose2D::Pose2D(const tf::StampedTransform& stamped_transform)
     theta = tf_mat.theta();
 }
 
+void Pose2D::updatePosition(const Point2D& pt)
+{
+    x = pt.x;
+    y = pt.y;
+}
+
 geometry_msgs::PoseStamped Pose2D::asPoseStamped(const std::string& frame) const
 {
     geometry_msgs::PoseStamped pose;
