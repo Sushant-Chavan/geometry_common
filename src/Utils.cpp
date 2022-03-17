@@ -1166,10 +1166,11 @@ float Utils::calcAngleBetweenPoints(
 WindingOrder Utils::calcWindingOrder(
         const Point2D& a,
         const Point2D& b,
-        const Point2D& c)
+        const Point2D& c,
+        float tolerance)
 {
     float angle = calcAngleBetweenPoints(a, b, c);
-    bool isCollinear = ( std::fabs(angle) <= 1e-6f || std::fabs(std::fabs(angle) - M_PI) <= 1e-6f );
+    bool isCollinear = ( std::fabs(angle) <= tolerance || std::fabs(std::fabs(angle) - M_PI) <= tolerance );
     return ( isCollinear ) ? WindingOrder::COLLINEAR : 
            ( angle > 0 )   ? WindingOrder::CLOCKWISE : WindingOrder::COUNTER_CLOCKWISE;
 

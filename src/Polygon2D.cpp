@@ -175,6 +175,33 @@ bool Polygon2D::isConvex() const
     return true;
 }
 
+bool Polygon2D::isApproximatelyConvex(float tolerance) const
+{
+    if ( vertices.size() <= 2 )
+    {
+        return true;
+    }
+
+    Point2D meanPt = meanPoint();
+    if ( !containsPoint(meanPt) )
+    {
+        return false;
+    }
+
+    for ( size_t i = 0; i < vertices.size(); i++ )
+    {
+        Point2D p1(vertices[i]);
+        Point2D p2(vertices[(i+2)%vertices.size()]);
+        meanPt = (p1 + p2) * 0.5f;
+        if ( !containsPoint(meanPt) &&
+             Utils::calcWindingOrder(p1, p2, meanPt, tolerance) != WindingOrder::COLLINEAR )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 Polygon2D Polygon2D::calcConvexHullOfPolygons(
         const Polygon2D& polygon_a,
         const Polygon2D& polygon_b)

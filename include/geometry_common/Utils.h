@@ -638,12 +638,14 @@ class Utils
          * @param a 
          * @param b 
          * @param c 
+         * @param tolerance 
          * @return WindingOrder 
          */
         static WindingOrder calcWindingOrder(
                 const Point2D& a,
                 const Point2D& b,
-                const Point2D& c);
+                const Point2D& c,
+                float tolerance = 1e-6f);
 
         /**
          * @brief Convert from Quaternion to Euler angles
