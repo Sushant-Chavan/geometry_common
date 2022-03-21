@@ -12,7 +12,8 @@ TEST(LineSegment2D, calcIntersectionPointWith)
     LineSegment2D l4(15, 0, 20, 0); // collinear non-intersecting to l1
     LineSegment2D l5(5, 0, 15, 0); // collinear partially overlapping to l1
     LineSegment2D l6(0, 1, 5, 6); // parallel to l3
-    
+    LineSegment2D l7(15, 0, 5, 0); // collinear partially overlapping to l1 but opposite direction
+
     Point2D intersection_pt;
 
     EXPECT_EQ(l1.calcIntersectionPointWith(l2, intersection_pt), true)
@@ -28,9 +29,15 @@ TEST(LineSegment2D, calcIntersectionPointWith)
     EXPECT_EQ(l1.calcIntersectionPointWith(l4, intersection_pt), false)
         << "l1 and l4 intersect.";
 
-    // See Issue #13
-    // EXPECT_EQ(l1.calcIntersectionPointWith(l5, intersection_pt), true)
-    //     << "l1 and l5 don't intersect.";
+    EXPECT_EQ(l1.calcIntersectionPointWith(l5, intersection_pt), true)
+        << "l1 and l5 don't intersect.";
+    EXPECT_EQ(intersection_pt == Point2D(5, 0), true)
+        << "l1 and l5 don't intersect at (5, 0).";
+
+    EXPECT_EQ(l1.calcIntersectionPointWith(l7, intersection_pt), true)
+        << "l1 and l7 don't intersect.";
+    EXPECT_EQ(intersection_pt == Point2D(5, 0), true)
+        << "l1 and l7 don't intersect at (5, 0).";
 
     EXPECT_EQ(l3.calcIntersectionPointWith(l6, intersection_pt), false)
         << "l3 and l6 intersect.";

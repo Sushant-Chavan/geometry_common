@@ -100,35 +100,55 @@ bool LineSegment2D::calcIntersectionPointWith(
         Point2D& intersection_point) const
 {
     /**
-     * source: https://www.codeproject.com/Tips/862988/Find-the-Intersection-Point-of-Two-Line-Segments
+     * source: https://stackoverflow.com/a/565282/10460994
      */
     Vector2D vec1 = end - start;
     Vector2D vec2 = line_segment.end - line_segment.start;
     Vector2D vec3 = line_segment.start - start;
     const float vec1_cross_vec2 = vec1.scalarCrossProduct(vec2);
-	const float vec3_cross_vec1 = vec3.scalarCrossProduct(vec1);
+    const float vec3_cross_vec1 = vec3.scalarCrossProduct(vec1);
     const float vec3_cross_vec2 = vec3.scalarCrossProduct(vec2);
 
-	if ( ( std::abs(vec1_cross_vec2) < 1e-10f &&
-           std::abs(vec3_cross_vec1) < 1e-10f ) || // the two lines are collinear
-		 ( std::abs(vec1_cross_vec2) < 1e-10f &&
-           std::abs(vec3_cross_vec1) > 1e-10f ) ) // the two lines are parallel and non-intersecting
+    if ( std::fabs(vec1_cross_vec2) < 1e-10f &&
+         std::fabs(vec3_cross_vec1) < 1e-10f ) // the two lines are collinear
     {
-		return false;
-	}
+        const float t0 = vec3.dotProduct(vec1) / vec1.dotProduct(vec1);
+        const float t1 = t0 + (vec2.dotProduct(vec1) / vec1.dotProduct(vec1));
+        const bool are_lines_opposite = ( vec2.dotProduct(vec1) < 0.0f );
+        // If the interval between t0 and t1 intersects the interval [0, 1] then
+        // the line segments are collinear and overlapping; otherwise they are
+        // collinear and disjoint. If vec2 and vec1 point in opposite
+        // directions, then vec2 . vec1 < 0 and so the interval to be checked is
+        // [t1, t0] rather than [t0, t1].
+        if ( ( !are_lines_opposite && (1.0f < t0 || t1 < 0.0f) ) ||
+             (  are_lines_opposite && (1.0f < t1 || t0 < 0.0f) ) )
+        {
+            return false;
+        }
+        // Ideally the intersection is a smaller line segment but here the start
+        // of that line segment is chosen
+        intersection_point = start + (vec1 * std::min(t0, t1));
+        return true;
+    }
 
-	const float t = vec3_cross_vec2/vec1_cross_vec2;
-	const float u = vec3_cross_vec1/vec1_cross_vec2;
+    if ( std::fabs(vec1_cross_vec2) < 1e-10f &&
+         std::fabs(vec3_cross_vec1) > 1e-10f ) // the two lines are parallel and non-intersecting
+    {
+        return false;
+    }
 
-	if ( std::abs(vec1_cross_vec2) > 1e-10f &&
+    const float t = vec3_cross_vec2/vec1_cross_vec2;
+    const float u = vec3_cross_vec1/vec1_cross_vec2;
+
+    if ( std::fabs(vec1_cross_vec2) > 1e-10f &&
          0.0f <= t && t <= 1.0f &&
          0.0f <= u && u <= 1.0f )
-	{
-		intersection_point = start + (vec1 * t);
-		return true;
-	}
+    {
+        intersection_point = start + (vec1 * t);
+        return true;
+    }
 
-	return false; // The two line segments are not parallel but do not intersect.
+    return false; // The two line segments are not parallel but do not intersect.
 }
 
 Point2D LineSegment2D::closestPointTo(const Point2D& point) const
