@@ -39,6 +39,9 @@ TEST(LineSegment2D, calcIntersectionPointWith)
     EXPECT_EQ(intersection_pt == Point2D(5, 0), true)
         << "l1 and l7 don't intersect at (5, 0).";
 
+    EXPECT_EQ(l5.calcIntersectionPointWith(l1, intersection_pt), true);
+    EXPECT_EQ(intersection_pt, Point2D(5, 0));
+
     EXPECT_EQ(l3.calcIntersectionPointWith(l6, intersection_pt), false)
         << "l3 and l6 intersect.";
 }

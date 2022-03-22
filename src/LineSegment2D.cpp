@@ -127,7 +127,7 @@ bool LineSegment2D::calcIntersectionPointWith(
         }
         // Ideally the intersection is a smaller line segment but here the start
         // of that line segment is chosen
-        intersection_point = start + (vec1 * std::min(t0, t1));
+        intersection_point = start + (vec1 * std::max(0.0f, std::min(t0, t1)));
         return true;
     }
 
