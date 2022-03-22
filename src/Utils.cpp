@@ -328,15 +328,14 @@ Point2D Utils::calcProjectedPointOnLine(
         proj_pt = Point2D(line_start);
         return proj_pt;
     }
-    float t = ((p.x - line_start.x) * (line_end.x - line_start.x) +
-               (p.y - line_start.y) * (line_end.y - line_start.y)) / length_sq;
+    Vector2D p_vec = p - line_start;
+    Vector2D line_vec = line_end - line_start;
+    float t = p_vec.dotProduct(line_vec) / length_sq;
     if ( is_segment )
     {
         t = Utils::clip(t, 1.0f, 0.0f);
     }
-    proj_pt.x = line_start.x + t * (line_end.x - line_start.x);
-    proj_pt.y = line_start.y + t * (line_end.y - line_start.y);
-    return proj_pt;
+    return line_start + (line_vec * t);
 }
 
 Point2D Utils::calcProjectedPointOnMajorAxis(
