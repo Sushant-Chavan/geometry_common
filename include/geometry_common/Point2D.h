@@ -178,6 +178,13 @@ class Point2D
         float dotProduct(const Point2D& point) const;
 
         /**
+         * @brief Return angle of vector/point w.r.t. origin point
+         *
+         * @return angle
+         */
+        float angle() const;
+
+        /**
          * @brief
          * 
          * @param frame 
