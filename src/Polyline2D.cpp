@@ -94,6 +94,28 @@ bool Polyline2D::calcClosestIntersectionPointWith(
     return intersects;
 }
 
+std::vector<LineSegment2D> Polyline2D::split(float max_segment_length) const
+{
+    std::vector<LineSegment2D> segments;
+    for ( unsigned int start = 0, end = start + 1; end < vertices.size();
+         start = end++ )
+    {
+        LineSegment2D edge(vertices[start], vertices[end]);
+        Point2D unit_vector = edge.unitVector();
+        if ( max_segment_length > 0 )
+        {
+            while ( edge.length() > max_segment_length )
+            {
+                Point2D split_point = edge.start + (unit_vector * max_segment_length);
+                segments.push_back(LineSegment2D(edge.start, split_point));
+                edge.start = split_point;
+            }
+        }
+        segments.push_back(edge);
+    }
+    return segments;
+}
+
 visualization_msgs::Marker Polyline2D::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float line_width) const
 {

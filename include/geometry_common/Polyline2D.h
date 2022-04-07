@@ -43,6 +43,7 @@
 
 #include <visualization_msgs/Marker.h>
 
+#include <geometry_common/LineSegment2D.h>
 #include <geometry_common/Point2D.h>
 
 namespace kelo
@@ -122,6 +123,16 @@ class Polyline2D
         virtual bool calcClosestIntersectionPointWith(
                 const LineSegment2D& line_segment,
                 Point2D& intersection_pt) const;
+
+        /**
+         * @brief This function splits the polyline into an ordered list of
+         * line segments
+         * @param max_segment_length The max length of each line segment. \n 
+         * If max_segment_length <= 0, then each segment corresponds to a full
+         * edge of the polyline
+         * @return std::vector<LineSegment2D> A ordered vector of line segments
+         */
+        std::vector<LineSegment2D> split(float max_segment_length) const;
 
         /**
          * @brief Get an RViz visualization marker for the polyline object
