@@ -113,6 +113,16 @@ class Polyline2D
         virtual bool intersects(const LineSegment2D& line_segment) const;
 
         /**
+         * @brief Checks if the 2D polyline intersects with another 2D polyline at
+         * atleast one point
+         * 
+         * @param polyline The 2D polyline to be checked for intersection
+         * @return bool True if the polyline intersects the queried polyline at
+         * atleast one point, false otherwise
+         */
+        virtual bool intersects(const Polyline2D& polyline) const;
+
+        /**
          * @brief If the 2D polyline intersects with a 2D line segment, this function returns the 
          * intersection point that is closest to the start vertex of the line segment
          * @param line_segment The 2D line segment to be checked for intersection

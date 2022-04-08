@@ -70,6 +70,18 @@ bool Polyline2D::intersects(const LineSegment2D& line_segment) const
     return false;
 }
 
+bool Polyline2D::intersects(const Polyline2D& polyline) const
+{
+    for ( size_t start = 0, end = start + 1; end < polyline.size(); start = end++ )
+    {
+        if ( intersects(LineSegment2D(polyline[start], polyline[end])) )
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Polyline2D::calcClosestIntersectionPointWith(
         const LineSegment2D& line_segment,
         Point2D& intersection_pt) const
