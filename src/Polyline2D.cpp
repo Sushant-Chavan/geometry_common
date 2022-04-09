@@ -145,6 +145,11 @@ std::vector<LineSegment2D> Polyline2D::split(float max_segment_length) const
     return segments;
 }
 
+void Polyline2D::reverse()
+{
+    std::reverse(vertices.begin(), vertices.end());
+}
+
 visualization_msgs::Marker Polyline2D::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha, float line_width) const
 {

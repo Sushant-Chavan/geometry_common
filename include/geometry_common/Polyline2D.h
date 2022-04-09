@@ -159,6 +159,11 @@ class Polyline2D
         std::vector<LineSegment2D> split(float max_segment_length) const;
 
         /**
+         * @brief This function reverses the direction of the polyline
+         */
+        void reverse();
+
+        /**
          * @brief Get an RViz visualization marker for the polyline object
          * 
          * @param frame The frame in which the polyline marker points are specified
