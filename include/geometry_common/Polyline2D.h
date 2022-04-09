@@ -44,7 +44,7 @@
 #include <visualization_msgs/Marker.h>
 
 #include <geometry_common/LineSegment2D.h>
-#include <geometry_common/Point2D.h>
+#include <geometry_common/Pose2D.h>
 
 namespace kelo
 {
@@ -133,6 +133,20 @@ class Polyline2D
         virtual bool calcClosestIntersectionPointWith(
                 const LineSegment2D& line_segment,
                 Point2D& intersection_pt) const;
+
+        /**
+         * @brief If the 2D polyline intersects with a 2D polyline, this function returns the 
+         * intersection point that is closest to the start vertex of the polyline
+         * when travelling along the polyline
+         * @param polyline The polyline to be checked for intersection
+         * @param intersection_pose The intersection pose closest to the start 
+         * vertex of the polyline when travelling along the polyline
+         * @return bool True if the polyline intersects the polyline at
+         * atleast one point, false otherwise
+         */
+        virtual bool calcClosestIntersectionPoseWith(
+                const Polyline2D& polyline,
+                Pose2D& intersection_pt) const;
 
         /**
          * @brief This function splits the polyline into an ordered list of

@@ -106,6 +106,23 @@ bool Polyline2D::calcClosestIntersectionPointWith(
     return intersects;
 }
 
+bool Polyline2D::calcClosestIntersectionPoseWith(
+        const Polyline2D& polyline,
+        Pose2D& intersection_pose) const
+{
+    for ( unsigned int start = 0, end = start + 1; end < polyline.size();
+         start = end++ )
+    {
+        LineSegment2D segment(polyline[start], polyline[end]);
+        Point2D intersection_pt;
+        if ( calcClosestIntersectionPointWith(segment, intersection_pt) ) {
+            intersection_pose = Pose2D(intersection_pt, segment.angle());
+            return true;
+        }
+    }
+    return false;
+}
+
 std::vector<LineSegment2D> Polyline2D::split(float max_segment_length) const
 {
     std::vector<LineSegment2D> segments;
