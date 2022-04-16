@@ -123,10 +123,13 @@ class Polyline2D
         virtual bool intersects(const Polyline2D& polyline) const;
 
         /**
-         * @brief If the 2D polyline intersects with a 2D line segment, this function returns the 
-         * intersection point that is closest to the start vertex of the line segment
+         * @brief If the 2D polyline intersects with a 2D line segment, this
+         * function returns the intersection point that is closest to the start
+         * vertex of the line segment
+         *
          * @param line_segment The 2D line segment to be checked for intersection
-         * @param intersection_pt The intersection point closest to the start vertex of the line segment
+         * @param intersection_pt The intersection point closest to the start
+         * vertex of the line segment
          * @return bool True if the polyline intersects the 2D line segment at
          * atleast one point, false otherwise
          */
@@ -135,9 +138,10 @@ class Polyline2D
                 Point2D& intersection_pt) const;
 
         /**
-         * @brief If the 2D polyline intersects with a 2D polyline, this function returns the 
-         * intersection point that is closest to the start vertex of the polyline
-         * when travelling along the polyline
+         * @brief If the 2D polyline intersects with a 2D polyline, this
+         * function returns the intersection point that is closest to the start
+         * vertex of the polyline when travelling along the polyline
+         *
          * @param polyline The polyline to be checked for intersection
          * @param intersection_pose The intersection pose closest to the start 
          * vertex of the polyline when travelling along the polyline
@@ -146,11 +150,12 @@ class Polyline2D
          */
         virtual bool calcClosestIntersectionPoseWith(
                 const Polyline2D& polyline,
-                Pose2D& intersection_pt) const;
+                Pose2D& intersection_pose) const;
 
         /**
          * @brief This function splits the polyline into an ordered list of
          * line segments
+         *
          * @param max_segment_length The max length of each line segment. \n 
          * If max_segment_length <= 0, then each segment corresponds to a full
          * edge of the polyline
