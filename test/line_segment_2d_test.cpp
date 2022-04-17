@@ -96,9 +96,3 @@ TEST(LineSegment2D, containsPoint)
 
     EXPECT_EQ(l.containsPoint(p4), true);
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

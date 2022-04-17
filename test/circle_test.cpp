@@ -31,9 +31,3 @@ TEST(CircleTest, fromPoints)
 
     EXPECT_FALSE(Circle::fromPoints(p1, p2, p4, circle));
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

@@ -14,9 +14,3 @@ TEST(Pose2DTest, constructor)
     EXPECT_FLOAT_EQ(pose2.y, 2.0f) << "pose2.y is not 2.0f";
     EXPECT_FLOAT_EQ(pose2.theta, 1.5f) << "pose2.theta is not 1.5f";
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
