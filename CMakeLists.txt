@@ -83,6 +83,7 @@ add_library(geometry_utils
     src/Polyline2D.cpp
     src/Pose2D.cpp
     src/XYTheta.cpp
+    src/Circle.cpp
     src/Box.cpp
     src/LineSegment2D.cpp
     src/TransformMatrix2D.cpp
@@ -134,6 +135,13 @@ if (CATKIN_ENABLE_TESTING)
         test/polygon_2d_test.cpp
     )
     target_link_libraries(polygon_2d_test
+        geometry_utils
+        ${catkin_LIBRARIES}
+    )
+    catkin_add_gtest(circle_test
+        test/circle_test.cpp
+    )
+    target_link_libraries(circle_test
         geometry_utils
         ${catkin_LIBRARIES}
     )
