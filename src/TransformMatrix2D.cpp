@@ -43,6 +43,7 @@
 #include <geometry_common/Utils.h>
 #include <geometry_common/Pose2D.h>
 #include <geometry_common/Point2D.h>
+#include <geometry_common/Circle.h>
 #include <geometry_common/Polyline2D.h>
 #include <geometry_common/Polygon2D.h>
 #include <geometry_common/TransformMatrix2D.h>
@@ -212,6 +213,14 @@ void TransformMatrix2D::transform(Point2D& point) const
     point.y = temp_y;
 }
 
+void TransformMatrix2D::transform(Circle& circle) const
+{
+    float temp_x = (mat_[0] * circle.x) + (mat_[1] * circle.y) + mat_[2];
+    float temp_y = (mat_[3] * circle.x) + (mat_[4] * circle.y) + mat_[5];
+    circle.x = temp_x;
+    circle.y = temp_y;
+}
+
 void TransformMatrix2D::transform(Pose2D& pose) const
 {
     TransformMatrix2D transformed_mat = (*this) * pose.asMat();
@@ -270,6 +279,13 @@ Point2D TransformMatrix2D::operator * (const Point2D& point) const
     Point2D transformed_point(point);
     transform(transformed_point);
     return transformed_point;
+}
+
+Circle TransformMatrix2D::operator * (const Circle& circle) const
+{
+    Circle transformed_circle(circle);
+    transform(transformed_circle);
+    return transformed_circle;
 }
 
 Pose2D TransformMatrix2D::operator * (const Pose2D& pose) const

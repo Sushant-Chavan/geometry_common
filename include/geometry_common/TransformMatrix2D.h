@@ -53,6 +53,7 @@ namespace geometry_common
 // Forward declaration 
 class Pose2D;
 class Point2D;
+class Circle;
 class Polyline2D;
 class Polygon2D;
 using PointCloud2D = std::vector<Point2D>;
@@ -143,6 +144,8 @@ class TransformMatrix2D
 
         void transform(Point2D& point) const;
 
+        void transform(Circle& circle) const;
+
         void transform(Pose2D& pose) const;
 
         void transform(Polyline2D& polyline) const;
@@ -162,6 +165,8 @@ class TransformMatrix2D
         TransformMatrix2D& operator *= (const TransformMatrix2D& tf_mat);
 
         Point2D operator * (const Point2D& vec) const;
+
+        Circle operator * (const Circle& circle) const;
 
         Pose2D operator * (const Pose2D& vec) const;
 
