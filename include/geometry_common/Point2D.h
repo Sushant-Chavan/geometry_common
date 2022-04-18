@@ -87,6 +87,33 @@ class Point2D
             Point2D(point.x, point.y) {}
 
         /**
+         * @brief Construct Point2D from geometry_msgs::PointStamped object.
+         * Ignores z coordinate.
+         *
+         * @param point geometry_msgs::PointStamped object
+         */
+        Point2D(const geometry_msgs::PointStamped& point):
+            Point2D(point.point) {}
+
+        /**
+         * @brief Construct Point2D from geometry_msgs::Point object. Ignores z
+         * coordinate.
+         *
+         * @param point geometry_msgs::Point object
+         */
+        Point2D(const geometry_msgs::Point& point):
+            Point2D(point.x, point.y) {}
+
+        /**
+         * @brief Construct Point2D from geometry_msgs::Point32 object. Ignores
+         * z coordinate.
+         *
+         * @param point geometry_msgs::Point32 object
+         */
+        Point2D(const geometry_msgs::Point32& point):
+            Point2D(point.x, point.y) {}
+
+        /**
          * @brief
          * 
          */

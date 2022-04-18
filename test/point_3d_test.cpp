@@ -13,9 +13,3 @@ TEST(PointTest, constructor)
     EXPECT_EQ(pt.y, 2.0f) << "pt.y is not 2.0f";
     EXPECT_EQ(pt.z, 3.0f) << "pt.z is not 3.0f";
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

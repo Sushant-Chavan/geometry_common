@@ -156,9 +156,3 @@ TEST(UtilsTest, convertEulerToQuaternion)
     EXPECT_NEAR(qz, 0.1675f, 1e-3f);
     EXPECT_NEAR(qw, 0.7861f, 1e-3f);
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

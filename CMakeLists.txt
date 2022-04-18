@@ -83,6 +83,7 @@ add_library(geometry_utils
     src/Polyline2D.cpp
     src/Pose2D.cpp
     src/XYTheta.cpp
+    src/Circle.cpp
     src/Box.cpp
     src/LineSegment2D.cpp
     src/TransformMatrix2D.cpp
@@ -102,41 +103,7 @@ target_link_libraries(pointcloud_projector
 # TESTS
 # =====
 if (CATKIN_ENABLE_TESTING)
-    catkin_add_gtest(point_3d_test
-        test/point_3d_test.cpp
-    )
-    target_link_libraries(point_3d_test
-        geometry_utils
-        ${catkin_LIBRARIES}
-    )
-    catkin_add_gtest(pose_2d_test
-        test/pose_2d_test.cpp
-    )
-    target_link_libraries(pose_2d_test
-        geometry_utils
-        ${catkin_LIBRARIES}
-    )
-    catkin_add_gtest(utils_test
-        test/utils_test.cpp
-    )
-    target_link_libraries(utils_test
-        geometry_utils
-        ${catkin_LIBRARIES}
-    )
-    catkin_add_gtest(line_segment_2d_test
-        test/line_segment_2d_test.cpp
-    )
-    target_link_libraries(line_segment_2d_test
-        geometry_utils
-        ${catkin_LIBRARIES}
-    )
-    catkin_add_gtest(polygon_2d_test
-        test/polygon_2d_test.cpp
-    )
-    target_link_libraries(polygon_2d_test
-        geometry_utils
-        ${catkin_LIBRARIES}
-    )
+    add_subdirectory(test)
 endif ()
 
 # =======

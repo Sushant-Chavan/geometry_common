@@ -145,9 +145,3 @@ TEST(Polygon2DTest, calcInflatedPolygon)
     EXPECT_EQ(inflated_polygon2[2], Point2D( 4.073f,  4.121f));
     EXPECT_EQ(inflated_polygon2[3], Point2D(-0.1f,  3.078f));
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
