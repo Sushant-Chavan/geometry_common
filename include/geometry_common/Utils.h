@@ -52,6 +52,7 @@
 
 #include <geometry_common/Pose2D.h>
 #include <geometry_common/Point3D.h>
+#include <geometry_common/Circle.h>
 #include <geometry_common/LineSegment2D.h>
 #include <geometry_common/Enums.h>
 
@@ -348,6 +349,42 @@ class Utils
         static std::vector<LineSegment2D> fitLineSegmentsRANSAC(
                 const PointCloud2D& pts,
                 float score_threshold = 0.9f,
+                float delta = 0.2f,
+                size_t itr_limit = 10);
+
+        /**
+         * @brief Fit a Circle from a subset of points using RANSAC
+         *
+         * @param pts entire pointcloud
+         * @param start_index start of subset of points to consider
+         * @param end_index end of subset of points to consider
+         * @param circle fitted circle (output)
+         * @param delta radius error
+         * @param itr_limit number of iteration for random samples
+         *
+         * @return best score
+         */
+        static float fitCircleRANSAC(
+                const PointCloud2D& pts,
+                unsigned start_index,
+                unsigned end_index,
+                Circle& circle,
+                float delta = 0.2f,
+                size_t itr_limit = 10);
+
+        /**
+         * @brief Fit a Circle from a set of points using RANSAC
+         *
+         * @param pts entire pointcloud
+         * @param circle fitted circle (output)
+         * @param delta radius error
+         * @param itr_limit number of iteration for random samples
+         *
+         * @return best score
+         */
+        static float fitCircleRANSAC(
+                const PointCloud2D& pts,
+                Circle& circle,
                 float delta = 0.2f,
                 size_t itr_limit = 10);
 

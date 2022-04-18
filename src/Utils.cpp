@@ -592,6 +592,70 @@ std::vector<LineSegment2D> Utils::fitLineSegmentsRANSAC(
     return line_segments;
 }
 
+float Utils::fitCircleRANSAC(
+        const PointCloud2D& pts,
+        unsigned start_index,
+        unsigned end_index,
+        Circle& circle,
+        float delta,
+        size_t itr_limit)
+{
+    if ( end_index <= start_index+1 )
+    {
+        circle.x = 0.0f;
+        circle.y = 0.0f;
+        circle.r = 0.0f;
+        return 0.0f;
+    }
+
+    unsigned max_score = 0;
+    size_t num_of_points = end_index-start_index+1;
+    Circle candidate_circle;
+    for ( size_t itr_num = 0; itr_num < itr_limit; ++itr_num )
+    {
+        size_t ind_1 = (std::rand() % num_of_points) + start_index;
+        size_t ind_2 = ind_1;
+        while ( ind_2 == ind_1 )
+        {
+            ind_2 = (std::rand() % num_of_points) + start_index;
+        }
+        size_t ind_3 = ind_1;
+        while ( ind_3 == ind_1 || ind_3 == ind_2 )
+        {
+            ind_3 = (std::rand() % num_of_points) + start_index;
+        }
+        if ( !Circle::fromPoints(pts[ind_1], pts[ind_2], pts[ind_3], candidate_circle) )
+        {
+            continue;
+        }
+
+        unsigned score = 0;
+        for ( size_t i = start_index; i <= end_index; i++ )
+        {
+            if ( std::fabs(pts[i].distTo(candidate_circle) - candidate_circle.r) < delta )
+            {
+                score ++;
+            }
+        }
+        if ( score > max_score )
+        {
+            max_score = score;
+            circle = candidate_circle;
+        }
+    }
+
+    return (float)max_score/num_of_points;
+}
+
+float Utils::fitCircleRANSAC(
+        const PointCloud2D& pts,
+        Circle& circle,
+        float delta,
+        size_t itr_limit)
+{
+    return Utils::fitCircleRANSAC(pts, 0, pts.size()-1, circle, delta, itr_limit);
+}
+
 float Utils::fitLineRegression(
         const PointCloud2D& pts,
         unsigned start_index,
