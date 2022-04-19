@@ -556,6 +556,54 @@ class Utils
                 float target,
                 float t);
 
+
+        /**
+         * @brief Calculate an entire bezier spline curve full of points for
+         * given control points.
+         *
+         * @param control_points control points to generate spline curve from
+         * @param num_of_points number of points to populate the spline curve
+         * with
+         *
+         * @return spline curve as a vector of points
+         */
+        static PointVec2D calcSplineCurvePoints(
+                const PointVec2D& control_points,
+                size_t num_of_points);
+
+        /**
+         * @brief Calculate the coefficients for a given row number in pascal's
+         * triangle \n
+         * for example, for row_num = 0, it would be    [1]
+         *              for row_num = 1, it would be   [1 1]
+         *              for row_num = 2, it would be  [1 2 1]
+         *              for row_num = 3, it would be [1 3 3 1]
+         *              ...
+         *
+         * @param row_num row number from top on pascal's triangle
+         *
+         * @return coefficients at the given row
+         */
+        static std::vector<unsigned int> calcPascalTriangleRowCoefficients(
+                size_t row_num);
+
+        /**
+         * @brief Calculate a single spline curve point at given interpolation t
+         * for given control points.
+         *
+         * @param control_points control points for bezier spline curve
+         * @param coefficients pascal triangle coefficient for given curve
+         * points
+         * @param t interpolation factor (should be between 0.0 and 1.0)
+         *
+         * @return a point on spline curve at given interpolation t
+         */
+        static Point2D calcSplineCurvePoint(
+                const PointVec2D& control_points,
+                const std::vector<unsigned int>& coefficients,
+                float t);
+
+
         /**
          * @brief Convert from PointCloud2D or PointCloud3D to
          * sensor_msgs::PointCloud

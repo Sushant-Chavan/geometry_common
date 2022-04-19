@@ -5,6 +5,7 @@
 #include <geometry_common/Utils.h>
 
 using kelo::geometry_common::Point2D;
+using kelo::geometry_common::PointVec2D;
 using kelo::geometry_common::Utils;
 using kelo::geometry_common::WindingOrder;
 
@@ -155,4 +156,52 @@ TEST(UtilsTest, convertEulerToQuaternion)
     EXPECT_NEAR(qy, 0.5709f, 1e-3f);
     EXPECT_NEAR(qz, 0.1675f, 1e-3f);
     EXPECT_NEAR(qw, 0.7861f, 1e-3f);
+}
+
+TEST(UtilsTest, pascalTriangleCoeff)
+{
+    EXPECT_EQ(Utils::calcPascalTriangleRowCoefficients(1),
+              std::vector<unsigned int>({1, 1}));
+    EXPECT_EQ(Utils::calcPascalTriangleRowCoefficients(2),
+              std::vector<unsigned int>({1, 2, 1}));
+    EXPECT_EQ(Utils::calcPascalTriangleRowCoefficients(3),
+              std::vector<unsigned int>({1, 3, 3, 1}));
+}
+
+TEST(UtilsTest, splineCurvePoint)
+{
+    std::vector<unsigned int> coeff{1, 2, 1};
+    PointVec2D control_points{
+        Point2D(0.0f, 0.0f),
+        Point2D(1.0f, 1.0f),
+        Point2D(2.0f, 0.0f)};
+    float t;
+
+    t = 0.0f;
+    EXPECT_EQ(Utils::calcSplineCurvePoint(control_points, coeff, t), control_points.front());
+
+    t = 1.0f;
+    EXPECT_EQ(Utils::calcSplineCurvePoint(control_points, coeff, t), control_points.back());
+
+    t = 0.5f;
+    Point2D mid_point = Utils::calcSplineCurvePoint(control_points, coeff, t);
+    EXPECT_NEAR(mid_point.x, control_points[1].x, 1e-3f);
+    EXPECT_LT(mid_point.y, control_points[1].y);
+}
+
+TEST(UtilsTest, splineCurvePoints)
+{
+    PointVec2D control_points{
+        Point2D(0.0f, 0.0f),
+        Point2D(1.0f, 1.0f),
+        Point2D(2.0f, 0.0f)};
+    size_t num_of_points = 11;
+
+    PointVec2D curve_points = Utils::calcSplineCurvePoints(control_points, num_of_points);
+    EXPECT_EQ(curve_points.size(), num_of_points);
+    EXPECT_EQ(curve_points.front(), control_points.front());
+    EXPECT_EQ(curve_points.back(), control_points.back());
+    const Point2D& mid_point = curve_points[num_of_points/2];
+    EXPECT_NEAR(mid_point.x, control_points[1].x, 1e-3f);
+    EXPECT_LT(mid_point.y, control_points[1].y);
 }

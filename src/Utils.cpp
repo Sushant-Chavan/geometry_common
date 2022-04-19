@@ -1061,6 +1061,70 @@ float Utils::applyLinearInterpolation(
            ( t <= 0.0f ) ? src    : (src * (1.0f - t)) + (target * t);
 }
 
+PointVec2D Utils::calcSplineCurvePoints(
+        const PointVec2D& control_points,
+        size_t num_of_points)
+{
+    PointVec2D curve_points;
+    if ( control_points.size() < 2 || num_of_points < 2 )
+    {
+        return curve_points;
+    }
+
+    size_t order = control_points.size() - 1;
+    std::vector<unsigned int> coef = Utils::calcPascalTriangleRowCoefficients(order);
+    float offset = 1.0f / (num_of_points-1);
+    curve_points.reserve(num_of_points);
+    curve_points.push_back(control_points[0]); // add start point as first curve point
+    // add n-2 curve points in middle
+    for ( size_t factor = 1; factor+1 < num_of_points; factor++ )
+    {
+        float t = offset * factor;
+        curve_points.push_back(Utils::calcSplineCurvePoint(control_points, coef, t));
+    }
+    curve_points.push_back(control_points.back()); // add end point as last curve point
+    return curve_points;
+}
+
+std::vector<unsigned int> Utils::calcPascalTriangleRowCoefficients(
+        size_t row_num)
+{
+    std::vector<unsigned int> coefficents;
+    coefficents.reserve(row_num+1);
+    coefficents.push_back(1);
+    for ( size_t i = 1; i < row_num+1; ++i )
+    {
+        coefficents.push_back( (coefficents.back() * (row_num + 1 - i)) / i );
+    }
+    return coefficents;
+}
+
+Point2D Utils::calcSplineCurvePoint(
+        const PointVec2D& control_points,
+        const std::vector<unsigned int>& coefficients,
+        float t)
+{
+    Point2D curve_point;
+    if ( control_points.size() < 2 )
+    {
+        return control_points.front();
+    }
+
+    size_t order = control_points.size() - 1;
+    for ( size_t i = 0; i < order+1; i++ )
+    {
+        curve_point.x += static_cast<float>(coefficients[i])
+                       * pow(1.0f-t, order-i)
+                       * pow(t, i)
+                       * control_points[i].x;
+        curve_point.y += static_cast<float>(coefficients[i])
+                       * pow(1.0f-t, order-i)
+                       * pow(t, i)
+                       * control_points[i].y;
+    }
+    return curve_point;
+}
+
 template <typename T>
 sensor_msgs::PointCloud Utils::convertToROSPointCloud(
         const std::vector<T>& pc,
