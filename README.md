@@ -16,11 +16,11 @@ We use [Doxygen](https://www.doxygen.nl/index.html) for code documentation.
 
 - Documentation can be built using the flag `-DBUILD_DOC=ON`
   ```bash
-  catkin build yaml_common -DBUILD_DOC=ON
+  catkin build geometry_common -DBUILD_DOC=ON
   ```
 
 - The documentation will be generated at
-  `<YOUR_CATKIN_WS>/build/yaml_common/docs/html/index.html`
+  `<YOUR_CATKIN_WS>/build/geometry_common/docs/html/index.html`
 
 ## Test
 
