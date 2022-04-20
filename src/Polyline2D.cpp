@@ -108,7 +108,8 @@ bool Polyline2D::calcClosestIntersectionPointWith(
 
 bool Polyline2D::calcClosestIntersectionPoseWith(
         const Polyline2D& polyline,
-        Pose2D& intersection_pose) const
+        Pose2D& intersection_pose,
+        unsigned int& segment_id) const
 {
     for ( unsigned int start = 0, end = start + 1; end < polyline.size();
          start = end++ )
@@ -118,6 +119,7 @@ bool Polyline2D::calcClosestIntersectionPoseWith(
         if ( calcClosestIntersectionPointWith(segment, intersection_pt) )
         {
             intersection_pose = Pose2D(intersection_pt, segment.angle());
+            segment_id = start;
             return true;
         }
     }
