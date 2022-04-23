@@ -253,6 +253,14 @@ void TransformMatrix2D::transform(PointCloud2D& cloud) const
     }
 }
 
+void TransformMatrix2D::transform(Path& pose_path) const
+{
+    for ( Pose2D& pose : pose_path )
+    {
+        transform(pose);
+    }
+}
+
 TransformMatrix2D& TransformMatrix2D::operator = (const TransformMatrix2D& other)
 {
     mat_ = other.mat_;
@@ -321,6 +329,13 @@ Polygon2D TransformMatrix2D::operator * (const Polygon2D& polygon) const
     Polyline2D transformed_polygon(polygon);
     transform(transformed_polygon);
     return transformed_polygon;
+}
+
+Path TransformMatrix2D::operator * (const Path& pose_path) const
+{
+    Path transformed_path(pose_path);
+    transform(transformed_path);
+    return transformed_path;
 }
 
 const float& TransformMatrix2D::operator [] (unsigned int index) const

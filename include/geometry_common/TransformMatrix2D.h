@@ -60,6 +60,7 @@ class XYTheta;
 using PointCloud2D = std::vector<Point2D>;
 using Vector2D = Point2D;
 using Velocity2D = XYTheta;
+using Path = std::vector<Pose2D>;
 
 /**
  * @brief Transformation matrix for two dimensional space
@@ -165,6 +166,8 @@ class TransformMatrix2D
 
         void transform(PointCloud2D& cloud) const;
 
+        void transform(Path& pose_path) const;
+
         /**
          * @brief 
          * 
@@ -188,6 +191,8 @@ class TransformMatrix2D
         Polyline2D operator * (const Polyline2D& polyline) const;
 
         Polygon2D operator * (const Polygon2D& polygon) const;
+
+        Path operator * (const Path& pose_path) const;
 
         const float& operator [] (unsigned int index) const;
 
