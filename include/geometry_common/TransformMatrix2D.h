@@ -56,8 +56,10 @@ class Point2D;
 class Circle;
 class Polyline2D;
 class Polygon2D;
+class XYTheta;
 using PointCloud2D = std::vector<Point2D>;
 using Vector2D = Point2D;
+using Velocity2D = XYTheta;
 
 /**
  * @brief Transformation matrix for two dimensional space
@@ -148,6 +150,17 @@ class TransformMatrix2D
 
         void transform(Pose2D& pose) const;
 
+        /**
+         * @brief transform two dimensional velocity in place
+         *
+         * [ cos(theta)  -sin(theta)  y ]   [ vel_x     ]    [ target_vel_x ]
+         * [ sin(theta)   cos(theta) -x ] * [ vel_y     ] => [ target_vel_y ]
+         * [ 0            0           1 ]   [ vel_theta ]    [ target_vel_theta ]
+         *
+         * @param vel velocity that needs to be transformed in place
+         */
+        void transform(Velocity2D& vel) const;
+
         void transform(Polyline2D& polyline) const;
 
         void transform(PointCloud2D& cloud) const;
@@ -169,6 +182,8 @@ class TransformMatrix2D
         Circle operator * (const Circle& circle) const;
 
         Pose2D operator * (const Pose2D& vec) const;
+
+        Velocity2D operator * (const Velocity2D& vec) const;
 
         Polyline2D operator * (const Polyline2D& polyline) const;
 

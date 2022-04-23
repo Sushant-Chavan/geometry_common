@@ -229,6 +229,14 @@ void TransformMatrix2D::transform(Pose2D& pose) const
     pose.theta = std::atan2(transformed_mat[3], transformed_mat[0]);
 }
 
+void TransformMatrix2D::transform(Velocity2D& vel) const
+{
+    float temp_x = (mat_[0] * vel.x) + (mat_[1] * vel.y) + (mat_[5] * vel.theta);
+    float temp_y = (mat_[3] * vel.x) + (mat_[4] * vel.y) - (mat_[2] * vel.theta);
+    vel.x = temp_x;
+    vel.y = temp_y;
+}
+
 void TransformMatrix2D::transform(Polyline2D& polyline) const
 {
     for ( Point2D& vertex : polyline.vertices )
@@ -292,6 +300,13 @@ Pose2D TransformMatrix2D::operator * (const Pose2D& pose) const
 {
     TransformMatrix2D transformed_mat = (*this) * pose.asMat();
     return transformed_mat.asPose2D();
+}
+
+Velocity2D TransformMatrix2D::operator * (const Velocity2D& vel) const
+{
+    Velocity2D transformed_vel(vel);
+    transform(transformed_vel);
+    return transformed_vel;
 }
 
 Polyline2D TransformMatrix2D::operator * (const Polyline2D& polyline) const
