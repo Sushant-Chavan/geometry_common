@@ -145,12 +145,15 @@ class Polyline2D
          * @param polyline The polyline to be checked for intersection
          * @param intersection_pose The intersection pose closest to the start 
          * vertex of the polyline when travelling along the polyline
+         * @param segment_id The first segment of the input polyline that 
+         * intersects with this polyline
          * @return bool True if the polyline intersects the polyline at
          * atleast one point, false otherwise
          */
         virtual bool calcClosestIntersectionPoseWith(
                 const Polyline2D& polyline,
-                Pose2D& intersection_pose) const;
+                Pose2D& intersection_pose,
+                unsigned int& segment_id) const;
 
         /**
          * @brief This function splits the polyline into an ordered list of
