@@ -73,6 +73,10 @@ TransformMatrix2D::TransformMatrix2D(const Pose2D& pose)
 {
     update(pose);
 }
+TransformMatrix2D::TransformMatrix2D(const XYTheta& x_y_theta)
+{
+    update(x_y_theta);
+}
 
 TransformMatrix2D::TransformMatrix2D(const TransformMatrix2D& tf_mat)
 {
@@ -106,6 +110,11 @@ void TransformMatrix2D::update(const tf::StampedTransform& stamped_transform)
 void TransformMatrix2D::update(const Pose2D& pose)
 {
     update(pose.x, pose.y, pose.theta);
+}
+
+void TransformMatrix2D::update(const XYTheta& x_y_theta)
+{
+    update(x_y_theta.x, x_y_theta.y, x_y_theta.theta);
 }
 
 void TransformMatrix2D::update(const TransformMatrix2D& tf_mat)

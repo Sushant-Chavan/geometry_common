@@ -101,6 +101,8 @@ class TransformMatrix2D
 
         TransformMatrix2D(const Pose2D& pose);
 
+        TransformMatrix2D(const XYTheta& x_y_theta);
+
         TransformMatrix2D(const TransformMatrix2D& tf_mat);
 
         /**
@@ -116,6 +118,8 @@ class TransformMatrix2D
         void update(const tf::StampedTransform& stamped_transform);
 
         void update(const Pose2D& pose);
+
+        void update(const XYTheta& x_y_theta);
 
         void update(const TransformMatrix2D& tf_mat);
 
