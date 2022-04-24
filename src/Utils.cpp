@@ -261,7 +261,7 @@ std::vector<Pose2D> Utils::calcTrajectory(
     float delta_t = future_time/num_of_poses;
 
     // d = v * t
-    TransformMatrix2D vel_tf_mat = Pose2D(vel * delta_t).asMat();
+    TransformMatrix2D vel_tf_mat(vel * delta_t);
     TransformMatrix2D pos_mat; // identity mat
 
     /* add current pose (for extra safety) */
