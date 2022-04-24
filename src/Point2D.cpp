@@ -91,7 +91,7 @@ Point2D Point2D::asNormalised() const
 
 float Point2D::scalarCrossProduct(const Point2D& point) const
 {
-	return (x * point.y) - (y * point.x);
+    return (x * point.y) - (y * point.x);
 }
 
 float Point2D::dotProduct(const Point2D& point) const

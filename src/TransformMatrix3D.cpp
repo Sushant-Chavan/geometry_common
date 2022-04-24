@@ -159,7 +159,7 @@ void TransformMatrix3D::updateQuaternion(float qx, float qy, float qz, float qw)
     /**
      * source: https://automaticaddison.com/how-to-convert-a-quaternion-to-a-rotation-matrix/
      */
-	mat_[0] = 2 * (qw * qw + qx * qx) - 1;
+    mat_[0] = 2 * (qw * qw + qx * qx) - 1;
     mat_[1] = 2 * (qx * qy - qw * qz);
     mat_[2] = 2 * (qx * qz + qw * qy);
     mat_[4] = 2 * (qx * qy + qw * qz);

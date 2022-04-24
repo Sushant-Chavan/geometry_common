@@ -800,7 +800,7 @@ std::vector<LineSegment2D> Utils::applyPiecewiseRegression(
             errors[i+1] = Utils::fitLineRegression(pts, segments[i].start_index,
                                                    segments[i+1].end_index, line_segment);
         }
-        errors.erase(errors.begin() + i);	
+        errors.erase(errors.begin() + i);
     }
 
     /* create line_segments from regression line segments */
@@ -917,9 +917,9 @@ void Utils::mergeCloseLines(
         float distance_threshold,
         float angle_threshold)
 {
-	if (line_segments.size() < 2)
+    if (line_segments.size() < 2)
     {
-		return;
+        return;
     }
 
     size_t i = 0;
@@ -945,9 +945,9 @@ void Utils::mergeCloseLinesBF(
         float distance_threshold,
         float angle_threshold)
 {
-	if (line_segments.size() < 2)
+    if (line_segments.size() < 2)
     {
-		return;
+        return;
     }
 
     size_t skip_index = 1;
