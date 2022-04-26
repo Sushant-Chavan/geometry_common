@@ -241,7 +241,7 @@ void TransformMatrix2D::transform(Pose2D& pose) const
 void TransformMatrix2D::transform(Velocity2D& vel) const
 {
     float temp_x = (mat_[0] * vel.x) + (mat_[1] * vel.y) + (mat_[5] * vel.theta);
-    float temp_y = (mat_[3] * vel.x) + (mat_[4] * vel.y) - (mat_[2] * vel.theta);
+    float temp_y = (mat_[3] * vel.x) + (mat_[4] * vel.y) + (mat_[2] * vel.theta);
     vel.x = temp_x;
     vel.y = temp_y;
 }
