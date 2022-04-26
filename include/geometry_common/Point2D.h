@@ -114,6 +114,17 @@ class Point2D
             Point2D(point.x, point.y) {}
 
         /**
+         * @brief Create a two dimensional point from radial coordinates
+         *
+         * @param radius distance from center
+         * @param angle angle from positive X axis
+         *
+         * @return newly created Point2D object
+         */
+        static Point2D initFromRadialCoord(float radius = 0.0f,
+                                           float angle = 0.0f);
+
+        /**
          * @brief
          * 
          */

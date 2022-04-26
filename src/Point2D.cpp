@@ -46,6 +46,11 @@ namespace kelo
 namespace geometry_common
 {
 
+Point2D Point2D::initFromRadialCoord(float radius, float angle)
+{
+    return Point2D(radius * std::cos(angle), radius * std::sin(angle));
+}
+
 geometry_msgs::Point Point2D::asPoint() const
 {
     geometry_msgs::Point point;
