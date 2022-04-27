@@ -91,6 +91,7 @@ visualization_msgs::Marker Circle::asMarker(const std::string& frame,
     marker.pose.position.x = x;
     marker.pose.position.y = y;
     marker.pose.position.z = 0.0f;
+    marker.pose.orientation.w = 1.0f;
     return marker;
 }
 
