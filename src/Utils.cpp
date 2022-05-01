@@ -1377,7 +1377,7 @@ nav_msgs::Path Utils::convertToROSPath(
 }
 
 visualization_msgs::Marker Utils::convertGeometricPathToMarker(
-        const std::vector<Pose2D>& geometric_path,
+        const Path& geometric_path,
         const std::string& frame,
         float red,
         float green,
@@ -1397,10 +1397,7 @@ visualization_msgs::Marker Utils::convertGeometricPathToMarker(
     marker.points.reserve(geometric_path.size());
     for ( size_t i = 0; i < geometric_path.size(); i++ )
     {
-        geometry_msgs::Point pt;
-        pt.x = geometric_path[i].x;
-        pt.y = geometric_path[i].y;
-        marker.points.push_back(pt);
+        marker.points.push_back(geometric_path[i].position().asPoint());
     }
     return marker;
 }

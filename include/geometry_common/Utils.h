@@ -796,7 +796,7 @@ class Utils
          * @return visualization_msgs::Marker 
          */
         static visualization_msgs::Marker convertGeometricPathToMarker(
-                const std::vector<Pose2D>& geometric_path,
+                const Path& geometric_path,
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,
