@@ -516,6 +516,20 @@ class Utils
                 float raw_angle);
 
         /**
+         * @brief Clip XYTheta between max and min limits
+         *
+         * @param value raw value that needs to be clipped
+         * @param max_limit higher than this will get clipped
+         * @param min_limit lower than this will get clipped
+         *
+         * @return clipped XYTheta
+         */
+        static XYTheta clip(
+                const XYTheta& value,
+                const XYTheta& max_limit,
+                const XYTheta& min_limit);
+
+        /**
          * @brief 
          * 
          * @param vel 

@@ -1020,16 +1020,24 @@ float Utils::clipAngle(
     return angle;
 }
 
+XYTheta Utils::clip(
+        const XYTheta& value,
+        const XYTheta& max_limit,
+        const XYTheta& min_limit)
+{
+    XYTheta clipped_xytheta;
+    clipped_xytheta.x = Utils::clip(value.x, max_limit.x, min_limit.x);
+    clipped_xytheta.y = Utils::clip(value.y, max_limit.y, min_limit.y);
+    clipped_xytheta.theta = Utils::clip(value.theta, max_limit.theta, min_limit.theta);
+    return clipped_xytheta;
+}
+
 Velocity2D Utils::applyVelLimits(
         const Velocity2D& vel,
         const Velocity2D& max_vel,
         const Velocity2D& min_vel)
 {
-    Velocity2D clipped_vel;
-    clipped_vel.x = Utils::clip(vel.x, max_vel.x, min_vel.x);
-    clipped_vel.y = Utils::clip(vel.y, max_vel.y, min_vel.y);
-    clipped_vel.theta = Utils::clip(vel.theta, max_vel.theta, min_vel.theta);
-    return clipped_vel;
+    return Utils::clip(vel, max_vel, min_vel);
 }
 
 Velocity2D Utils::applyAccLimits(
@@ -1040,17 +1048,9 @@ Velocity2D Utils::applyAccLimits(
 {
     Velocity2D vel;
     Acceleration2D max_acc_per_loop = max_acc * (1.0f/loop_rate);
-    vel.x = Utils::clip(cmd_vel.x,
-                        curr_vel.x + max_acc_per_loop.x,
-                        curr_vel.x - max_acc_per_loop.x);
-    vel.y = Utils::clip(cmd_vel.y,
-                        curr_vel.y + max_acc_per_loop.y,
-                        curr_vel.y - max_acc_per_loop.y);
-    vel.theta = Utils::clip(cmd_vel.theta,
-                            curr_vel.theta + max_acc_per_loop.theta,
-                            curr_vel.theta - max_acc_per_loop.theta);
-    return vel;
+    return Utils::clip(cmd_vel, curr_vel + max_acc_per_loop, curr_vel - max_acc_per_loop);
 }
+
 
 float Utils::applyLinearInterpolation(
         float src,
