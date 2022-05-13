@@ -401,7 +401,8 @@ class Utils
                 const PointCloud2D& pts,
                 unsigned start_index,
                 unsigned end_index,
-                LineSegment2D& line_segment);
+                LineSegment2D& line_segment,
+                bool is_ordered = false);
 
         /**
          * @brief 
@@ -412,7 +413,8 @@ class Utils
          */
         static float fitLineRegression(
                 const PointCloud2D& pts,
-                LineSegment2D& line_segment);
+                LineSegment2D& line_segment,
+                bool is_ordered = false);
 
         /**
          * @brief 

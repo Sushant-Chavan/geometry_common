@@ -660,7 +660,8 @@ float Utils::fitLineRegression(
         const PointCloud2D& pts,
         unsigned start_index,
         unsigned end_index,
-        LineSegment2D& line_segment)
+        LineSegment2D& line_segment,
+        bool is_ordered)
 {
     if ( pts.size() < 2 ||
          start_index >= pts.size() || end_index >= pts.size() ||
@@ -671,9 +672,40 @@ float Utils::fitLineRegression(
     }
     Point2D mean_pt = Utils::calcMeanPoint(pts, start_index, end_index);
 
-    float dx = pts[end_index].x - pts[start_index].x;
-    float dy = pts[end_index].y - pts[start_index].y;
-    bool swap_axis = ( std::fabs(dx) < std::fabs(dy) );
+    Point2D start_pt, end_pt;
+    if ( is_ordered )
+    {
+        start_pt = pts[start_index];
+        end_pt = pts[end_index];
+    }
+    else
+    {
+        end_pt.x = std::numeric_limits<float>::min();
+        end_pt.y = std::numeric_limits<float>::min();
+        start_pt.x = std::numeric_limits<float>::max();
+        start_pt.y = std::numeric_limits<float>::max();
+        for ( size_t i = start_index; i <= end_index; i++ )
+        {
+            if ( pts[i].x < start_pt.x )
+            {
+                start_pt.x = pts[i].x;
+            }
+            if ( pts[i].y < start_pt.y )
+            {
+                start_pt.y = pts[i].y;
+            }
+            if ( pts[i].x > end_pt.x )
+            {
+                end_pt.x = pts[i].x;
+            }
+            if ( pts[i].y > end_pt.y )
+            {
+                end_pt.y = pts[i].y;
+            }
+        }
+    }
+    Point2D diff = end_pt - start_pt;
+    bool swap_axis = ( std::fabs(diff.x) < std::fabs(diff.y) );
     float numerator = 0.0f;
     float denominator = 0.0f;
     for ( size_t i = start_index; i <= end_index; i++ )
@@ -688,28 +720,28 @@ float Utils::fitLineRegression(
             denominator += std::pow(pts[i].y - mean_pt.y, 2);
         }
     }
-    if ( denominator < 1e-8 )
+    if ( denominator < 1e-8f )
     {
-        denominator = 1e-8;
+        denominator = 1e-8f;
     }
 
     if ( !swap_axis )
     {
         float m = numerator / denominator;
         float c = mean_pt.y - (m * mean_pt.x);
-        line_segment.start.x = pts[start_index].x;
-        line_segment.start.y = (m * pts[start_index].x) + c;
-        line_segment.end.x = pts[end_index].x;
-        line_segment.end.y = (m * pts[end_index].x) + c;
+        line_segment.start.x = start_pt.x;
+        line_segment.start.y = (m * start_pt.x) + c;
+        line_segment.end.x = end_pt.x;
+        line_segment.end.y = (m * end_pt.x) + c;
     }
     else
     {
         float n = numerator / denominator;
         float d = mean_pt.x - (n * mean_pt.y);
-        line_segment.start.y = pts[start_index].y;
-        line_segment.start.x = (n * pts[start_index].y) + d;
-        line_segment.end.y = pts[end_index].y;
-        line_segment.end.x = (n * pts[end_index].y) + d;
+        line_segment.start.y = start_pt.y;
+        line_segment.start.x = (n * start_pt.y) + d;
+        line_segment.end.y = end_pt.y;
+        line_segment.end.x = (n * end_pt.y) + d;
     }
 
     float error = 0.0f;
@@ -722,9 +754,10 @@ float Utils::fitLineRegression(
 
 float Utils::fitLineRegression(
         const PointCloud2D& pts,
-        LineSegment2D& line_segment)
+        LineSegment2D& line_segment,
+        bool is_ordered)
 {
-    return Utils::fitLineRegression(pts, 0, pts.size()-1, line_segment);
+    return Utils::fitLineRegression(pts, 0, pts.size()-1, line_segment, is_ordered);
 }
 
 std::vector<LineSegment2D> Utils::applyPiecewiseRegression(
@@ -760,8 +793,9 @@ std::vector<LineSegment2D> Utils::applyPiecewiseRegression(
     LineSegment2D line_segment; // not used;
     for ( size_t i = 0; i < errors.size(); i++ )
     {
-        errors[i] = Utils::fitLineRegression(pts, segments[i].start_index,
-                                             segments[i+1].end_index, line_segment);
+        errors[i] = Utils::fitLineRegression(
+                pts, segments[i].start_index, segments[i+1].end_index,
+                line_segment, true);
     }
 
     while ( segments.size() > 1 )
@@ -792,13 +826,15 @@ std::vector<LineSegment2D> Utils::applyPiecewiseRegression(
         LineSegment2D line_segment; // not used
         if (i > 0)
         {
-            errors[i-1] = Utils::fitLineRegression(pts, segments[i-1].start_index,
-                                                   segments[i].end_index, line_segment);
+            errors[i-1] = Utils::fitLineRegression(
+                    pts, segments[i-1].start_index, segments[i].end_index,
+                    line_segment, true);
         }
         if (i < segments.size() - 1)
         {
-            errors[i+1] = Utils::fitLineRegression(pts, segments[i].start_index,
-                                                   segments[i+1].end_index, line_segment);
+            errors[i+1] = Utils::fitLineRegression(
+                    pts, segments[i].start_index, segments[i+1].end_index,
+                    line_segment, true);
         }
         errors.erase(errors.begin() + i);
     }
@@ -807,7 +843,7 @@ std::vector<LineSegment2D> Utils::applyPiecewiseRegression(
     for ( RegressionLineSegment rls : segments )
     {
         LineSegment2D l;
-        Utils::fitLineRegression(pts, rls.start_index, rls.end_index, l);
+        Utils::fitLineRegression(pts, rls.start_index, rls.end_index, l, true);
         line_segments.push_back(l);
     }
     return line_segments;
@@ -834,9 +870,9 @@ std::vector<LineSegment2D> Utils::applyPiecewiseRegressionSplit(
     segments[0].start_index = 0;
     segments[0].end_index = pts.size()-1;
 
-    float error = Utils::fitLineRegression(pts, segments[0].start_index,
-                                           segments[0].end_index,
-                                           segments[0].line_segment);
+    float error = Utils::fitLineRegression(
+            pts, segments[0].start_index, segments[0].end_index,
+            segments[0].line_segment, true);
     if ( error < error_threshold )
     {
         line_segments.push_back(segments[0].line_segment);
@@ -898,10 +934,10 @@ std::vector<LineSegment2D> Utils::applyPiecewiseRegressionSplit(
 
         errors[i] = Utils::fitLineRegression(
                 pts, segments[i].start_index, segments[i].end_index,
-                segments[i].line_segment);
+                segments[i].line_segment, true);
         errors[i+1] = Utils::fitLineRegression(
                 pts, segments[i+1].start_index, segments[i+1].end_index,
-                segments[i+1].line_segment);
+                segments[i+1].line_segment, true);
     }
 
     /* create line_segments from regression line segments */

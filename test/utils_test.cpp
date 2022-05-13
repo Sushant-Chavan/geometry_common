@@ -6,6 +6,7 @@
 
 using kelo::geometry_common::Point2D;
 using kelo::geometry_common::PointVec2D;
+using kelo::geometry_common::LineSegment2D;
 using kelo::geometry_common::Utils;
 using kelo::geometry_common::WindingOrder;
 
@@ -204,4 +205,28 @@ TEST(UtilsTest, splineCurvePoints)
     const Point2D& mid_point = curve_points[num_of_points/2];
     EXPECT_NEAR(mid_point.x, control_points[1].x, 1e-3f);
     EXPECT_LT(mid_point.y, control_points[1].y);
+}
+
+TEST(UtilsTest, regression)
+{
+    PointVec2D pts{
+        Point2D(0.0f, 0.0f),
+        Point2D(5.0f, 0.0f),
+        Point2D(5.0f, 1.0f),
+        Point2D(0.0f, 1.0f)};
+
+    LineSegment2D l;
+    Utils::fitLineRegression(pts, l);
+    EXPECT_EQ(l.start, Point2D(0.0f, 0.5f));
+    EXPECT_EQ(l.end, Point2D(5.0f, 0.5f));
+
+    PointVec2D pts2{
+        Point2D(0.0f, 0.0f),
+        Point2D(0.0f, 5.0f),
+        Point2D(1.0f, 5.0f),
+        Point2D(1.0f, 0.0f)};
+
+    Utils::fitLineRegression(pts2, l);
+    EXPECT_EQ(l.start, Point2D(0.5f, 0.0f));
+    EXPECT_EQ(l.end, Point2D(0.5f, 5.0f));
 }
