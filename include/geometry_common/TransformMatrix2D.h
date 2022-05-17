@@ -54,6 +54,7 @@ namespace geometry_common
 class Pose2D;
 class Point2D;
 class Circle;
+class LineSegment2D;
 class Polyline2D;
 class Polygon2D;
 class XYTheta;
@@ -166,6 +167,8 @@ class TransformMatrix2D
          */
         void transform(Velocity2D& vel) const;
 
+        void transform(LineSegment2D& line_segment) const;
+
         void transform(Polyline2D& polyline) const;
 
         void transform(PointCloud2D& cloud) const;
@@ -191,6 +194,8 @@ class TransformMatrix2D
         Pose2D operator * (const Pose2D& vec) const;
 
         Velocity2D operator * (const Velocity2D& vec) const;
+
+        LineSegment2D operator * (const LineSegment2D& line_segment) const;
 
         Polyline2D operator * (const Polyline2D& polyline) const;
 

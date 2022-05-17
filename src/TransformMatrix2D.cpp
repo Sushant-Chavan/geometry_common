@@ -44,6 +44,7 @@
 #include <geometry_common/Pose2D.h>
 #include <geometry_common/Point2D.h>
 #include <geometry_common/Circle.h>
+#include <geometry_common/LineSegment2D.h>
 #include <geometry_common/Polyline2D.h>
 #include <geometry_common/Polygon2D.h>
 #include <geometry_common/TransformMatrix2D.h>
@@ -246,6 +247,12 @@ void TransformMatrix2D::transform(Velocity2D& vel) const
     vel.y = temp_y;
 }
 
+void TransformMatrix2D::transform(LineSegment2D& line_segment) const
+{
+    transform(line_segment.start);
+    transform(line_segment.end);
+}
+
 void TransformMatrix2D::transform(Polyline2D& polyline) const
 {
     for ( Point2D& vertex : polyline.vertices )
@@ -324,6 +331,13 @@ Velocity2D TransformMatrix2D::operator * (const Velocity2D& vel) const
     Velocity2D transformed_vel(vel);
     transform(transformed_vel);
     return transformed_vel;
+}
+
+LineSegment2D TransformMatrix2D::operator * (const LineSegment2D& line_segment) const
+{
+    LineSegment2D transformed_line_segment(line_segment);
+    transform(transformed_line_segment);
+    return transformed_line_segment;
 }
 
 Polyline2D TransformMatrix2D::operator * (const Polyline2D& polyline) const
