@@ -210,7 +210,7 @@ class Polygon2D : public Polyline2D
          * deflate.
          * @return Polygon2D An inflated/deflated polygon
          */
-        Polygon2D calcInflatedPolygon(float inflation_dist);
+        Polygon2D calcInflatedPolygon(float inflation_dist) const;
 
         /**
          * @brief Get an RViz visualization marker for the polygon object.

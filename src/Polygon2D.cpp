@@ -271,7 +271,7 @@ Polygon2D Polygon2D::calcConvexHullOfPolygons(
     return Polygon2D(convex_hull);
 }
 
-Polygon2D Polygon2D::calcInflatedPolygon(float inflation_dist)
+Polygon2D Polygon2D::calcInflatedPolygon(float inflation_dist) const
 {
     Polygon2D inflated_polygon(*this);
     size_t N = vertices.size();
