@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef KELO_GEOMETRY_COMMON_BOX_H
-#define KELO_GEOMETRY_COMMON_BOX_H
+#ifndef KELO_GEOMETRY_COMMON_BOX_3D_H
+#define KELO_GEOMETRY_COMMON_BOX_3D_H
 
 #include <visualization_msgs/Marker.h>
 #include <geometry_common/Point3D.h>
@@ -147,4 +147,4 @@ class Box3D
 
 } // namespace geometry_common
 } // namespace kelo
-#endif // KELO_GEOMETRY_COMMON_BOX_H
+#endif // KELO_GEOMETRY_COMMON_BOX_3D_H

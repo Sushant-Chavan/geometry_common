@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef KELO_GEOMETRY_COMMON_BOX_H
-#define KELO_GEOMETRY_COMMON_BOX_H
+#ifndef KELO_GEOMETRY_COMMON_BOX_2D_H
+#define KELO_GEOMETRY_COMMON_BOX_2D_H
 
 #include <visualization_msgs/Marker.h>
 #include <geometry_common/Point2D.h>
@@ -51,7 +51,7 @@ namespace geometry_common
 {
 
 /**
- * @brief Axis aligned cuboid
+ * @brief Axis aligned rectangle
  * 
  */
 class Box2D
@@ -150,4 +150,4 @@ class Box2D
 
 } // namespace geometry_common
 } // namespace kelo
-#endif // KELO_GEOMETRY_COMMON_BOX_H
+#endif // KELO_GEOMETRY_COMMON_BOX_2D_H
