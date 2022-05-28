@@ -291,7 +291,7 @@ TransformMatrix3D TransformMatrix3D::operator * (const TransformMatrix3D& tf_mat
 
 TransformMatrix3D& TransformMatrix3D::operator *= (const TransformMatrix3D& tf_mat)
 {
-    float arr[12]; // temporary array
+    float arr[12] = {0.0f}; // temporary array
 
     // apply rotation to tf_mat by multipling 3x3 rot mat part of mat_ with tf_mat
     for ( size_t i = 0; i < 3; i++ )
