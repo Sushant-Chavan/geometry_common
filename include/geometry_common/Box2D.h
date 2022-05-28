@@ -38,13 +38,12 @@
  *
  ******************************************************************************/
 
-#ifndef KELO_GEOMETRY_COMMON_BOX_H
-#define KELO_GEOMETRY_COMMON_BOX_H
-
-#include <yaml-cpp/yaml.h>
+#ifndef KELO_GEOMETRY_COMMON_BOX_2D_H
+#define KELO_GEOMETRY_COMMON_BOX_2D_H
 
 #include <visualization_msgs/Marker.h>
-#include <geometry_common/Point3D.h>
+#include <geometry_common/Point2D.h>
+#include <geometry_common/Polygon2D.h>
 
 namespace kelo
 {
@@ -52,16 +51,16 @@ namespace geometry_common
 {
 
 /**
- * @brief Axis aligned cuboid
+ * @brief Axis aligned rectangle
  * 
  */
-class Box
+class Box2D
 {
     public:
-        float min_x, max_x, min_y, max_y, min_z, max_z;
-        
-        using Ptr = std::shared_ptr<Box>;
-        using ConstPtr = std::shared_ptr<const Box>;
+        float min_x, max_x, min_y, max_y;
+
+        using Ptr = std::shared_ptr<Box2D>;
+        using ConstPtr = std::shared_ptr<const Box2D>;
 
         /**
          * @brief
@@ -70,31 +69,33 @@ class Box
          * @param _max_x 
          * @param _min_y 
          * @param _max_y 
-         * @param _min_z 
-         * @param _max_z 
          */
-        Box(float _min_x = 0.0f, float _max_x = 0.0f,
-            float _min_y = 0.0f, float _max_y = 0.0f,
-            float _min_z = 0.0f, float _max_z = 0.0f):
+        Box2D(float _min_x = 0.0f, float _max_x = 0.0f,
+            float _min_y = 0.0f, float _max_y = 0.0f):
             min_x(_min_x), max_x(_max_x),
-            min_y(_min_y), max_y(_max_y),
-            min_z(_min_z), max_z(_max_z) {};
+            min_y(_min_y), max_y(_max_y) {};
 
         /**
          * @brief
          * 
          * @param box 
          */
-        Box(const Box& box):
+        Box2D(const Box2D& box):
             min_x(box.min_x), max_x(box.max_x),
-            min_y(box.min_y), max_y(box.max_y),
-            min_z(box.min_z), max_z(box.max_z) {};
+            min_y(box.min_y), max_y(box.max_y) {};
+
+        /**
+         * @brief Bounding box
+         *
+         * @param polygon
+         */
+        Box2D(const Polygon2D& polygon);
 
         /**
          * @brief
          * 
          */
-        virtual ~Box() {};
+        virtual ~Box2D() {};
 
         /**
          * @brief
@@ -119,15 +120,15 @@ class Box
          * @param p 
          * @return bool 
          */
-        bool containsPoint(const Point3D& p) const;
+        bool containsPoint(const Point2D& p) const;
 
         /**
          * @brief 
          * 
          * @param other 
-         * @return Box& 
+         * @return Box2D& 
          */
-        Box& operator = (const Box& other);
+        Box2D& operator = (const Box2D& other);
 
         /**
          * @brief 
@@ -135,7 +136,7 @@ class Box
          * @param box
          * @return bool
          */
-        bool operator == (const Box& box) const;
+        bool operator == (const Box2D& box) const;
 
         /**
          * @brief 
@@ -144,9 +145,9 @@ class Box
          * @param box 
          * @return std::ostream& 
          */
-        friend std::ostream& operator << (std::ostream& out, const Box& box);
+        friend std::ostream& operator << (std::ostream& out, const Box2D& box);
 };
 
 } // namespace geometry_common
 } // namespace kelo
-#endif // KELO_GEOMETRY_COMMON_BOX_H
+#endif // KELO_GEOMETRY_COMMON_BOX_2D_H

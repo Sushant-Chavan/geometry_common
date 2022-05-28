@@ -84,7 +84,8 @@ add_library(geometry_utils
     src/Pose2D.cpp
     src/XYTheta.cpp
     src/Circle.cpp
-    src/Box.cpp
+    src/Box2D.cpp
+    src/Box3D.cpp
     src/LineSegment2D.cpp
     src/TransformMatrix2D.cpp
     src/TransformMatrix3D.cpp
