@@ -38,14 +38,15 @@
  *
  ******************************************************************************/
 
-#include <geometry_common/Box.h>
+#include <geometry_common/Box3D.h>
 
 namespace kelo
 {
 namespace geometry_common
 {
 
-visualization_msgs::Marker Box::asMarker(const std::string& frame,
+visualization_msgs::Marker Box3D::asMarker(
+        const std::string& frame,
         float red, float green, float blue, float alpha) const
 {
     visualization_msgs::Marker marker;
@@ -65,14 +66,14 @@ visualization_msgs::Marker Box::asMarker(const std::string& frame,
     return marker;
 }
 
-bool Box::containsPoint(const Point3D& p) const
+bool Box3D::containsPoint(const Point3D& p) const
 {
     return ( p.x >= min_x && p.x <= max_x &&
              p.y >= min_y && p.y <= max_y &&
              p.z >= min_z && p.z <= max_z );
 }
 
-Box& Box::operator = (const Box& other)
+Box3D& Box3D::operator = (const Box3D& other)
 {
     min_x = other.min_x;
     max_x = other.max_x;
@@ -83,7 +84,7 @@ Box& Box::operator = (const Box& other)
     return *this;
 }
 
-bool Box::operator == (const Box& box) const
+bool Box3D::operator == (const Box3D& box) const
 {
     return ( std::fabs(min_x - box.min_x) < 1e-3f &&
              std::fabs(max_x - box.max_x) < 1e-3f &&
@@ -93,7 +94,7 @@ bool Box::operator == (const Box& box) const
              std::fabs(max_z - box.max_z) < 1e-3f );
 }
 
-std::ostream& operator << (std::ostream& out, const Box& box)
+std::ostream& operator << (std::ostream& out, const Box3D& box)
 {
     out <<  "<min_x: " << box.min_x
         << ", max_x: " << box.max_x

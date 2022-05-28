@@ -41,8 +41,6 @@
 #ifndef KELO_GEOMETRY_COMMON_BOX_H
 #define KELO_GEOMETRY_COMMON_BOX_H
 
-#include <yaml-cpp/yaml.h>
-
 #include <visualization_msgs/Marker.h>
 #include <geometry_common/Point3D.h>
 
@@ -55,13 +53,13 @@ namespace geometry_common
  * @brief Axis aligned cuboid
  * 
  */
-class Box
+class Box3D
 {
     public:
         float min_x, max_x, min_y, max_y, min_z, max_z;
-        
-        using Ptr = std::shared_ptr<Box>;
-        using ConstPtr = std::shared_ptr<const Box>;
+
+        using Ptr = std::shared_ptr<Box3D>;
+        using ConstPtr = std::shared_ptr<const Box3D>;
 
         /**
          * @brief
@@ -73,7 +71,7 @@ class Box
          * @param _min_z 
          * @param _max_z 
          */
-        Box(float _min_x = 0.0f, float _max_x = 0.0f,
+        Box3D(float _min_x = 0.0f, float _max_x = 0.0f,
             float _min_y = 0.0f, float _max_y = 0.0f,
             float _min_z = 0.0f, float _max_z = 0.0f):
             min_x(_min_x), max_x(_max_x),
@@ -85,7 +83,7 @@ class Box
          * 
          * @param box 
          */
-        Box(const Box& box):
+        Box3D(const Box3D& box):
             min_x(box.min_x), max_x(box.max_x),
             min_y(box.min_y), max_y(box.max_y),
             min_z(box.min_z), max_z(box.max_z) {};
@@ -94,7 +92,7 @@ class Box
          * @brief
          * 
          */
-        virtual ~Box() {};
+        virtual ~Box3D() {};
 
         /**
          * @brief
@@ -125,9 +123,9 @@ class Box
          * @brief 
          * 
          * @param other 
-         * @return Box& 
+         * @return Box3D& 
          */
-        Box& operator = (const Box& other);
+        Box3D& operator = (const Box3D& other);
 
         /**
          * @brief 
@@ -135,7 +133,7 @@ class Box
          * @param box
          * @return bool
          */
-        bool operator == (const Box& box) const;
+        bool operator == (const Box3D& box) const;
 
         /**
          * @brief 
@@ -144,7 +142,7 @@ class Box
          * @param box 
          * @return std::ostream& 
          */
-        friend std::ostream& operator << (std::ostream& out, const Box& box);
+        friend std::ostream& operator << (std::ostream& out, const Box3D& box);
 };
 
 } // namespace geometry_common
