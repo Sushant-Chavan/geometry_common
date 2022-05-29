@@ -158,7 +158,10 @@ bool Point3D::operator == (const Point3D& other) const
 
 std::ostream& operator << (std::ostream& out, const Point3D& point)
 {
-    out << "<x: " << point.x << ", y: " << point.y << ", z: " << point.z << ">";
+    out <<  "<x: " << point.x
+        << ", y: " << point.y
+        << ", z: " << point.z
+        << ">";
     return out;
 }
 

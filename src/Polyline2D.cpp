@@ -211,11 +211,16 @@ bool Polyline2D::operator == (const Polyline2D& other) const
 
 std::ostream& operator<<(std::ostream& out, const Polyline2D& polyline)
 {
-    out << "Polyline vertices:" << std::endl;
-    for (const auto& vertex : polyline.vertices)
+    out << "<Polyline vertices: [";
+    for ( size_t i = 0; i < polyline.vertices.size(); i++ )
     {
-        out << vertex;
+        if ( i > 0 )
+        {
+            out << ", ";
+        }
+        out << polyline.vertices[i];
     }
+    out << "]>";
     return out;
 }
 

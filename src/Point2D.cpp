@@ -168,7 +168,9 @@ bool Point2D::operator == (const Point2D& other) const
 
 std::ostream& operator << (std::ostream& out, const Point2D& point)
 {
-    out << "<x: " << point.x << ", y: " << point.y << ">";
+    out <<  "<x: " << point.x
+        << ", y: " << point.y
+        << ">";
     return out;
 }
 

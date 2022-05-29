@@ -204,8 +204,8 @@ bool LineSegment2D::operator == (const LineSegment2D& line_segment) const
 
 std::ostream& operator << (std::ostream& out, const LineSegment2D& line_segment)
 {
-    out << "start: " << line_segment.start << std::endl;
-    out << "end: " << line_segment.end << std::endl;
+    out << "<start: " << line_segment.start
+        << ", end: " << line_segment.end << ">";
     return out;
 }
 

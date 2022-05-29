@@ -110,7 +110,7 @@ bool Circle::operator == (const Circle& other) const
 
 std::ostream& operator << (std::ostream& out, const Circle& circle)
 {
-    out << "<x: " << circle.x
+    out <<  "<x: " << circle.x
         << ", y: " << circle.y
         << ", r: " << circle.r
         << ">";

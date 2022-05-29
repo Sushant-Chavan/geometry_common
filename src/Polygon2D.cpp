@@ -376,11 +376,16 @@ Polygon2D& Polygon2D::operator = (const Polygon2D& other)
 
 std::ostream& operator<<(std::ostream& out, const Polygon2D& polygon)
 {
-    out << "Polygon vertices:" << std::endl;
-    for (const auto& vertex : polygon.vertices)
+    out << "<Polygon vertices: [";
+    for ( size_t i = 0; i < polygon.vertices.size(); i++ )
     {
-        out << vertex;
+        if ( i > 0 )
+        {
+            out << ", ";
+        }
+        out << polygon.vertices[i];
     }
+    out << "]>";
     return out;
 }
 

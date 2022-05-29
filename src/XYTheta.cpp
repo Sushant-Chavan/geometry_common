@@ -90,7 +90,7 @@ bool XYTheta::operator == (const XYTheta& other) const
 
 std::ostream& operator << (std::ostream& out, const XYTheta& x_y_theta)
 {
-    out << "<x: " << x_y_theta.x
+    out <<  "<x: " << x_y_theta.x
         << ", y: " << x_y_theta.y
         << ", theta: " << x_y_theta.theta
         << ">";

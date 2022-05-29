@@ -357,7 +357,7 @@ std::ostream& operator << (std::ostream& out, const TransformMatrix3D& tf_mat)
         << tf_mat.mat_[9] << "\t"
         << tf_mat.mat_[10] << "\t"
         << tf_mat.mat_[11] << std::endl
-        << "0.000\t0.000\t0.000\t1.000" << std::endl;
+        << "0.000\t0.000\t0.000\t1.000";
     return out;
 }
 
