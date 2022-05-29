@@ -68,6 +68,18 @@ bool Polygon2D::intersects(const LineSegment2D& line_segment) const
     return false;
 }
 
+bool Polygon2D::intersects(const Polyline2D& polyline) const
+{
+    for ( size_t start = 0, end = start + 1; end < polyline.size(); start = end++ )
+    {
+        if ( intersects(LineSegment2D(polyline[start], polyline[end])) )
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Polygon2D::calcClosestIntersectionPointWith(
         const LineSegment2D& line_segment,
         Point2D& intersection_pt) const
@@ -90,6 +102,26 @@ bool Polygon2D::calcClosestIntersectionPointWith(
         }
     }
     return intersects;
+}
+
+bool Polygon2D::calcClosestIntersectionPoseWith(
+        const Polyline2D& polyline,
+        Pose2D& intersection_pose,
+        unsigned int& segment_id) const
+{
+    for ( unsigned int start = 0, end = start + 1; end < polyline.size();
+         start = end++ )
+    {
+        LineSegment2D segment(polyline[start], polyline[end]);
+        Point2D intersection_pt;
+        if ( calcClosestIntersectionPointWith(segment, intersection_pt) )
+        {
+            intersection_pose = Pose2D(intersection_pt, segment.angle());
+            segment_id = start;
+            return true;
+        }
+    }
+    return false;
 }
 
 bool Polygon2D::containsPoint(const Point2D& point) const
