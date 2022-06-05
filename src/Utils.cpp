@@ -122,7 +122,7 @@ template Pose2D Utils::calcMeanPose(const std::deque<Pose2D>& poses);
 template Pose2D Utils::calcMeanPose(const std::list<Pose2D>& poses);
 
 template <typename T>
-T Utils::calcClosestPoint(
+T Utils::calcNearestPoint(
         const std::vector<T>& points,
         const T& pt)
 {
@@ -139,10 +139,10 @@ T Utils::calcClosestPoint(
     }
     return points[min_pt_index];
 }
-template Point2D Utils::calcClosestPoint(
+template Point2D Utils::calcNearestPoint(
         const std::vector<Point2D>& points,
         const Point2D& pt);
-template Point3D Utils::calcClosestPoint(
+template Point3D Utils::calcNearestPoint(
         const std::vector<Point3D>& points,
         const Point3D& pt);
 

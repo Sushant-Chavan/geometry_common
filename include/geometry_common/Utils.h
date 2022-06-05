@@ -126,7 +126,7 @@ class Utils
          * @return T 
          */
         template <typename T>
-        static T calcClosestPoint(
+        static T calcNearestPoint(
                 const std::vector<T>& points,
                 const T& pt = T());
 
