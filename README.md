@@ -1,5 +1,7 @@
 # Geometry Common
 
+[![build status](https://git.locomotec.com:444/kelo/common/geometry_common/badges/master/build.svg)](https://git.locomotec.com:444/kelo/common/geometry_common/commits/master)
+
 Common data structures, utilities and modules for geometric tasks.
 
 ## Documentation
