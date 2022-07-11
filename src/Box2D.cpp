@@ -45,14 +45,14 @@ namespace kelo
 namespace geometry_common
 {
 
-Box2D::Box2D(const Polygon2D& polygon)
+Box2D::Box2D(const PointVec2D& points)
 {
     min_x = std::numeric_limits<float>::max();
     max_x = std::numeric_limits<float>::min();
     min_y = std::numeric_limits<float>::max();
     max_y = std::numeric_limits<float>::min();
 
-    for ( const Point2D& pt : polygon.vertices )
+    for ( const Point2D& pt : points )
     {
         if ( pt.x < min_x )
         {
