@@ -268,6 +268,8 @@ class Pose2D : public XYTheta
  */
 using Path = std::vector<Pose2D>;
 
+using PoseVec2D = std::vector<Pose2D>;
+
 } // namespace geometry_common
 } // namespace kelo
 #endif // KELO_GEOMETRY_COMMON_POSE_2D_H
