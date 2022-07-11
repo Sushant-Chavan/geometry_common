@@ -45,6 +45,42 @@ namespace kelo
 namespace geometry_common
 {
 
+Box3D::Box3D(const PointVec3D& points)
+{
+    min_x = std::numeric_limits<float>::max();
+    max_x = std::numeric_limits<float>::min();
+    min_y = std::numeric_limits<float>::max();
+    max_y = std::numeric_limits<float>::min();
+
+    for ( const Point3D& pt : points )
+    {
+        if ( pt.x < min_x )
+        {
+            min_x = pt.x;
+        }
+        if ( pt.x > max_x )
+        {
+            max_x = pt.x;
+        }
+        if ( pt.y < min_y )
+        {
+            min_y = pt.y;
+        }
+        if ( pt.y > max_y )
+        {
+            max_y = pt.y;
+        }
+        if ( pt.z < min_z )
+        {
+            min_z = pt.z;
+        }
+        if ( pt.z > max_z )
+        {
+            max_z = pt.z;
+        }
+    }
+}
+
 visualization_msgs::Marker Box3D::asMarker(
         const std::string& frame,
         float red, float green, float blue, float alpha) const

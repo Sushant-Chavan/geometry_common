@@ -89,6 +89,13 @@ class Box3D
             min_z(box.min_z), max_z(box.max_z) {};
 
         /**
+         * @brief Bounding box
+         *
+         * @param points
+         */
+        Box3D(const PointVec3D& points);
+
+        /**
          * @brief
          * 
          */
