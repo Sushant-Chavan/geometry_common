@@ -680,8 +680,8 @@ float Utils::fitLineRegression(
     }
     else
     {
-        end_pt.x = std::numeric_limits<float>::min();
-        end_pt.y = std::numeric_limits<float>::min();
+        end_pt.x = std::numeric_limits<float>::lowest();
+        end_pt.y = std::numeric_limits<float>::lowest();
         start_pt.x = std::numeric_limits<float>::max();
         start_pt.y = std::numeric_limits<float>::max();
         for ( size_t i = start_index; i <= end_index; i++ )

@@ -48,9 +48,9 @@ namespace geometry_common
 Box2D::Box2D(const PointVec2D& points)
 {
     min_x = std::numeric_limits<float>::max();
-    max_x = std::numeric_limits<float>::min();
+    max_x = std::numeric_limits<float>::lowest();
     min_y = std::numeric_limits<float>::max();
-    max_y = std::numeric_limits<float>::min();
+    max_y = std::numeric_limits<float>::lowest();
 
     for ( const Point2D& pt : points )
     {
