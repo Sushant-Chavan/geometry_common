@@ -262,7 +262,8 @@ class Polygon2D : public Polyline2D
                 float green = 0.0f,
                 float blue = 0.0f,
                 float alpha = 1.0f,
-                float line_width = 0.1f) const override;
+                float line_width = 0.1f,
+                bool use_line_strip = true) const override;
 
         /**
          * @brief Get a PolygonStamped message object from Polygon2D object
