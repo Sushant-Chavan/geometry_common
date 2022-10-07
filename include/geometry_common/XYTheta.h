@@ -111,12 +111,20 @@ class XYTheta
         XYTheta operator - (const XYTheta& other) const;
 
         /**
-         * @brief 
+         * @brief Scale XYTheta with a scalar number
          * 
-         * @param scalar 
-         * @return XYTheta 
+         * @param scalar number the XYTheta will be scaled with
+         * @return XYTheta
          */
         XYTheta operator * (float scalar) const;
+
+        /**
+         * @brief Inversely scale XYTheta with a scalar number
+         * 
+         * @param scalar number the XYTheta will be inversely scaled with
+         * @return XYTheta
+         */
+        XYTheta operator / (float scalar) const;
 
         /**
          * @brief 

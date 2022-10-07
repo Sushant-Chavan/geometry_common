@@ -288,6 +288,14 @@ class Point2D
         Point2D operator * (float scalar) const;
 
         /**
+         * @brief Inversely scale point with a constant scalar number
+         *
+         * @param scalar number the point will be inversely scaled with
+         * @return Point2D
+         */
+        Point2D operator / (float scalar) const;
+
+        /**
          * @brief 
          * 
          * @param other 

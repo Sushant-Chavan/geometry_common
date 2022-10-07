@@ -164,7 +164,7 @@ Point2D Polygon2D::meanPoint() const
         {
             mean = mean + vertex;
         }
-        mean = mean * (1.0f/vertices.size());
+        mean = mean / static_cast<float>(vertices.size());
     }
     return mean;
 }

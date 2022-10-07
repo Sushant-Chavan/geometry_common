@@ -82,6 +82,15 @@ XYTheta XYTheta::operator * (float scalar) const
     return scaled;
 }
 
+XYTheta XYTheta::operator / (float scalar) const
+{
+    if ( std::fabs(scalar) < 1e-9f ) // to fix divide by zero issue
+    {
+        scalar = 1e-9f;
+    }
+    return (*this) * (1.0f/scalar);
+}
+
 bool XYTheta::operator == (const XYTheta& other) const
 {
     XYTheta diff = *this - other;

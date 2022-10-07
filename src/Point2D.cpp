@@ -191,6 +191,15 @@ Point2D Point2D::operator * (float scalar) const
     return scaled;
 }
 
+Point2D Point2D::operator / (float scalar) const
+{
+    if ( std::fabs(scalar) < 1e-9f ) // to fix divide by zero issue
+    {
+        scalar = 1e-9f;
+    }
+    return (*this) * (1.0f/scalar);
+}
+
 bool Point2D::operator == (const Point2D& other) const
 {
     return ( distTo(other) < 1e-3f );

@@ -73,7 +73,7 @@ T Utils::calcMeanPoint(
     {
         sum_pt = sum_pt + points[i];
     }
-    return sum_pt * (1.0f/(end_index-start_index+1));
+    return sum_pt / static_cast<float>(end_index - start_index + 1);
 }
 template Point2D Utils::calcMeanPoint(
         const std::vector<Point2D>& points,
@@ -1083,7 +1083,7 @@ Velocity2D Utils::applyAccLimits(
         float loop_rate)
 {
     Velocity2D vel;
-    Acceleration2D max_acc_per_loop = max_acc * (1.0f/loop_rate);
+    Acceleration2D max_acc_per_loop = max_acc / loop_rate;
     return Utils::clip(cmd_vel, curr_vel + max_acc_per_loop, curr_vel - max_acc_per_loop);
 }
 

@@ -86,7 +86,7 @@ Point2D LineSegment2D::center() const
 
 Point2D LineSegment2D::unitVector() const
 {
-    return (end - start) * (1.0f/length());
+    return (end - start) / static_cast<float>(length());
 }
 
 bool LineSegment2D::intersects(const LineSegment2D& line_segment) const

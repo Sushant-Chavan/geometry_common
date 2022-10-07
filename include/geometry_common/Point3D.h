@@ -253,6 +253,14 @@ class Point3D
         Point3D operator * (float scalar) const;
 
         /**
+         * @brief Inversely scale point with a constant scalar number
+         *
+         * @param scalar number the point will be inversely scaled with
+         * @return Point3D
+         */
+        Point3D operator / (float scalar) const;
+
+        /**
          * @brief 
          * 
          * @param other 
