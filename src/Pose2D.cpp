@@ -147,6 +147,38 @@ visualization_msgs::Marker Pose2D::asMarker(const std::string& frame,
     return marker;
 }
 
+visualization_msgs::InteractiveMarker Pose2D::asInteractiveMarker(
+        const std::string& name, const std::string& frame,
+        float red, float green, float blue, float alpha,
+        float size_x, float size_y, float size_z) const
+{
+    visualization_msgs::InteractiveMarker interactive_marker;
+    interactive_marker.header.frame_id = frame;
+    interactive_marker.name = name;
+    interactive_marker.pose = asPose();
+
+    visualization_msgs::Marker arrow_marker = asMarker(
+            frame, red, green, blue, alpha, size_x, size_y, size_z);
+
+    visualization_msgs::InteractiveMarkerControl arrow_control;
+    arrow_control.always_visible = true;
+    arrow_control.markers.push_back(arrow_marker);
+    arrow_control.name = "move_x_y";
+    arrow_control.interaction_mode = visualization_msgs::InteractiveMarkerControl::MOVE_PLANE;
+    arrow_control.orientation.w = 1.0f;
+    arrow_control.orientation.y = 1.0f;
+    interactive_marker.controls.push_back(arrow_control);
+
+    visualization_msgs::InteractiveMarkerControl rotate_control;
+    rotate_control.name = "rotate_z";
+    rotate_control.interaction_mode = visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+    rotate_control.orientation.y = 1.0f;
+    rotate_control.orientation.w = 1.0f;
+    interactive_marker.controls.push_back(rotate_control);
+
+    return interactive_marker;
+}
+
 std::string Pose2D::asString() const
 {
     std::stringstream ss;

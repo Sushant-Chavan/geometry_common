@@ -42,6 +42,8 @@
 #define KELO_GEOMETRY_COMMON_POINT_2D_H
 
 #include <visualization_msgs/Marker.h>
+#include <visualization_msgs/InteractiveMarker.h>
+
 #include <geometry_msgs/PointStamped.h>
 #include <geometry_msgs/Point32.h>
 #include <geometry_msgs/Point.h>
@@ -235,6 +237,16 @@ class Point2D
          * @return visualization_msgs::Marker 
          */
         visualization_msgs::Marker asMarker(
+                const std::string& frame = "base_link",
+                float red = 1.0f,
+                float green = 0.0f,
+                float blue = 0.0f,
+                float alpha = 1.0f,
+                float diameter = 0.2f,
+                float z = 0.0f) const;
+
+        visualization_msgs::InteractiveMarker asInteractiveMarker(
+                const std::string& name,
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,

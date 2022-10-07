@@ -44,6 +44,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Pose.h>
 #include <visualization_msgs/Marker.h>
+#include <visualization_msgs/InteractiveMarker.h>
 #include <tf/transform_datatypes.h>
 
 #include <cmath>
@@ -188,6 +189,17 @@ class Pose2D : public XYTheta
          * @return visualization_msgs::Marker 
          */
         visualization_msgs::Marker asMarker(
+                const std::string& frame = "base_link",
+                float red = 1.0f,
+                float green = 0.0f,
+                float blue = 0.0f,
+                float alpha = 1.0f,
+                float size_x = 0.3f,
+                float size_y = 0.05f,
+                float size_z = 0.05f) const;
+
+        visualization_msgs::InteractiveMarker asInteractiveMarker(
+                const std::string& name,
                 const std::string& frame = "base_link",
                 float red = 1.0f,
                 float green = 0.0f,

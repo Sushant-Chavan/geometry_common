@@ -130,6 +130,36 @@ visualization_msgs::Marker Point2D::asMarker(const std::string& frame,
     return marker;
 }
 
+visualization_msgs::InteractiveMarker Point2D::asInteractiveMarker(
+        const std::string& name, const std::string& frame,
+        float red, float green, float blue, float alpha,
+        float diameter, float z) const
+{
+    visualization_msgs::InteractiveMarker interactive_marker;
+    interactive_marker.header.frame_id = frame;
+    interactive_marker.name = name;
+    interactive_marker.pose.position = asPoint();
+    interactive_marker.pose.orientation.w = 1.0f;
+
+    visualization_msgs::Marker sphere_marker = asMarker(
+            frame, red, green, blue, alpha, diameter, z);
+
+    visualization_msgs::InteractiveMarkerControl sphere_control;
+    sphere_control.always_visible = true;
+    sphere_control.markers.push_back(sphere_marker);
+    sphere_control.name = "move_x_y";
+    sphere_control.interaction_mode = visualization_msgs::InteractiveMarkerControl::MOVE_PLANE;
+    float qx, qy, qz, qw;
+    Utils::convertEulerToQuaternion(0.0f, M_PI/2, 0.0f, qx, qy, qz, qw);
+    sphere_control.orientation.x = qx;
+    sphere_control.orientation.y = qy;
+    sphere_control.orientation.z = qz;
+    sphere_control.orientation.w = qw;
+    interactive_marker.controls.push_back(sphere_control);
+
+    return interactive_marker;
+}
+
 Point2D& Point2D::operator = (const Point2D& other)
 {
     x = other.x;
