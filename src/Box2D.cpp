@@ -73,6 +73,21 @@ Box2D::Box2D(const PointVec2D& points)
     }
 }
 
+float Box2D::sizeX() const
+{
+    return max_x - min_x;
+}
+
+float Box2D::sizeY() const
+{
+    return max_y - min_y;
+}
+
+Point2D Box2D::center() const
+{
+    return Point2D((min_x + max_x)/2, (min_y + max_y)/2);
+}
+
 visualization_msgs::Marker Box2D::asMarker(const std::string& frame,
         float red, float green, float blue, float alpha) const
 {
@@ -83,14 +98,22 @@ visualization_msgs::Marker Box2D::asMarker(const std::string& frame,
     marker.color.g = green;
     marker.color.b = blue;
     marker.color.a = alpha;
-    marker.scale.x = max_x-min_x;
-    marker.scale.y = max_y-min_y;
+    marker.scale.x = sizeX();
+    marker.scale.y = sizeY();
     marker.scale.z = 0.01f; // 1 cm
-    marker.pose.position.x = (max_x+min_x)/2;
-    marker.pose.position.y = (max_y+min_y)/2;
-    marker.pose.position.z = 0.0f;
+    marker.pose.position = center().asPoint();
     marker.pose.orientation.w = 1.0f;
     return marker;
+}
+
+Polygon2D Box2D::asPolygon2D() const
+{
+    return Polygon2D({
+        Point2D(max_x, max_y),
+        Point2D(min_x, max_y),
+        Point2D(min_x, min_y),
+        Point2D(max_x, min_y)
+    });
 }
 
 bool Box2D::containsPoint(const Point2D& p) const

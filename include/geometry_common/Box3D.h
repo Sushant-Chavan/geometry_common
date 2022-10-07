@@ -97,19 +97,47 @@ class Box3D
 
         /**
          * @brief
-         * 
+         *
          */
         virtual ~Box3D() {};
 
         /**
+         * @brief get size of box in X-axis
+         *
+         * @return size of box in X-axis
+         */
+        float sizeX() const;
+
+        /**
+         * @brief get size of box in Y-axis
+         *
+         * @return size of box in Y-axis
+         */
+        float sizeY() const;
+
+        /**
+         * @brief get size of box in Z-axis
+         *
+         * @return size of box in Z-axis
+         */
+        float sizeZ() const;
+
+        /**
+         * @brief get the center of box
+         *
+         * @return center as Point3D
+         */
+        Point3D center() const;
+
+        /**
          * @brief
-         * 
-         * @param frame 
-         * @param red 
-         * @param green 
-         * @param blue 
-         * @param alpha 
-         * @return visualization_msgs::Marker 
+         *
+         * @param frame
+         * @param red
+         * @param green
+         * @param blue
+         * @param alpha
+         * @return visualization_msgs::Marker
          */
         visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",

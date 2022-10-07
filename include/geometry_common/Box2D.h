@@ -52,7 +52,7 @@ namespace geometry_common
 
 /**
  * @brief Axis aligned rectangle
- * 
+ *
  */
 class Box2D
 {
@@ -101,19 +101,40 @@ class Box2D
 
         /**
          * @brief
-         * 
+         *
          */
         virtual ~Box2D() {};
 
         /**
+         * @brief get size of box in X-axis
+         *
+         * @return size of box in X-axis
+         */
+        float sizeX() const;
+
+        /**
+         * @brief get size of box in Y-axis
+         *
+         * @return size of box in Y-axis
+         */
+        float sizeY() const;
+
+        /**
+         * @brief get the center of box
+         *
+         * @return center as Point2D
+         */
+        Point2D center() const;
+
+        /**
          * @brief
-         * 
-         * @param frame 
-         * @param red 
-         * @param green 
-         * @param blue 
-         * @param alpha 
-         * @return visualization_msgs::Marker 
+         *
+         * @param frame
+         * @param red
+         * @param green
+         * @param blue
+         * @param alpha
+         * @return visualization_msgs::Marker
          */
         visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
@@ -123,23 +144,30 @@ class Box2D
                 float alpha = 1.0f) const;
 
         /**
-         * @brief 
-         * 
-         * @param p 
-         * @return bool 
+         * @brief return boundary as Polygon2D object
+         *
+         * @return resulting Polygon2D object
+         */
+        Polygon2D asPolygon2D() const;
+
+        /**
+         * @brief
+         *
+         * @param p
+         * @return bool
          */
         bool containsPoint(const Point2D& p) const;
 
         /**
-         * @brief 
-         * 
-         * @param other 
-         * @return Box2D& 
+         * @brief
+         *
+         * @param other
+         * @return Box2D&
          */
         Box2D& operator = (const Box2D& other);
 
         /**
-         * @brief 
+         * @brief
          *
          * @param box
          * @return bool

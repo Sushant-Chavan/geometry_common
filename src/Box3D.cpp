@@ -81,6 +81,28 @@ Box3D::Box3D(const PointVec3D& points)
     }
 }
 
+float Box3D::sizeX() const
+{
+    return max_x - min_x;
+}
+
+float Box3D::sizeY() const
+{
+    return max_y - min_y;
+}
+
+float Box3D::sizeZ() const
+{
+    return max_z - min_z;
+}
+
+Point3D Box3D::center() const
+{
+    return Point3D((min_x + max_x)/2,
+                   (min_y + max_y)/2,
+                   (min_z + max_z)/2);
+}
+
 visualization_msgs::Marker Box3D::asMarker(
         const std::string& frame,
         float red, float green, float blue, float alpha) const
@@ -92,12 +114,10 @@ visualization_msgs::Marker Box3D::asMarker(
     marker.color.g = green;
     marker.color.b = blue;
     marker.color.a = alpha;
-    marker.scale.x = max_x-min_x;
-    marker.scale.y = max_y-min_y;
-    marker.scale.z = max_z-min_z;
-    marker.pose.position.x = (max_x+min_x)/2;
-    marker.pose.position.y = (max_y+min_y)/2;
-    marker.pose.position.z = (max_z+min_z)/2;
+    marker.scale.x = sizeX();
+    marker.scale.y = sizeY();
+    marker.scale.z = sizeZ();
+    marker.pose.position = center().asPoint();
     marker.pose.orientation.w = 1.0f;
     return marker;
 }
