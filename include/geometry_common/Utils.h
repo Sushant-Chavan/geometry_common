@@ -545,19 +545,20 @@ class Utils
                 const Velocity2D& min_vel);
 
         /**
-         * @brief 
+         * @brief calculate target velocity by ramping from curr_vel to
+         * cmd_vel. Ramping is achieved by applying acceleration limits.
          * 
-         * @param cmd_vel 
-         * @param curr_vel 
-         * @param max_acc 
-         * @param loop_rate 
-         * @return Velocity2D 
+         * @param cmd_vel Target velocity
+         * @param curr_vel current velocity
+         * @param max_acc acceleration limits
+         * @param delta_t time between now and next iteration
+         * @return Velocity2D ramped velocity
          */
         static Velocity2D applyAccLimits(
                 const Velocity2D& cmd_vel,
                 const Velocity2D& curr_vel,
                 const Acceleration2D& max_acc,
-                float loop_rate);
+                float delta_t);
 
         /**
          * @brief 

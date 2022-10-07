@@ -1080,10 +1080,10 @@ Velocity2D Utils::applyAccLimits(
         const Velocity2D& cmd_vel,
         const Velocity2D& curr_vel,
         const Acceleration2D& max_acc,
-        float loop_rate)
+        float delta_t)
 {
     Velocity2D vel;
-    Acceleration2D max_acc_per_loop = max_acc / loop_rate;
+    Acceleration2D max_acc_per_loop = max_acc * delta_t;
     return Utils::clip(cmd_vel, curr_vel + max_acc_per_loop, curr_vel - max_acc_per_loop);
 }
 
