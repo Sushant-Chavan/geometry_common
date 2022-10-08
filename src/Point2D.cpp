@@ -205,6 +205,11 @@ bool Point2D::operator == (const Point2D& other) const
     return ( distTo(other) < 1e-3f );
 }
 
+bool Point2D::operator != (const Point2D& other) const
+{
+    return !((*this) == other);
+}
+
 std::ostream& operator << (std::ostream& out, const Point2D& point)
 {
     out <<  "<x: " << point.x

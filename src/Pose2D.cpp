@@ -213,5 +213,10 @@ bool Pose2D::operator == (const Pose2D& other) const
              Utils::calcShortestAngle(theta, other.theta) < 1e-2f );
 }
 
+bool Pose2D::operator != (const Pose2D& other) const
+{
+    return !((*this) == other);
+}
+
 } // namespace geometry_common
 } // namespace kelo

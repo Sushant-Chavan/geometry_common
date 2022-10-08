@@ -197,9 +197,14 @@ LineSegment2D& LineSegment2D::operator = (const LineSegment2D& other)
     return *this;
 }
 
-bool LineSegment2D::operator == (const LineSegment2D& line_segment) const
+bool LineSegment2D::operator == (const LineSegment2D& other) const
 {
-    return ( start == line_segment.start && end == line_segment.end );
+    return ( start == other.start && end == other.end );
+}
+
+bool LineSegment2D::operator != (const LineSegment2D& other) const
+{
+    return !((*this) == other);
 }
 
 std::ostream& operator << (std::ostream& out, const LineSegment2D& line_segment)

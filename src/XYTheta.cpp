@@ -97,6 +97,11 @@ bool XYTheta::operator == (const XYTheta& other) const
     return ( pow(diff.x, 2) + pow(diff.y, 2) + pow(diff.theta, 2) < 1e-6f );
 }
 
+bool XYTheta::operator != (const XYTheta& other) const
+{
+    return !((*this) == other);
+}
+
 std::ostream& operator << (std::ostream& out, const XYTheta& x_y_theta)
 {
     out <<  "<x: " << x_y_theta.x

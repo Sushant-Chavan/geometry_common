@@ -229,12 +229,21 @@ class LineSegment2D
         LineSegment2D& operator = (const LineSegment2D& other);
 
         /**
-         * @brief 
+         * @brief Equality checking operator overload. Checks if the members are
+         * almost equal by checking if difference is smaller than threshold
          *
-         * @param line_segment
-         * @return 
+         * @param other rhs LineSegment2D object
+         * @return bool true is all members are almost equal; false otherwise
          */
         bool operator == (const LineSegment2D& line_segment) const;
+
+        /**
+         * @brief Inequality checking operator overload.
+         *
+         * @param other rhs LineSegment2D object
+         * @return bool false is all members are almost equal; true otherwise
+         */
+        bool operator != (const LineSegment2D& line_segment) const;
 
         /**
          * @brief 

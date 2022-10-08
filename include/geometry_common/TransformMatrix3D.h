@@ -150,12 +150,21 @@ class TransformMatrix3D
         const float& operator [] (unsigned int index) const;
 
         /**
-         * @brief 
+         * @brief Equality checking operator overload. Checks if the members are
+         * almost equal by checking if difference is smaller than threshold
          *
-         * @param tf_mat
-         * @return 
+         * @param other rhs TransformMatrix3D object
+         * @return bool true is all members are almost equal; false otherwise
          */
         bool operator == (const TransformMatrix3D& tf_mat) const;
+
+        /**
+         * @brief Inequality checking operator overload.
+         *
+         * @param other rhs TransformMatrix3D object
+         * @return bool false is all members are almost equal; true otherwise
+         */
+        bool operator != (const TransformMatrix3D& tf_mat) const;
 
         /**
          * @brief 

@@ -108,6 +108,11 @@ bool Circle::operator == (const Circle& other) const
     return ( distTo(other) < 1e-3f && std::fabs(r - other.r) < 1e-3f );
 }
 
+bool Circle::operator != (const Circle& other) const
+{
+    return !((*this) == other);
+}
+
 std::ostream& operator << (std::ostream& out, const Circle& circle)
 {
     out <<  "<x: " << circle.x

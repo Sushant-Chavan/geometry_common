@@ -261,12 +261,21 @@ class Point3D
         Point3D operator / (float scalar) const;
 
         /**
-         * @brief 
-         * 
-         * @param other 
-         * @return bool 
+         * @brief Equality checking operator overload. Checks if the members are
+         * almost equal by checking if difference is smaller than threshold
+         *
+         * @param other rhs Point3D object
+         * @return bool true is all members are almost equal; false otherwise
          */
         bool operator == (const Point3D& other) const;
+
+        /**
+         * @brief Inequality checking operator overload.
+         *
+         * @param other rhs Point3D object
+         * @return bool false is all members are almost equal; true otherwise
+         */
+        bool operator != (const Point3D& other) const;
 
         /**
          * @brief 

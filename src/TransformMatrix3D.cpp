@@ -330,16 +330,21 @@ const float& TransformMatrix3D::operator [] (unsigned int index) const
     return mat_[index];
 }
 
-bool TransformMatrix3D::operator == (const TransformMatrix3D& tf_mat) const
+bool TransformMatrix3D::operator == (const TransformMatrix3D& other) const
 {
     for ( size_t i = 0; i < mat_.size(); i++ )
     {
-        if ( std::fabs(mat_[i] - tf_mat[i]) > 1e-3f )
+        if ( std::fabs(mat_[i] - other[i]) > 1e-3f )
         {
             return false;
         }
     }
     return true;
+}
+
+bool TransformMatrix3D::operator != (const TransformMatrix3D& other) const
+{
+    return !((*this) == other);
 }
 
 std::ostream& operator << (std::ostream& out, const TransformMatrix3D& tf_mat)

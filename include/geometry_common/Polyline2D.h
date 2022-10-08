@@ -232,12 +232,21 @@ class Polyline2D
         const Point2D& operator [] (unsigned int index) const;
 
         /**
-         * @brief 
+         * @brief Equality checking operator overload. Checks if the members are
+         * almost equal by checking if difference is smaller than threshold
          *
-         * @param other
-         * @return 
+         * @param other rhs Polyline2D object
+         * @return bool true is all members are almost equal; false otherwise
          */
         bool operator == (const Polyline2D& other) const;
+
+        /**
+         * @brief Inequality checking operator overload.
+         *
+         * @param other rhs Polyline2D object
+         * @return bool false is all members are almost equal; true otherwise
+         */
+        bool operator != (const Polyline2D& other) const;
 
         /**
          * @brief Append the Polyline information as string to the input stream object

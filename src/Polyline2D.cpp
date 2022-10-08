@@ -223,6 +223,11 @@ bool Polyline2D::operator == (const Polyline2D& other) const
     return true;
 }
 
+bool Polyline2D::operator != (const Polyline2D& other) const
+{
+    return !((*this) == other);
+}
+
 std::ostream& operator<<(std::ostream& out, const Polyline2D& polyline)
 {
     out << "<Polyline vertices: [";
