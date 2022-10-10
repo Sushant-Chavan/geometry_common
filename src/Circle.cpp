@@ -38,6 +38,7 @@
  *
  ******************************************************************************/
 
+#include <geometry_common/Polygon2D.h>
 #include <geometry_common/Circle.h>
 
 namespace kelo
@@ -93,6 +94,20 @@ visualization_msgs::Marker Circle::asMarker(const std::string& frame,
     marker.pose.position.z = 0.0f;
     marker.pose.orientation.w = 1.0f;
     return marker;
+}
+
+Polygon2D Circle::asPolygon2D(size_t num_of_segments) const
+{
+    Polygon2D polygon;
+    float delta_angle = (2 * M_PI) / num_of_segments;
+    float angle = -M_PI;
+    const Point2D center_pt = center();
+    polygon.vertices.reserve(num_of_segments);
+    for ( size_t i = 0; i < num_of_segments; i++, angle += delta_angle )
+    {
+        polygon.vertices.push_back(center_pt + Point2D::initFromRadialCoord(r, angle));
+    }
+    return polygon;
 }
 
 Circle& Circle::operator = (const Circle& other)

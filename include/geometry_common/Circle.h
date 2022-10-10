@@ -50,6 +50,9 @@ namespace kelo
 namespace geometry_common
 {
 
+// Forward declaration 
+class Polygon2D;
+
 /**
  * @brief Circle with center (as Point2D) and radius
  */
@@ -142,6 +145,13 @@ class Circle : public Point2D
                 float green = 0.0f,
                 float blue = 0.0f,
                 float alpha = 1.0f) const;
+
+        /**
+         * @brief return boundary as Polygon2D object
+         *
+         * @return resulting Polygon2D object
+         */
+        Polygon2D asPolygon2D(size_t num_of_segments = 16) const;
 
         /**
          * @brief 
