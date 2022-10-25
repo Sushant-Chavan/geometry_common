@@ -160,7 +160,7 @@ class TransformMatrix2D
          * @brief transform two dimensional velocity in place
          *
          * [ cos(theta)  -sin(theta)  y ]   [ vel_x     ]    [ target_vel_x ]
-         * [ sin(theta)   cos(theta)  x ] * [ vel_y     ] => [ target_vel_y ]
+         * [ sin(theta)   cos(theta) -x ] * [ vel_y     ] => [ target_vel_y ]
          * [ 0            0           1 ]   [ vel_theta ]    [ target_vel_theta ]
          *
          * @param vel velocity that needs to be transformed in place
