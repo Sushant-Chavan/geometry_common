@@ -63,12 +63,12 @@ class Box2D
         using ConstPtr = std::shared_ptr<const Box2D>;
 
         /**
-         * @brief
-         * 
-         * @param _min_x 
-         * @param _max_x 
-         * @param _min_y 
-         * @param _max_y 
+         * @brief Default c-tor
+         *
+         * @param _min_x minimum boundary on X-axis
+         * @param _max_x maximum boundary on X-axis
+         * @param _min_y minimum boundary on Y-axis
+         * @param _max_y maximum boundary on Y-axis
          */
         Box2D(float _min_x = 0.0f, float _max_x = 0.0f,
             float _min_y = 0.0f, float _max_y = 0.0f):
@@ -76,23 +76,23 @@ class Box2D
             min_y(_min_y), max_y(_max_y) {};
 
         /**
-         * @brief
-         * 
-         * @param box 
+         * @brief Copy c-tor
+         *
+         * @param box Box2D object to copy from
          */
         Box2D(const Box2D& box):
             min_x(box.min_x), max_x(box.max_x),
             min_y(box.min_y), max_y(box.max_y) {};
 
         /**
-         * @brief Bounding box
+         * @brief Bounding box from vector of points
          *
          * @param points
          */
         Box2D(const PointVec2D& points);
 
         /**
-         * @brief Bounding box
+         * @brief Bounding box of a polygon
          *
          * @param polygon
          */
@@ -100,7 +100,7 @@ class Box2D
             Box2D(polygon.vertices) {};
 
         /**
-         * @brief
+         * @brief d-tor
          *
          */
         virtual ~Box2D() {};
@@ -127,14 +127,19 @@ class Box2D
         Point2D center() const;
 
         /**
-         * @brief
+         * @brief Get an RViz visualization marker for the box object
          *
-         * @param frame
-         * @param red
-         * @param green
-         * @param blue
-         * @param alpha
-         * @return visualization_msgs::Marker
+         * @param frame The frame in which the box is specified
+         * @param red The red color-component to be used in the marker
+         * color in the range [0.0, 1.0]
+         * @param green The green color-component to be used in the marker
+         * color in the range [0.0, 1.0]
+         * @param blue The blue color-component to be used in the marker
+         * color in the range [0.0, 1.0]
+         * @param alpha The transparency of the generated marker
+         * in the range [0.0, 1.0]
+         * @return visualization_msgs::Marker A marker object representing the
+         * box
          */
         visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
@@ -151,37 +156,47 @@ class Box2D
         Polygon2D asPolygon2D() const;
 
         /**
-         * @brief
+         * @brief Check if a 2D point lies within the Box.
          *
-         * @param p
-         * @return bool
+         * @param p 2D point to be checked
+         * @return bool True if the point lies inside the box, false otherwise
          */
         bool containsPoint(const Point2D& p) const;
 
         /**
-         * @brief
+         * @brief assignment operator overload
          *
-         * @param other
-         * @return Box2D&
+         * @param other rhs Box2D object
+         * @return Box2D& lhs Box2D object
          */
         Box2D& operator = (const Box2D& other);
 
         /**
-         * @brief
+         * @brief equality operator overload
          *
-         * @param box
-         * @return bool
+         * @param other rhs Box2D object
+         * @return bool true if both Box2D are almost equal; false otherwise
          */
-        bool operator == (const Box2D& box) const;
+        bool operator == (const Box2D& other) const;
 
         /**
-         * @brief 
-         * 
-         * @param out 
-         * @param box 
-         * @return std::ostream& 
+         * @brief inequality operator overload
+         *
+         * @param other rhs Box2D object
+         * @return bool false if both Box2D are almost equal; true otherwise
+         */
+        bool operator != (const Box2D& other) const;
+
+        /**
+         * @brief << operator overload
+         *
+         * @param out The stream object to which the box information should be appended
+         * @param box The box whose data should be appended to the stream object
+         * @return std::ostream& The stream object representing the concatenation
+         * of the input stream and the box information
          */
         friend std::ostream& operator << (std::ostream& out, const Box2D& box);
+
 };
 
 } // namespace geometry_common

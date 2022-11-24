@@ -131,12 +131,17 @@ Box2D& Box2D::operator = (const Box2D& other)
     return *this;
 }
 
-bool Box2D::operator == (const Box2D& box) const
+bool Box2D::operator == (const Box2D& other) const
 {
-    return ( std::fabs(min_x - box.min_x) < 1e-3f &&
-             std::fabs(max_x - box.max_x) < 1e-3f &&
-             std::fabs(min_y - box.min_y) < 1e-3f &&
-             std::fabs(max_y - box.max_y) < 1e-3f );
+    return ( std::fabs(min_x - other.min_x) < 1e-3f &&
+             std::fabs(max_x - other.max_x) < 1e-3f &&
+             std::fabs(min_y - other.min_y) < 1e-3f &&
+             std::fabs(max_y - other.max_y) < 1e-3f );
+}
+
+bool Box2D::operator != (const Box2D& other) const
+{
+    return !((*this) == other);
 }
 
 std::ostream& operator << (std::ostream& out, const Box2D& box)
