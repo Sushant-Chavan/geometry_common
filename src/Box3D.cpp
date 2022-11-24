@@ -142,14 +142,19 @@ Box3D& Box3D::operator = (const Box3D& other)
     return *this;
 }
 
-bool Box3D::operator == (const Box3D& box) const
+bool Box3D::operator == (const Box3D& other) const
 {
-    return ( std::fabs(min_x - box.min_x) < 1e-3f &&
-             std::fabs(max_x - box.max_x) < 1e-3f &&
-             std::fabs(min_y - box.min_y) < 1e-3f &&
-             std::fabs(max_y - box.max_y) < 1e-3f &&
-             std::fabs(min_z - box.min_z) < 1e-3f &&
-             std::fabs(max_z - box.max_z) < 1e-3f );
+    return ( std::fabs(min_x - other.min_x) < 1e-3f &&
+             std::fabs(max_x - other.max_x) < 1e-3f &&
+             std::fabs(min_y - other.min_y) < 1e-3f &&
+             std::fabs(max_y - other.max_y) < 1e-3f &&
+             std::fabs(min_z - other.min_z) < 1e-3f &&
+             std::fabs(max_z - other.max_z) < 1e-3f );
+}
+
+bool Box3D::operator != (const Box3D& other) const
+{
+    return !((*this) == other);
 }
 
 std::ostream& operator << (std::ostream& out, const Box3D& box)

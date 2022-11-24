@@ -51,7 +51,7 @@ namespace geometry_common
 
 /**
  * @brief Axis aligned cuboid
- * 
+ *
  */
 class Box3D
 {
@@ -62,14 +62,14 @@ class Box3D
         using ConstPtr = std::shared_ptr<const Box3D>;
 
         /**
-         * @brief
-         * 
-         * @param _min_x 
-         * @param _max_x 
-         * @param _min_y 
-         * @param _max_y 
-         * @param _min_z 
-         * @param _max_z 
+         * @brief Default c-tor
+         *
+         * @param _min_x minimum boundary on X-axis
+         * @param _max_x maximum boundary on X-axis
+         * @param _min_y minimum boundary on Y-axis
+         * @param _max_y maximum boundary on Y-axis
+         * @param _min_z minimum boundary on Z-axis
+         * @param _max_z maximum boundary on Z-axis
          */
         Box3D(float _min_x = 0.0f, float _max_x = 0.0f,
             float _min_y = 0.0f, float _max_y = 0.0f,
@@ -79,9 +79,9 @@ class Box3D
             min_z(_min_z), max_z(_max_z) {};
 
         /**
-         * @brief
-         * 
-         * @param box 
+         * @brief Copy c-tor
+         *
+         * @param box Box3D object to copy from
          */
         Box3D(const Box3D& box):
             min_x(box.min_x), max_x(box.max_x),
@@ -89,14 +89,14 @@ class Box3D
             min_z(box.min_z), max_z(box.max_z) {};
 
         /**
-         * @brief Bounding box
+         * @brief Bounding box from a vector of points
          *
-         * @param points
+         * @param points vector of points whose bounding box gets calculated
          */
         Box3D(const PointVec3D& points);
 
         /**
-         * @brief
+         * @brief d-tor
          *
          */
         virtual ~Box3D() {};
@@ -130,14 +130,19 @@ class Box3D
         Point3D center() const;
 
         /**
-         * @brief
+         * @brief Get an RViz visualization marker for the box object
          *
-         * @param frame
-         * @param red
-         * @param green
-         * @param blue
-         * @param alpha
-         * @return visualization_msgs::Marker
+         * @param frame The frame in which the box is specified
+         * @param red The red color-component to be used in the marker
+         * color in the range [0.0, 1.0]
+         * @param green The green color-component to be used in the marker
+         * color in the range [0.0, 1.0]
+         * @param blue The blue color-component to be used in the marker
+         * color in the range [0.0, 1.0]
+         * @param alpha The transparency of the generated marker
+         * in the range [0.0, 1.0]
+         * @return visualization_msgs::Marker A marker object representing the
+         * box
          */
         visualization_msgs::Marker asMarker(
                 const std::string& frame = "base_link",
@@ -147,37 +152,47 @@ class Box3D
                 float alpha = 1.0f) const;
 
         /**
-         * @brief 
-         * 
-         * @param p 
-         * @return bool 
+         * @brief Check if a 3D point lies within the Box.
+         *
+         * @param p 3D point to be checked
+         * @return bool True if the point lies inside the box, false otherwise
          */
         bool containsPoint(const Point3D& p) const;
 
         /**
-         * @brief 
-         * 
-         * @param other 
-         * @return Box3D& 
+         * @brief assignment operator overload
+         *
+         * @param other rhs Box3D object
+         * @return Box3D& lhs Box3D object
          */
         Box3D& operator = (const Box3D& other);
 
         /**
-         * @brief 
+         * @brief equality operator overload
          *
-         * @param box
-         * @return bool
+         * @param other rhs Box3D object
+         * @return bool true if both Box3D are almost equal; false otherwise
          */
         bool operator == (const Box3D& box) const;
 
         /**
-         * @brief 
-         * 
-         * @param out 
-         * @param box 
-         * @return std::ostream& 
+         * @brief inequality operator overload
+         *
+         * @param other rhs Box3D object
+         * @return bool false if both Box3D are almost equal; true otherwise
+         */
+        bool operator != (const Box3D& other) const;
+
+        /**
+         * @brief << operator overload
+         *
+         * @param out The stream object to which the box information should be appended
+         * @param box The box whose data should be appended to the stream object
+         * @return std::ostream& The stream object representing the concatenation
+         * of the input stream and the box information
          */
         friend std::ostream& operator << (std::ostream& out, const Box3D& box);
+
 };
 
 } // namespace geometry_common

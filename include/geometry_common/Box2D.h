@@ -87,14 +87,14 @@ class Box2D
         /**
          * @brief Bounding box from vector of points
          *
-         * @param points
+         * @param points vector of points whose bounding box gets calculated
          */
         Box2D(const PointVec2D& points);
 
         /**
          * @brief Bounding box of a polygon
          *
-         * @param polygon
+         * @param polygon polygon object whose bounding box gets calculated
          */
         Box2D(const Polygon2D& polygon):
             Box2D(polygon.vertices) {};
