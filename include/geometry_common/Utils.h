@@ -173,12 +173,13 @@ class Utils
                 size_t min_cluster_size = 3);
 
         /**
-         * @brief
-         * 
-         * @param vel 
-         * @param num_of_poses 
-         * @param future_time 
-         * @return std::vector<Pose2D> 
+         * @brief Calculate trajectory (vector of poses) for fixed velocity
+         * using euler forward integration
+         *
+         * @param vel velocity at which the object is travelling
+         * @param num_of_poses number of poses in trajectory
+         * @param future_time time for which the object is travelling
+         * @return std::vector<Pose2D> trajectory
          */
         static std::vector<Pose2D> calcTrajectory(
                 const Velocity2D& vel,
@@ -186,24 +187,26 @@ class Utils
                 float future_time);
 
         /**
-         * @brief
-         * 
-         * @param angle1 
-         * @param angle2 
-         * @return float 
+         * @brief Calculate the shortest angular difference between two given
+         * angles. The result will always be between -pi and pi
+         *
+         * @param angle1 first angle
+         * @param angle2 second angle
+         * @return float shortest angle between first and second angle
          */
         static float calcShortestAngle(
                 float angle1,
                 float angle2);
 
         /**
-         * @brief 
-         * 
-         * @param m 
-         * @param c 
-         * @param p 
-         * @param perpendicular_m 
-         * @param perpendicular_c 
+         * @brief Calculate slope and constant of a line that is perpendicular
+         * to the given line at a specific given point
+         *
+         * @param m slope of given line
+         * @param c constant of given line
+         * @param p point at which the given line and perpendicular intersect
+         * @param perpendicular_m slope of perpendicular line
+         * @param perpendicular_c constant of perpendicular line
          */
         static void findPerpendicularLineAt(
                 float m,
@@ -213,12 +216,14 @@ class Utils
                 float& perpendicular_c);
 
         /**
-         * @brief 
-         * 
-         * @param m 
-         * @param c 
-         * @param p 
-         * @return float 
+         * @brief Calculate squared perpendicular distance of a point from a
+         * line.
+         *
+         * @param m slope of given line
+         * @param c constant of given line
+         * @param p point from which perpedicular distance needs to be
+         * calculated
+         * @return float squared perpendicular distance between point and line
          */
         static float calcSquaredDistToLine(
                 float m,
@@ -226,12 +231,13 @@ class Utils
                 const Point2D& p);
 
         /**
-         * @brief
-         * 
-         * @param m 
-         * @param c 
-         * @param p 
-         * @return Point2D 
+         * @brief Given a line and a point, calculate a projection point of the
+         * given point on that line
+         *
+         * @param m slope of given line
+         * @param c constant of given line
+         * @param p point whose projection needs to be calculated
+         * @return Point2D projected point
          */
         static Point2D calcProjectedPointOnLine(
                 float m,
@@ -239,13 +245,22 @@ class Utils
                 const Point2D& p);
 
         /**
-         * @brief Get the Projected Point On Line object
-         * 
-         * @param line_start 
-         * @param line_end 
-         * @param p 
-         * @param is_segment 
-         * @return Point2D 
+         * @brief Given a line and a point, calculate a projection point of the
+         * given point on that line. The line would be considered as a line
+         * segment if `is_segment` is true, implying that the projected point
+         * would be clipped to be within the line segment's start and end
+         * points.
+         * source: https://stackoverflow.com/a/1501725/10460994
+         *
+         * @param line_start a point on the given line (also treated as start
+         * point if it is line segment)
+         * @param line_end another point on the given line (also treated as end
+         * point if it is line segment)
+         * @param p point whose projection needs to be calculated
+         * @param is_segment option to treat the line as a line segment or not.
+         * True implies that the projected point would always be between
+         * `line_start` and `line_end`.
+         * @return Point2D projected point
          */
         static Point2D calcProjectedPointOnLine(
                 const Point2D& line_start,
@@ -254,12 +269,19 @@ class Utils
                 bool is_segment);
 
         /**
-         * @brief
-         * 
-         * @param m 
-         * @param c 
-         * @param p 
-         * @return Point2D 
+         * @brief Given a line and a point, calculate a projection point of the
+         * given point on either of the 2 axis on that line depending on the
+         * slope of the line. If the given line is closer to X-axis in terms of
+         * slope, then the projected point will have same x coordinate as the
+         * given point and the y coordinate will be projected on that given
+         * line. Similarly, if the given line is closer to Y-axis, then the
+         * projected point's y coordinate will be same and x coordinate will be
+         * projected.
+         *
+         * @param m slope of given line
+         * @param c constant of given line
+         * @param p point whose projection needs to be calculated
+         * @return Point2D projected point
          */
         static Point2D calcProjectedPointOnMajorAxis(
                 float m,
@@ -267,14 +289,19 @@ class Utils
                 const Point2D& p);
 
         /**
-         * @brief Find the distance of point p from a line formed by points a and b
-         * source: https://stackoverflow.com/a/1501725/10460994
-         * 
-         * @param a 
-         * @param b 
-         * @param p 
-         * @param is_segment 
-         * @return float 
+         * @brief Find the distance of point p from a line formed by points a
+         * and b
+         *
+         * @param a point on the given line (also treated as start
+         * point if it is line segment)
+         * @param b another point on the given line (also treated as end
+         * point if it is line segment)
+         * @param p point whose squared distance from the line needs to be
+         * calculated
+         * @param is_segment option to treat the line as a line segment or not.
+         * \see Utils::calcProjectedPointOnLine
+         * @return float squared distance between the given point and projected
+         * point.
          */
         static float calcSquaredDistToLine(
                 const Point2D& a,
