@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
+    - uses: mattnotmitt/doxygen-action@1.9.5
     - uses: actions/checkout@v3
 #     - name: Build the Docker image
 #       run: docker build . --file Dockerfile --tag geometry_common:$(date +%s) --no-cache
     - name: Build doxygen documentation
-      uses: mattnotmitt/doxygen-action@1.9.5
       with:
         doxyfile-path: docs/doxygen/Doxyfile.in
         working-directory: docs/
