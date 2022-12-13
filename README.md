@@ -1,6 +1,6 @@
 # Geometry Common
 
-[![build status](https://git.locomotec.com:444/kelo/common/geometry_common/badges/master/build.svg)](https://git.locomotec.com:444/kelo/common/geometry_common/commits/master)
+[![build and test status](https://github.com/Sushant-Chavan/geometry_common/actions/workflows/docker-image.yml/badge.svg)](https://github.com/Sushant-Chavan/geometry_common/actions/workflows/docker-image.yml)
 
 Common data structures, utilities and modules for geometric tasks.
 
