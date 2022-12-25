@@ -23,4 +23,4 @@ RUN cd /workspace/catkin_ws && \
 RUN source /workspace/catkin_ws/devel/setup.bash && \
     cd /workspace/catkin_ws/src/geometry_common && \
     /ros_entrypoint.sh catkin build --this --no-status --catkin-make-args run_tests -- && \
-    rosrun geometry_common geometry_common_test
+    rosrun geometry_common geometry_common_test 
